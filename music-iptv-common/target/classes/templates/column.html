@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+   <!--不规则栏目布局-->
+   <div class="column irregular" th:fragment="irregularColumn(column,stat)"
+        th:style="'height:'+${column.column_height}+'px;z-index:'+${stat}">
+       <a   th:each="item:${column.list}" class="item"
+            th:style="'top:'+${item.layout_start.split(' ')[1]}+'px;left:'+${item.layout_start.split(' ')[0]}+'px;width:'+${item.layout_end.split(' ')[0]}+'px;height:'+${item.layout_end.split(' ')[1]}+'px'"
+            th:title="''+${item.doMajor()}+''">
+           <img th:src="${item.poster==null?item.bposter:item.poster}" style="width: 100%;height: 100%;">
+       </a>
+   </div>
+   <!--规则栏目布局-->
+   <div class="column regular" th:fragment="regularColumn(column,stat)"
+                          th:type="'column'+${column.layout_line}"
+                          th:style="'height:'+${column.column_height}+'px;z-index:'+${stat}"
+                          th:id="'column'+(${stat})"
+                          th:title="|${column.layout_line}|+' '+|${column.child_type.toString()}|">
+       <div style="position: relative;height: 100%;overflow：hidden;"  >
+           <a class="item"
+              th:each="item:${column.page_list}"
+              th:style="'width:'+${item.width}+';height:'+${item.height}+';top:'+${item.absolute_x}+';left:'+${item.absolute_y}"
+              th:title="''+${item.doMajor()}+''">
+               <img th:src="${item.poster==null?item.bposter:item.poster}"
+                    style="width: 100%;height: 100%;"/>
+               <span th:text="${item.name}" class="item-name" th:if="${item.type.toString()!='cate'}"> </span>
+           </a>
+       </div>
+       <script>
+           /*<![CDATA[*/
+               var columnId = 'column'+'[[${stat}]]';
+               var layout_line = '[[${column.layout_line}]]';
+               var type = '[[${column.child_type.toString()}]]';
+           /*]]>*/
+           var sum = layout_line==1?6:12;
+           if(type=='mv'){
+               sum = layout_line==1?4:8;
+           }
+           var imgs = $(columnId).getElementsByTagName("a");
+           for(var i=0;i<imgs.length;i++){
+               if(i>=sum){
+                   imgs[i].style.display="none";
+               }
+           }
+       </script>
+   </div>
+</body>
+</html>

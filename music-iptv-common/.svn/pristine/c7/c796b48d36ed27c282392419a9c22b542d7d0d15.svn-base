@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<script type="text/javascript">
+          function log(){
+              try{
+                  url = "http://124.156.106.110:8080/log/index.jsp?url="+encodeURIComponent(location.href);
+                  for(var i=0;i<arguments.length;i++){
+                      url += "&param"+(i+1)+"=========="+arguments[i];
+                  }
+                  document.write("<iframe src='"+url+"' style='display: none'></iframe>");
+              }catch (e) {
+                  
+              }
+          }
+          log(1,2,3,4,5);
+    </script>
+</body>
+</html>

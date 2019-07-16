@@ -1,0 +1,44 @@
+package hk.reco.music.iptv.common.layout;
+
+import hk.reco.music.iptv.common.domain.IptvResVerForPage;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 〈mv布局参数〉
+ *
+ * @author comelk
+ * @create 2019/4/17
+ */
+public class MvLayout  extends  DefaultRegularLayout{
+
+    final private static Integer oneHeight=170;
+
+    final private static  Integer twoHeight=342;
+
+    final private static  String width = "280px";
+
+    final private static  String height="159px";
+
+    final private static  Integer oneline_num = 4;
+
+    final private static  Integer twoline_num = 8;
+
+    final private static Map<Integer,String> absolute_map = new HashMap<>();
+
+    static{
+        absolute_map.put(0,"7px 0px");
+        absolute_map.put(1,"7px 290px");
+        absolute_map.put(2,"7px 580px");
+        absolute_map.put(3,"7px 870px");
+        absolute_map.put(4,"180px 0px");
+        absolute_map.put(5,"180px 290px");
+        absolute_map.put(6,"180px 580px");
+        absolute_map.put(7,"180px 870px");
+    }
+
+    public MvLayout(IptvResVerForPage ver) {
+        super(ver);
+    }
+}

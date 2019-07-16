@@ -1,0 +1,1191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="page-view-size" content="1280*720">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>搜索</title>
+    <style>
+        .test{
+            top:20px;
+            color:red;
+            background: transparent;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 50;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            right: 30px;
+            display: none;
+            position:absolute;
+        }
+
+        .log{
+            width: 1280px;
+            top:20px;
+            color:white;
+            background: black;
+            z-index: 25;
+            height: 300px;
+            position:absolute;
+        }
+    </style>
+</head>
+<body>
+    <div style="position:absolute; left:0px; top:0px; width:1280px; height:720px;background-image: url(images/bg.jpg);;background-repeat:no-repeat; overflow:hidden;">
+        <p id="test" class="test">测试版</p>
+        <p id="log" class="log"></p>
+    <div id="search_btn" style="position: absolute; left: 148px; top: 66px; width: 395px; height: 589px; line-height: 56px; color: #FFF; font-size: 28px; text-align: center;">
+    	<div style="position: absolute; left: 0px; top: 0px; width: 380px; height: 44px; background-image: url(images/067.png);">
+        	<div id="search_text" style="position: absolute; left: 36px; top: 0px; width: 341px; height: 25px; line-height: 25px; font-size:23px; text-align: left; color:#999; overflow:hidden;">请输入歌曲首字母</div>
+      </div>
+        <div id="search_top_btn0" style="position: absolute; left: 0px; top: 56px; width: 188px; height: 56px; background-image: url(images/074.png);">全键盘</div>
+        <div id="search_top_btn1" style="position: absolute; left: 192px; top: 56px; width: 188px; height: 56px; background-image: url(images/074.png);">T9键盘</div>
+      	<div id="search_bottom_btn0" style="position: absolute; left: 0px; top: 519px; width: 188px; height: 56px; background-image: url(images/074.png);">
+        	<div style="position: absolute; left: 0px; top: 0px; width: 188px; height: 56px; background-image: url(images/072.png);"></div>
+        </div>
+        <div id="search_bottom_btn1" style="position: absolute; left: 192px; top: 519px; width: 188px; height: 56px; background-image:url(images/074.png);">
+        	<div style="position: absolute; left: 0px; top: 0px; width: 188px; height: 56px; background-image:url(images/075.png);"></div>
+        </div>
+        
+        <div id="search_t9_btn" style="position: absolute; left: 0px; top: 125px; width: 388px; height: 389px; line-height:38px; display:none;">
+        	<div id="search_t9_btn0" style="position: absolute; left: 0px; top: 0px; width: 124px; height: 125px; background-image:url(images/069.png);">
+            	<div style="position: absolute; left: 0px; top: 40px; width: 124px; height: 38px;">0&nbsp;|&nbsp;1</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">&nbsp;</div>
+          </div>
+        	<div id="search_t9_btn1" style="position: absolute; left: 128px; top: 0px; width: 124px; height: 125px; background-image:url(images/069.png);">
+            	<div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">2</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">ABC</div>
+            </div>
+        	<div id="search_t9_btn2" style="position: absolute; left: 256px; top: 0px; width: 124px; height: 125px; background-image:url(images/069.png);">
+           	  <div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">3</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">DEF</div>
+          </div>
+          
+       	  <div id="search_t9_btn3" style="position: absolute; left: 0px; top: 128px; width: 124px; height: 125px; background-image:url(images/069.png);">
+            	<div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">4</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">GHI</div>
+          </div>
+       	  <div id="search_t9_btn4" style="position: absolute; left: 128px; top: 128px; width: 124px; height: 125px; background-image:url(images/069.png);">
+            	<div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">5</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">JKL</div>
+          </div>
+       	  <div id="search_t9_btn5" style="position: absolute; left: 256px; top: 128px; width: 124px; height: 125px; background-image:url(images/069.png);">
+           	  <div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">6</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">MNO</div>
+          </div>
+          
+        	<div id="search_t9_btn6" style="position: absolute; left: 0px; top: 256px; width: 124px; height: 125px; background-image: url(images/069.png);">
+           	  <div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">7</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">PQRS</div>
+            </div>
+        	<div id="search_t9_btn7" style="position: absolute; left: 128px; top: 256px; width: 124px; height: 125px; background-image:url(images/069.png);">
+           	  <div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">8</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">TUV</div>
+            </div>
+        	<div id="search_t9_btn8" style="position: absolute; left: 256px; top: 256px; width: 124px; height: 125px; background-image:url(images/069.png);">
+           	  <div style="position: absolute; left: 0px; top: 20px; width: 124px; height: 38px;">9</div>
+            	<div style="position: absolute; left: 0px; top: 63px; width: 124px; height: 38px;">WXYZ</div>
+          </div>
+          
+       	  <div id="search_t9_btn_focus" style="position: absolute; left: 0px; top: 0px; width: 124px; height: 125px; line-height:55px; color:#000; display:none; z-index:9;">
+            	<div id="search_t9_btn_focus0" style="position: absolute; left: 35px; top: 35px; width: 54px; height: 55px; background-color:#0FF; visibility:hidden;"></div>
+            	<div id="search_t9_btn_focus1" style="position: absolute; left: 35px; top: -25px; width: 54px; height: 55px; background-color:#FFF; visibility:hidden;"></div>
+            	<div id="search_t9_btn_focus2" style="position: absolute; left: -24px; top: 35px; width: 54px; height: 55px; background-color:#FFF; visibility:hidden;"></div>
+            	<div id="search_t9_btn_focus3" style="position: absolute; left: 94px; top: 35px; width: 54px; height: 55px; background-color:#FFF; visibility:hidden;"></div>
+            	<div id="search_t9_btn_focus4" style="position: absolute; left: 35px; top: 95px; width: 54px; height: 55px; background-color:#FFF; visibility:hidden;"></div>
+          </div>
+      </div>
+        
+        <div id="search_all_btn" style="position: absolute; left: 0px; top: 125px; width: 388px; height: 389px; line-height: 60px; display: block;">
+        	<div id="search_all_btn0" style="position: absolute; left: 0px; top: 0px; width: 60px; height: 60px; background-image: url(images/070.png);">A</div>
+        	<div id="search_all_btn1" style="position: absolute; left: 64px; top: 0px; width: 60px; height: 60px; background-image: url(images/070.png);">B</div>
+        	<div id="search_all_btn2" style="position: absolute; left: 128px; top: 0px; width: 60px; height: 60px; background-image: url(images/070.png);">C</div>
+        	<div id="search_all_btn3" style="position: absolute; left: 192px; top: 0px; width: 60px; height: 60px; background-image: url(images/070.png);">D</div>
+        	<div id="search_all_btn4" style="position: absolute; left: 256px; top: 0px; width: 60px; height: 60px; background-image: url(images/070.png);">E</div>
+        	<div id="search_all_btn5" style="position: absolute; left: 320px; top: 0px; width: 60px; height: 60px; background-image: url(images/070.png);">F</div>
+            
+        	<div id="search_all_btn6" style="position: absolute; left: 0px; top: 64px; width: 60px; height: 60px; background-image: url(images/070.png);">G</div>
+        	<div id="search_all_btn7" style="position: absolute; left: 64px; top: 64px; width: 60px; height: 60px; background-image: url(images/070.png);">H</div>
+        	<div id="search_all_btn8" style="position: absolute; left: 128px; top: 64px; width: 60px; height: 60px; background-image: url(images/070.png);">I</div>
+        	<div id="search_all_btn9" style="position: absolute; left: 192px; top: 64px; width: 60px; height: 60px; background-image: url(images/070.png);">J</div>
+        	<div id="search_all_btn10" style="position: absolute; left: 256px; top: 64px; width: 60px; height: 60px; background-image: url(images/070.png);">K</div>
+        	<div id="search_all_btn11" style="position: absolute; left: 320px; top: 64px; width: 60px; height: 60px; background-image: url(images/070.png);">L</div>
+            
+        	<div id="search_all_btn12" style="position: absolute; left: 0px; top: 128px; width: 60px; height: 60px; background-image: url(images/070.png);">M</div>
+        	<div id="search_all_btn13" style="position: absolute; left: 64px; top: 128px; width: 60px; height: 60px; background-image: url(images/070.png);">N</div>
+        	<div id="search_all_btn14" style="position: absolute; left: 128px; top: 128px; width: 60px; height: 60px; background-image: url(images/070.png);">O</div>
+        	<div id="search_all_btn15" style="position: absolute; left: 192px; top: 128px; width: 60px; height: 60px; background-image: url(images/070.png);">P</div>
+        	<div id="search_all_btn16" style="position: absolute; left: 256px; top: 128px; width: 60px; height: 60px; background-image: url(images/070.png);">Q</div>
+        	<div id="search_all_btn17" style="position: absolute; left: 320px; top: 128px; width: 60px; height: 60px; background-image: url(images/070.png);">R</div>
+            
+        	<div id="search_all_btn18" style="position: absolute; left: 0px; top: 192px; width: 60px; height: 60px; background-image: url(images/070.png);">S</div>
+        	<div id="search_all_btn19" style="position: absolute; left: 64px; top: 192px; width: 60px; height: 60px; background-image: url(images/070.png);">T</div>
+        	<div id="search_all_btn20" style="position: absolute; left: 128px; top: 192px; width: 60px; height: 60px; background-image: url(images/070.png);">U</div>
+        	<div id="search_all_btn21" style="position: absolute; left: 192px; top: 192px; width: 60px; height: 60px; background-image: url(images/070.png);">V</div>
+        	<div id="search_all_btn22" style="position: absolute; left: 256px; top: 192px; width: 60px; height: 60px; background-image: url(images/070.png);">W</div>
+        	<div id="search_all_btn23" style="position: absolute; left: 320px; top: 192px; width: 60px; height: 60px; background-image: url(images/070.png);">X</div>
+            
+        	<div id="search_all_btn24" style="position: absolute; left: 0px; top: 256px; width: 60px; height: 60px; background-image: url(images/070.png);">Y</div>
+        	<div id="search_all_btn25" style="position: absolute; left: 64px; top: 256px; width: 60px; height: 60px; background-image: url(images/070.png);">Z</div>
+        	<div id="search_all_btn26" style="position: absolute; left: 128px; top: 256px; width: 60px; height: 60px; background-image: url(images/070.png);">1</div>
+        	<div id="search_all_btn27" style="position: absolute; left: 192px; top: 256px; width: 60px; height: 60px; background-image: url(images/070.png);">2</div>
+        	<div id="search_all_btn28" style="position: absolute; left: 256px; top: 256px; width: 60px; height: 60px; background-image: url(images/070.png);">3</div>
+        	<div id="search_all_btn29" style="position: absolute; left: 320px; top: 256px; width: 60px; height: 60px; background-image: url(images/070.png);">4</div>
+            
+        	<div id="search_all_btn30" style="position: absolute; left: 0px; top: 320px; width: 60px; height: 60px; background-image: url(images/070.png);">5</div>
+        	<div id="search_all_btn31" style="position: absolute; left: 64px; top: 320px; width: 60px; height: 60px; background-image: url(images/070.png);">6</div>
+        	<div id="search_all_btn32" style="position: absolute; left: 128px; top: 320px; width: 60px; height: 60px; background-image: url(images/070.png);">7</div>
+        	<div id="search_all_btn33" style="position: absolute; left: 192px; top: 320px; width: 60px; height: 60px; background-image: url(images/070.png);">8</div>
+        	<div id="search_all_btn34" style="position: absolute; left: 256px; top: 320px; width: 60px; height: 60px; background-image: url(images/070.png);">9</div>
+        	<div id="search_all_btn35" style="position: absolute; left: 320px; top: 320px; width: 60px; height: 60px; background-image: url(images/070.png);">0</div>
+        </div>
+    </div>
+    
+    <div id="hot_search" style="position: absolute; left: 627px; top: 63px; width: 543px; height: 614px; line-height: 35px;color: #DEDEDF; font-size: 22px; display: none;">
+       <div style="position: absolute; left: 0px; top: 0px; width: 500px; height: 52px; font-size: 25px; line-height: 52px; text-indent:0px;">热门搜索</div>
+      <div id="hot_search_list0" style="position: absolute; left: 0px; top: 59px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list0_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+          <img id="hot_search_list0_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility: hidden;" />
+        </div>
+        
+    	<div id="hot_search_list1" style="position: absolute; left: 0px; top: 119px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list1_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list1_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list2" style="position: absolute; left: 0px; top: 179px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list2_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list2_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list3" style="position: absolute; left: 0px; top: 239px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list3_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list3_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list4" style="position: absolute; left: 0px; top: 299px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list4_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list4_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list5" style="position: absolute; left: 0px; top: 359px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list5_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list5_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list6" style="position: absolute; left: 0px; top: 419px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list6_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list6_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list7" style="position: absolute; left: 0px; top: 479px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list7_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list7_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+        
+    	<div id="hot_search_list8" style="position: absolute; left: 0px; top: 539px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="hot_search_list8_title" style="position: absolute; left: 20px; top: 9px; width: 390px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <img id="hot_search_list8_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 430px; top: 9px; visibility:hidden;" />
+        </div>
+    </div>
+    
+    <div id="no_result" style="position: absolute; left: 627px; top: 180px; width: 500px; height: 52px; line-height: 52px; #DEDEDF; font-size: 28px; text-align:center; display: none;">无&nbsp;&nbsp;搜&nbsp;&nbsp;索&nbsp;&nbsp;结&nbsp;&nbsp;果&nbsp;&nbsp;!</div>
+    <div id="search_result" style="position: absolute; left: 627px; top: 63px; width: 543px; height: 614px; line-height: 35px; color:#DEDEDF; font-size: 22px; display: none;">
+        <div style="position: absolute; left: 0px; top: 0px; width: 400px; height: 52px; font-size: 25px; line-height: 52px; text-indent: 0px; overflow:hidden;">您当前搜索到&nbsp;<span id="search_num" style=" color:rgb(0, 255, 84)"></span>&nbsp;首歌曲</div>
+        
+        <div id="page_num" style="position: absolute; left: 405px; top: 15px; width: 88px; height: 35px; text-align:right;"></div>
+        
+    	<div id="search_result_list0" style="position: absolute; left: 0px; top: 59px; width: 492px; height: 52px; background-image: url(images/065.png);">
+          <div id="search_result_list0_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list0_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color: rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list0_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list1" style="position: absolute; left: 0px; top: 119px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list1_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list1_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color: rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list1_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list2" style="position: absolute; left: 0px; top: 179px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list2_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list2_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color: rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list2_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list3" style="position: absolute; left: 0px; top: 239px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list3_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list3_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color: rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list3_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list4" style="position: absolute; left: 0px; top: 299px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list4_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list4_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color:rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list4_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list5" style="position: absolute; left: 0px; top: 359px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list5_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list5_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color:rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list5_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list6" style="position: absolute; left: 0px; top: 419px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list6_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list6_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color: rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list6_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list7" style="position: absolute; left: 0px; top: 479px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list7_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list7_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color:rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list7_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+        
+    	<div id="search_result_list8" style="position: absolute; left: 0px; top: 539px; width: 492px; height: 52px; background-image: url(images/065.png);">
+            <div id="search_result_list8_title" style="position: absolute; left: 20px; top: 9px; width: 290px; height: 35px; font-size: 25px; overflow:hidden;"></div>
+            <div id="search_result_list8_name" style="position: absolute; left: 370px; top: 9px; width: 110px; height: 35px; color: rgb(0, 255, 84); text-align:right; overflow:hidden;"></div>
+            <img id="search_result_list8_img" src="images/tm.gif" width="50" height="34" style="position: absolute; left: 315px; top: 9px;" />
+        </div>
+      
+      <div id="prop" style="position: absolute; left: 512px; top: 61px; width: 4px;"><img src="images/077.png" width="4" height="5" /><img id="prop_img" src="images/078.png" width="4" height="10" /><img src="images/079.png" width="4" height="5" /></div>
+    </div>
+</div>
+
+<!--自适应焦点 begin-->
+ <div id="self_ad_focus" style="position: absolute; left: 118px; top: 161px; width: 120px; height: 120px; line-height:1px; visibility: visible; z-index: 5;">
+    <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="50" height="50" style="background:url(images/focus/focus_lt.png); background-repeat:no-repeat;"></td>
+            <td style="background:url(images/focus/focus_t.png);background-repeat:repeat-x;">&nbsp;</td>
+            <td width="50" style="background:url(images/focus/focus_rt.png);background-repeat:no-repeat;"></td>
+        </tr>
+        <tr>
+            <td style="background:url(images/focus/focus_l.png);background-repeat:repeat-y;"></td>
+            <td>&nbsp;</td>
+            <td style="background:url(images/focus/focus_r.png);background-repeat:repeat-y;"></td>
+        </tr>
+        <tr>
+            <td width="50" height="50" style="background:url(images/focus/focus_lb.png);background-repeat:no-repeat;"></td>
+            <td style="background:url(images/focus/focus_b.png);background-repeat:repeat-x;">&nbsp;</td>
+            <td width="50" style="background:url(images/focus/focus_rb.png);background-repeat:no-repeat;"></td>
+        </tr>
+    </table>
+</div>
+<!--自适应焦点 end-->
+
+
+<div id="pop_up" style="position:absolute; left:0px; top:0px; width:1280px; height:720px; background-image:url(images/037.png); background-repeat:no-repeat; overflow:hidden; display:none; z-index:999;">
+	<div id="pop_up_bg" style="position: absolute; left: 441px; top: 195px; width: 391px; height: 200px; background-image: url(images/038.png); color: #FFF; font-size: 23px; text-align: center; line-height: 30px; background-repeat: no-repeat;">
+    	<table style="position: absolute; left: 15px; top: 8px; width: 361px; height: 120px;" cellpadding="0" cellspacing="0">
+        	<tr>
+            	<td id="pop_up_text" width="100%" height="100%" align="center">&nbsp;</td>
+            </tr>
+        </table>
+      <div id="pop_up_btn0" style="position: absolute; left: 0px; top: 142px; width: 196px; height: 58px; line-height: 58px; font-size: 25px; background-image: url(images/tm.gif);"></div>
+        <div id="pop_up_btn1" style="position: absolute; left: 195px; top: 142px; width: 196px; height: 58px; line-height: 58px; font-size: 25px; background-image: url(images/tm.gif);"></div>
+        <div id="pop_up_btn2" style="position: absolute; left: 118px; top: 133px; width: 156px; height: 46px; line-height: 46px; font-size: 25px; background-image: url(images/040.png);"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript">
+var searchObj = {
+	area : 1,
+	pos : [0, 0, 0],
+	size : [2, 1, 2],
+	
+	search_text : "",
+	data_arr_pos : 0,
+	focusObj : $("self_ad_focus"),
+	dataArray : [
+		{id:"search_all_btn", size_line:6, x:118, y:161, x_dis:64, y_dis:64, width:120, height:120, img:"images/070.png", array:["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]},
+		{id:"search_t9_btn", size_line:3, x:118, y:161, x_dis:128, y_dis:128, width:184, height:185, img:"images/069.png", array:[
+			["0", "1"],
+			["2", "A", "B", "C"],
+			["3", "D", "E", "F"],
+			["4", "G", "H", "I"],
+			["5", "J", "K", "L"],
+			["6", "M", "N", "O"],
+			["7", "P", "Q", "R", "S"],
+			["8", "T", "U", "V"],
+			["9", "W", "X", "Y", "Z"]
+		]}
+	],
+	
+	init : function(_data_arr_pos) {
+		this.data_arr_pos = _data_arr_pos || 0;
+		this.size[1] = this.dataArray[this.data_arr_pos].array.length;
+		$(this.dataArray[this.data_arr_pos].id).style.display = "block";
+		$(this.dataArray[(this.data_arr_pos + 1) % this.size[2]].id).style.display = "none";
+	},
+	
+	t9_focus_max_size : 5,
+	t9_focus_cur_size : 0,
+	t9_focus_zb_arr : [
+		[0, 0],
+		[128, 0],
+		[256, 0],
+		[0, 128],
+		[128, 128],
+		[256, 128],
+		[0, 256],
+		[128, 256],
+		[256, 256]
+	],
+	
+	t9_focus_index : 0,
+	t9_pos : 0,
+	showT9Focus : function(_arr, _index) {
+		this.area = 3;
+		var array = _arr || [];
+		var index = _index || 0;
+		this.t9_focus_index = index;
+		this.t9_focus_cur_size = array.length > this.t9_focus_max_size ? this.t9_focus_max_size : array.length;
+		
+		for(var i = 0; i < this.t9_focus_max_size; i++) {
+			if(i < this.t9_focus_cur_size) {
+				$("search_t9_btn_focus" + i).innerHTML = array[i];
+				$("search_t9_btn_focus" + i).style.visibility = "visible";
+			} else {
+				$("search_t9_btn_focus" + i).style.visibility = "hidden";
+			}
+		}
+		$("search_t9_btn_focus").style.left = this.t9_focus_zb_arr[index][0] + "px";
+		$("search_t9_btn_focus").style.top = this.t9_focus_zb_arr[index][1] + "px";
+		$("search_t9_btn_focus").style.display = "block";
+		
+		this.T9FocusMove();
+	},
+	
+	hiddenT9Focus : function(_pos) {
+		var pos = _pos || 0;
+		if(-1 == pos) {
+			this.area = 1;
+			$("search_t9_btn_focus").style.display = "none";
+		} else {
+			if(-2 == pos) {
+				pos = this.t9_pos;
+			}
+			if(pos < this.t9_focus_cur_size && pos >= 0) {
+				this.area = 1;
+				if(2 == pos && 0 == this.t9_focus_index) {
+					this.search_text += " ";
+				} else {
+					this.search_text += $("search_t9_btn_focus" + pos).innerHTML;
+				}
+				this.showSearchText();
+				$("search_t9_btn_focus").style.display = "none";
+			}
+		}
+	},
+	
+	T9FocusMove : function(_num, _dir) {
+		var num = _num || 0;
+		var dir = _dir || 0;
+		var pos = 0;
+		
+		switch(this.t9_pos) {
+			case 0 :
+				if(num > 0 && 0 == dir) {
+					pos = 3;
+				} else if(num < 0 && 0 == dir) {
+					pos = 2;
+				} else if(num > 0 && 1 == dir) {
+					pos = 4;
+				} else if(num < 0 && 1 == dir) {
+					pos = 1;
+				} else if(0 != num) {
+					return;
+				}
+				break;
+			case 1 :
+				if(num > 0 && 1 == dir) {
+					pos = 0;
+				} else if(0 != num) {
+					return;
+				}
+				break;
+			case 2 :
+				if(num > 0 && 0 == dir) {
+					pos = 0;
+				} else if(0 != num) {
+					return;
+				}
+				break;
+			case 3 :
+				if(num < 0 && 0 == dir) {
+					pos = 0;
+				} else if(0 != num) {
+					return;
+				}
+				break;
+			case 4 :
+				if(num < 0 && 1 == dir) {
+					pos = 0;
+				} else if(0 != num) {
+					return;
+				}
+				break;
+		}
+		
+		if(pos >= 0 && pos < this.t9_focus_cur_size) {
+			$("search_t9_btn_focus" + this.t9_pos).style.backgroundColor = "#fff";
+			this.t9_pos = pos;
+			$("search_t9_btn_focus" + this.t9_pos).style.backgroundColor = "rgb(0, 255, 84)";
+		}
+	},
+	
+	focusOn : function(_flag) {
+		if(!_flag) {
+			this.focusObj.style.visibility = "visible";
+		}
+		switch(this.area) {
+			case 0 :
+				$("search_top_btn" + this.pos[0]).style.backgroundImage = "url(images/tm.gif)";
+				break;
+			case 1 :
+				$(this.dataArray[this.data_arr_pos].id + this.pos[1]).style.backgroundImage = "url(images/tm.gif)";
+				break;
+			case 2 :
+				$("search_bottom_btn" + this.pos[2]).style.backgroundImage = "url(images/tm.gif)";
+				break;
+		}
+	},
+	
+	focusOut : function(_flag) {
+		if(!_flag) {
+			this.focusObj.style.visibility = "hidden";
+		}
+		switch(this.area) {
+			case 0 :
+				$("search_top_btn" + this.pos[0]).style.backgroundImage = "url(images/074.png)";
+				break;
+			case 1 :
+				$(this.dataArray[this.data_arr_pos].id + this.pos[1]).style.backgroundImage = "url(" + this.dataArray[this.data_arr_pos].img + ")";
+				break;
+			case 2 :
+				$("search_bottom_btn" + this.pos[2]).style.backgroundImage = "url(images/074.png)";
+				break;
+		}
+	},
+	
+	moveX : function(_num) {
+		if(3 == this.area) {
+			//this.hiddenT9Focus(_num > 0 ? 3 : 2);
+			this.T9FocusMove(_num, 0);
+		} else {
+			this.focusMove(_num);
+		}
+	},
+	
+	moveY : function(_num) {
+		switch(this.area) {
+			case 0 :
+				if(_num > 0) {
+					if(1 == this.pos[0]) {
+						this.pos[1] = this.dataArray[this.data_arr_pos].size_line - 1;
+					} else if(0 == this.pos[0]) {
+						this.pos[1] = 0;
+					}
+					this.focusOut();
+					this.area = 1;
+					this.focusOn();
+				}
+				break;
+			case 1 :
+				if(_num > 0 && this.pos[1] > this.size[1] - this.dataArray[this.data_arr_pos].size_line - 1) {
+					if(0 == Math.round((this.pos[1] %this.dataArray[this.data_arr_pos].size_line)  / this.dataArray[this.data_arr_pos].size_line)) {
+						this.pos[2] = 0;
+					} else {
+						this.pos[2] = 1;
+					}
+					this.focusOut();
+					this.area = 2;
+					this.focusOn();
+				} else if(_num < 0 && this.pos[1] < this.dataArray[this.data_arr_pos].size_line) {
+					if(0 == Math.round(this.pos[1] / this.dataArray[this.data_arr_pos].size_line)) {
+						this.pos[0] = 0;
+					} else {
+						this.pos[0] = 1;
+					}
+					this.focusOut();
+					this.area = 0;
+					this.focusOn();
+				} else {
+					this.focusMove(_num * this.dataArray[this.data_arr_pos].size_line);
+				}
+				break;
+			case 2 :
+				if(_num < 0) {
+					if(1 == this.pos[2]) {
+						this.pos[1] = this.size[1] - 1;
+					} else if(0 == this.pos[2]) {
+						this.pos[1] = this.size[1] - this.dataArray[this.data_arr_pos].size_line;
+					}
+					this.focusOut();
+					this.area = 1;
+					this.focusOn();
+				}
+				break;
+			case 3 :
+				//this.hiddenT9Focus(_num > 0 ? 4 : 1);
+				this.T9FocusMove(_num, 1);
+				break;
+		}
+		this.focusMove();
+	},
+	
+	focusMove : function(_num) {
+		var num = _num || 0;
+		var pos = this.pos[this.area] + num;
+		var obj;
+		if(pos >= 0 && pos < this.size[this.area]) {
+			this.focusOut(1);
+			this.pos[this.area] = pos;
+			this.focusOn(1);
+			
+			var left = 0, top = 0, width = 0, height = 0;
+			if(1 == this.area) {
+				var obj_in = this.dataArray[this.data_arr_pos];
+				left = obj_in.x + (pos % obj_in.size_line) * obj_in.x_dis;
+				top = obj_in.y + Math.floor(pos / obj_in.size_line) * obj_in.y_dis;
+				width = obj_in.width;
+				height = obj_in.height;
+			} else {
+				left = 118 + (pos % 2) * 192;
+				top = 0 == this.area ? 92 : 555;
+				width = 248;
+				height = 116;
+			}
+			
+			this.focusObj.style.left = left +  "px";
+			this.focusObj.style.top = top +  "px";
+			this.focusObj.style.width = width +  "px";
+			this.focusObj.style.height = height +  "px";
+		}
+	},
+	
+	showSearchText : function(_flag) {
+		if("" != this.search_text) {
+			$("search_text").innerHTML = this.search_text;
+			$("search_text").style.color = "#FFF";
+			
+			oparateObj.search_flag = 1;
+			$("hot_search").style.display = "none";
+			
+			if(!_flag) {
+				searchResultListObj.pos = 0;
+				searchResultListObj.page_pos = 0;
+			}
+			initListData(this.search_text);
+		} else {
+			$("search_text").innerHTML = "请输入歌曲首字母";
+			$("search_text").style.color = "#999";
+			
+			oparateObj.search_flag = 0;
+			$("hot_search").style.display = "block";
+			$("search_result").style.display = "none";
+			$("no_result").style.display = "none";
+		}
+	},
+	
+	doSelect : function() {
+		switch(this.area) {
+			case 0 :
+				this.init(this.pos[this.area]);
+				break;
+			case 1 :
+				if(0 == this.data_arr_pos) {
+					this.search_text += this.dataArray[0].array[this.pos[this.area]];
+					this.showSearchText();
+				} else {
+					this.showT9Focus(this.dataArray[1].array[this.pos[this.area]], this.pos[this.area]);
+				}
+				break;
+			case 2 :
+				if(0 == this.pos[this.area]) {
+					this.search_text = "";
+				} else {
+					this.search_text = this.search_text.substring(0, this.search_text.length - 1);
+				}
+				this.showSearchText();
+				break;
+			case 3 :
+				this.hiddenT9Focus(-2);
+				break;
+		}
+	}
+}
+
+var hotSearchListObj = {
+	pos : 0,
+	max_size : 9,
+	get_flag : false, //表示是否在拿数据中
+	cur_size : 0,
+	size_line : 1,
+	page_pos : 0,
+	page_size : 1,
+	len : 0,
+	focusObj : $("self_ad_focus"),
+	dataArray : [],
+	
+	init : function(_arr) {
+		this.dataArray = _arr || this.dataArray;
+		this.len = this.dataArray.length;
+		
+		this.page_size = Math.ceil(this.len / this.max_size);
+		if(this.page_pos >= this.page_size) {
+			this.page_pos = this.page_size - 1;
+		}
+		
+		this.show();
+	},
+	
+	show : function() {
+		if(this.page_pos == this.page_size - 1) {
+			if(0 != this.len && 0 == this.len % this.max_size) {
+				this.cur_size = this.max_size;
+			} else {
+				this.cur_size = this.len % this.max_size;
+			}
+		} else {
+			this.cur_size = this.max_size;
+		}
+		
+		var obj;
+		var num = this.page_pos * this.max_size;
+		for(var i = 0; i < this.max_size; i++) {
+			if(i < this.cur_size) {
+				obj = this.dataArray[num + i];
+				$("hot_search_list" + i + "_title").innerHTML = obj.name;
+				if("MV" == obj.ctype) {
+					$("hot_search_list" + i + "_img").src = "images/099.png";
+				} else {
+					$("hot_search_list" + i + "_img").src = "images/tm.gif";
+				}
+				$("hot_search_list" + i).style.visibility = "visible";
+			} else {
+				$("hot_search_list" + i).style.visibility = "hidden";
+			}
+		}
+	},
+	
+	time_out : 0,
+	initFocusOn : function(_flag) {
+		var num = this.page_pos * this.max_size + this.pos;
+		var obj = this.dataArray[num];
+		if(obj) {
+			this.time_out = showTitleForMarquee(obj.name, $("hot_search_list" + this.pos + "_title"), 11);
+		}
+		if(!_flag) {
+			this.focusObj.style.width = "552px";
+			this.focusObj.style.height = "112px";
+			this.focusObj.style.left = "597px";
+			if(checkSTBType()) {
+				this.focusObj.style.webkitTransitionDuration = "350ms";
+			}
+		}
+	},
+	focusOn : function(_flag) {
+		var num = this.page_pos * this.max_size + this.pos;
+		var obj = this.dataArray[num];
+		if(obj) {
+			this.time_out = showTitleForMarquee(obj.name, $("hot_search_list" + this.pos + "_title"), 11);
+		}
+		if(!_flag) {
+			this.focusObj.style.visibility = "visible";
+			this.focusObj.style.width = "552px";
+			this.focusObj.style.height = "112px";
+			this.focusObj.style.left = "597px";
+			if(checkSTBType()) {
+				this.focusObj.style.webkitTransitionDuration = "350ms";
+			}
+		}
+	},
+	
+	focusOut : function(_flag) {
+		clearTimeout(this.time_out);
+		var num = this.page_pos * this.max_size + this.pos;
+		$("hot_search_list" + this.pos + "_title").innerHTML = this.dataArray[num].name;
+		if(!_flag) {
+			this.focusObj.style.visibility = "hidden";
+			if(checkSTBType()) {
+				this.focusObj.style.webkitTransitionDuration = "0ms";
+			}
+		}
+	},
+	
+	focusMove : function(_num) {
+		var num = _num || 0;
+		var pos = this.pos + num;
+		
+		if(pos < 0) {
+			this.changePage(-1);
+		} else if(pos >= this.cur_size) {
+			this.changePage(1);
+		} else {
+			this.focusOut(1);
+			this.pos = pos;
+			
+			this.focusObj.style.top = 92 + 60 * this.pos + "px";
+			this.focusOn(1);
+		}
+	},
+	
+	changePage : function(_num) {
+		/*var num = _num || 0;
+		var pos = this.page_pos + num;
+		if(pos >= 0 && pos < this.page_size) {
+			this.pos = 0;
+			this.page_pos = pos;
+			
+			this.show();
+			this.focusMove();
+		}*/
+	},
+	
+	doSelect : function() {
+		var backUrl = window.location.href.split("?")[0] + "?area=" + oparateObj.area + "&h_pos="
+            + this.pos + "&h_p_pos=" + this.page_pos + "&backUrl=" + Q.encode(oparateObj.backUrl)
+            +"&test="+paramObj.test+"&prid="+paramObj.prid+"&rid="+oparateObj.rid;
+		var num = this.page_pos * this.max_size + this.pos;
+		var obj = this.dataArray[num];
+        ajaxForAuth(obj,backUrl,function (authResult) {
+            checkAndToPlay(authResult,backUrl,"","",paramObj.prid,paramObj.test);
+        },function () {
+            console.log("报错");
+        });
+	}
+};
+
+var searchResultListObj = {
+	pos : 0,
+	max_size : 9,
+	get_flag : false, //表示是否在拿数据中
+	cur_size : 0,
+	size_line : 1,
+	page_pos : 0,
+	page_size : 1,
+	len : 0,
+	focusObj : $("self_ad_focus"),
+	dataArray : [],
+	
+	init : function(_arr) {
+		this.dataArray = _arr || this.dataArray;
+		this.len = this.dataArray.length;
+		
+		if(this.len > 0) {
+			$("no_result").style.display = "none";
+			$("search_result").style.display = "block";
+			$("search_num").innerHTML = this.len;
+		} else {
+			$("no_result").style.display = "block";
+			$("search_result").style.display = "none";
+			return;
+		}
+		
+		this.page_size = Math.ceil(this.len / this.max_size);
+		if(this.page_pos >= this.page_size) {
+			this.page_pos = this.page_size - 1;
+		}
+		
+		this.show();
+		$("prop_img").style.height = 500 / this.len + "px";
+	},
+	
+	show : function() {
+		if(this.page_pos == this.page_size - 1) {
+			if(0 != this.len && 0 == this.len % this.max_size) {
+				this.cur_size = this.max_size;
+			} else {
+				this.cur_size = this.len % this.max_size;
+			}
+		} else {
+			this.cur_size = this.max_size;
+		}
+		
+		var obj;
+		var num = this.page_pos * this.max_size;
+		for(var i = 0; i < this.max_size; i++) {
+			if(i < this.cur_size) {
+				obj = this.dataArray[num + i];
+				$("search_result_list" + i + "_title").innerHTML = obj.name;
+				$("search_result_list" + i + "_name").innerHTML = obj.singer_name;
+				
+				if("mv" == obj.type) {
+					$("search_result_list" + i + "_img").src = "images/099.png";
+				} else {
+					$("search_result_list" + i + "_img").src = "images/tm.gif";
+				}
+				$("search_result_list" + i).style.visibility = "visible";
+			} else {
+				$("search_result_list" + i).style.visibility = "hidden";
+			}
+		}
+		
+		$("page_num").innerHTML = (this.page_pos + 1) + "/" + this.page_size;
+	},
+	
+	time_out : 0,
+	initFocusOn : function(_flag) {
+		var num = this.page_pos * this.max_size + this.pos;
+		var obj = this.dataArray[num];
+		if(obj) {
+			this.time_out = showTitleForMarquee(obj.name, $("search_result_list" + this.pos + "_title"), 11);
+		}
+		if(!_flag) {
+			this.focusObj.style.width = "552px";
+			this.focusObj.style.height = "112px";
+			this.focusObj.style.left = "597px";
+			if(checkSTBType()) {
+				this.focusObj.style.webkitTransitionDuration = "350ms";
+			}
+		}
+	},
+	focusOn : function(_flag) {
+		var num = this.page_pos * this.max_size + this.pos;
+		var obj = this.dataArray[num];
+		if(obj) {
+			this.time_out = showTitleForMarquee(obj.name, $("search_result_list" + this.pos + "_title"), 11);
+		}
+		if(!_flag) {
+			this.focusObj.style.visibility = "visible";
+			this.focusObj.style.width = "552px";
+			this.focusObj.style.height = "112px";
+			this.focusObj.style.left = "597px";
+			if(checkSTBType()) {
+				this.focusObj.style.webkitTransitionDuration = "350ms";
+			}
+		}
+	},
+	
+	focusOut : function(_flag) {
+		clearTimeout(this.time_out);
+		var num = this.page_pos * this.max_size + this.pos;
+		$("search_result_list" + this.pos + "_title").innerHTML = this.dataArray[num].name;
+		if(!_flag) {
+			this.focusObj.style.visibility = "hidden";
+			if(checkSTBType()) {
+				this.focusObj.style.webkitTransitionDuration = "0ms";
+			}
+		}
+	},
+	
+	focusMove : function(_num) {
+		var num = _num || 0;
+		var pos = this.pos + num;
+		if(pos < 0) {
+			this.changePage(-1);
+		} else if(pos >= this.cur_size) {
+			this.changePage(1);
+		} else {
+			this.focusOut(1);
+			this.pos = pos;
+			
+			this.focusObj.style.top = 92 + 60 * this.pos + "px";
+			this.focusOn(1);
+		}
+		$("prop").style.top = 61 + (this.pos + this.page_pos * this.max_size) * (500 / this.len) + "px";
+	},
+	
+	changePage : function(_num) {
+		var num = _num || 0;
+		var pos = this.page_pos + num;
+		if(pos >= 0 && pos < this.page_size) {
+			this.pos = 0;
+			this.page_pos = pos;
+			
+			this.show();
+			this.focusMove();
+		}
+	},
+	
+	doSelect : function() {
+		var backUrl = window.location.href.split("?")[0] + "?area=" + oparateObj.area + "&search_text="
+            + searchObj.search_text + "&s_pos=" + this.pos + "&s_p_pos="
+            + this.page_pos + "&backUrl=" + Q.encode(oparateObj.backUrl)
+            +"&test="+paramObj.test+"&prid="+paramObj.prid+"&rid="+oparateObj.rid;
+		var num = this.page_pos * this.max_size + this.pos;
+		var obj = this.dataArray[num];
+		//此处不再请求详情（请求鉴权）
+        ajaxForAuth(obj,backUrl,function (authResult) {
+            checkAndToPlay(authResult,backUrl,"","",paramObj.prid,paramObj.test);
+        },function () {
+            console.log("报错");
+        });
+	}
+};
+
+var oparateObj = {
+	area : 0,
+	search_flag : 0,
+	
+	backUrl : "",
+	recommendId:1,
+	panelId:11,
+	pagelevel:2,
+	init : function() {
+		this.getParameter();
+		searchObj.init();
+		this.focusOn("init");
+		searchObj.showSearchText(1);
+		if("" == searchObj.search_text){
+			initListData();
+		}
+		dcHTMLToReciveServlet(this.backUrl.split("?")[0], window.location.href.split("?")[0], "qq_music_search");
+	},
+	
+	getParameter : function() {
+		var search_text = Q.getDecoded("search_text");
+		if(null != search_text && "null" != search_text) {
+			searchObj.search_text = search_text;
+		}
+		var area = Q.getDecoded("area");
+		if(null != area && "null" != area) {
+			this.area = parseInt(area);
+		}
+		var s_pos = Q.getDecoded("s_pos");
+		if(null != s_pos && "null" != s_pos) {
+			searchResultListObj.pos = parseInt(s_pos);
+		}
+		var s_p_pos = Q.getDecoded("s_p_pos");
+		if(null != s_p_pos && "null" != s_p_pos) {
+			searchResultListObj.page_pos = parseInt(s_p_pos);
+		}
+		var h_pos = Q.getDecoded("h_pos");
+		if(null != h_pos && "null" != h_pos) {
+			hotSearchListObj.pos = parseInt(h_pos);
+		}
+		var h_p_pos = Q.getDecoded("h_p_pos");
+		if(null != h_p_pos && "null" != h_p_pos) {
+			hotSearchListObj.page_pos = parseInt(h_p_pos);
+		}
+
+        var rid = Q.getDecoded("rid");
+        if(null != rid && "null" != rid) {
+            this.rid = rid;
+        }
+		
+		var backUrl = Q.getDecoded("backUrl");
+		if(null != backUrl && "null" != backUrl) {
+			this.backUrl = backUrl;
+		}
+	},
+	
+	focusOn : function(init) {
+		switch(this.area) {
+			case 0 :
+				searchObj.focusOn();
+				searchObj.focusMove();
+				break;
+			case 1 :
+				if(init==="init"){
+					searchResultListObj.initFocusOn();
+				}else{
+					searchResultListObj.focusOn();
+				}
+				searchResultListObj.focusMove();
+				break;
+			case 2 :
+				if(init==="init"){
+					hotSearchListObj.initFocusOn();
+				}else{
+					hotSearchListObj.focusOn();
+				}
+				hotSearchListObj.focusMove();
+				break;
+			case 10 :
+				popUpObj.focusOn();
+				break;
+		}
+	},
+	
+	focusOut : function() {
+		switch(this.area) {
+			case 0 :
+				searchObj.focusOut();
+				break;
+			case 1 :
+				searchResultListObj.focusOut();
+				break;
+			case 2 :
+				hotSearchListObj.focusOut();
+				break;
+			case 10 :
+				popUpObj.focusOut();
+				break;
+		}
+	},
+	
+	moveX : function(_num) {
+		switch(this.area) {
+			case 0 :
+				if(_num > 0 && ((0 == searchObj.area && 1 == searchObj.pos[0]) || (2 == searchObj.area && 1 == searchObj.pos[2]) || (1 == searchObj.area && searchObj.dataArray[searchObj.data_arr_pos].size_line - 1 == searchObj.pos[1] % searchObj.dataArray[searchObj.data_arr_pos].size_line))) {
+					if(searchResultListObj.len < 1 && 1 == this.search_flag) {
+						return;
+					}
+					this.focusOut();
+					this.area = 0 == this.search_flag ? 2 : 1;
+					this.focusOn();
+				} else {
+					searchObj.moveX(_num);
+				}
+				break;
+			case 1 :
+				if(_num < 0) {
+					this.focusOut();
+					this.area = 0;
+					this.focusOn();
+				}
+				break;
+			case 2 :
+				if(_num < 0) {
+					this.focusOut();
+					this.area = 0;
+					this.focusOn();
+				}
+				break;
+			case 10 :
+				popUpObj.focusMove(_num);
+				break;
+		}
+	},
+	
+	moveY : function(_num) {
+		switch(this.area) {
+			case 0 :
+				searchObj.moveY(_num);
+				break;
+			case 1 :
+			 	searchResultListObj.focusMove(_num * searchResultListObj.size_line);
+				break;
+			case 2 :
+				hotSearchListObj.focusMove(_num * hotSearchListObj.size_line);
+				break;
+			case 10 :
+				
+				break;
+		}
+	},
+	
+	changePage : function(_num) {
+		if(1 == this.area) {
+			searchResultListObj.changePage(_num);
+		}
+	},
+	
+	doSelect : function() {
+		ajaxForPanelClick();
+		switch(this.area) {
+			case 0 :
+				searchObj.doSelect();
+				break;
+			case 1 :
+				searchResultListObj.doSelect();
+				break;
+			case 2 :
+				hotSearchListObj.doSelect();
+				break;
+			case 10 :
+				popUpObj.doSelect();
+				break;
+		}
+	},
+	
+	doBack : function() {
+		if(10 == this.area) {
+			popUpObj.hidden();
+		} else if(3 == searchObj.area) {
+			searchObj.hiddenT9Focus(-1);
+		} else {
+			location.href = oparateObj.backUrl;
+		}
+	}
+};
+
+function init() {
+	searchObj.focusObj.style.visibility = "hidden";
+	initglobalParam();
+	checkAndInitPress();
+	oparateObj.init();
+	if(checkSTBType()) {
+		$("prop").style.webkitTransitionDuration = "350ms";
+	}
+}
+
+window.onload = init;
+
+function initListData(_keywords) {
+	var keywords = _keywords || "";
+	if("" != keywords) {
+		ajaxForSearchProgram(_keywords);
+	} else {
+		oparateObj.focusOn("init");
+		ajaxForHotSearchProgram();
+	}
+	paramObj.endtime = getCurrntTime();
+	ajaxForExposure();
+}
+
+
+function ajaxForHotSearchProgram() {
+	ajax({
+		url: paramObj.serverUrl + "/hotSearch?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId="
+            + getCAcardNum()+"&test="+paramObj.test,// 请求的URL,可传参数
+		type: "POST", //HTTP 请求类型,GET或POST
+		onSuccess: function(html){ //请求成功后执行[可选]
+			var json = eval('('+html+')');
+			if("0" == json.code) {
+				hotSearchListObj.init(json.data);
+				oparateObj.focusOn();
+				payBackPlay(hotSearchListObj);
+				searchObj.focusObj.style.visibility = "visible";
+			} else {
+				
+			}
+		},
+		onError:function(){ //请求失败后执行[可选]
+			popUpObj.init("获取数据失败！");
+		},
+        onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+		   // alert("onComplete");	             			           		  
+        },
+        post:"", 
+        timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+	});
+}
+
+function ajaxForSearchProgram(_keywords) {
+	var keywords = _keywords || "";
+	ajax({
+		url: paramObj.serverUrl + "/search?pinyin=" + keywords+"&rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId="
+            + getCAcardNum()+"&test="+paramObj.test,// 请求的URL,可传参数
+		type: "POST", //HTTP 请求类型,GET或POST
+		onSuccess: function(html){ //请求成功后执行[可选]
+			var json = eval('('+html+')');
+			if("0" == json.code) {
+				searchResultListObj.init(json.data);
+				oparateObj.focusOn();
+				payBackPlay(searchResultListObj);
+				searchObj.focusObj.style.visibility = "visible";
+			} else {
+				
+			}
+		},
+		onError:function(){ //请求失败后执行[可选]
+			popUpObj.init("获取数据失败！");
+		},
+        onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+		   // alert("onComplete");	             			           		  
+        },
+        post:"", 
+        timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+	});
+}
+</script>
+</body>
+</html>
+

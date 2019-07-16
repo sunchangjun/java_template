@@ -1,0 +1,230 @@
+package hk.reco.music.iptv.common.service.stb;
+
+import hk.reco.music.iptv.common.dao.IptvResDailyPlayDao;
+import hk.reco.music.iptv.common.domain.IptvPage;
+import hk.reco.music.iptv.common.domain.IptvPageResult;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.enums.IptvPlatform;
+import hk.reco.music.iptv.common.exception.IptvBusinessException;
+import hk.reco.music.iptv.common.exception.IptvError;
+import hk.reco.music.iptv.common.stats.IptvSpecialRid;
+import hk.reco.music.iptv.common.stats.IptvStatsAction;
+import hk.reco.music.iptv.common.stats.IptvStatsLogger;
+
+import java.sql.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+/**
+ * 整合过后服务,适合web与apk,适合test和prod环境
+ * @author zhangsl
+ * @date 2019年5月27日
+ */
+@Service
+public class IptvStbCommonService {
+	
+	@Autowired
+	protected IptvStbProdService prodService;
+
+	@Autowired
+	protected IptvStbTestService testService;
+	@Autowired
+	protected IptvResDailyPlayDao iptvResDailyPlayDao;
+	
+	private static final Logger log = LoggerFactory.getLogger(IptvStbCommonService.class);
+	
+	protected IptvStbAbstract getService(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, Long extrid, 
+			String pinyin, IptvObjectEnum type, Integer duration, String method, boolean test) throws Exception{
+		platform = (platform==null)?IptvPlatform.apk:platform;
+		String data = IptvStatsLogger.data(IptvStatsAction.reqs, ip, mac, userId, prid, rid, extrid, pinyin, type, duration, method, platform, test);
+		log.info(data);
+		return (test) ? testService : prodService;
+	}
+	
+	//取所有的顶层布局
+	public List<IptvResVer> get_layouts_impl(IptvPlatform platform, String ip, String mac, String userId, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, null, IptvSpecialRid.root, null, null, null, null, "get_layouts_impl", test);
+		List<IptvResVer> vers = service.findLayoutList();
+		return vers;
+	}
+
+	//根据顶层布局rid取内容
+	public List<IptvResVer> get_layout_by_rid_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_layout_by_rid_impl", test);
+		List<IptvResVer> vers = service.findLayoutByRid(rid);
+		return vers;
+	}
+
+	//取歌手分类
+	public List<IptvResVer> get_singer_category_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_singer_category_impl", test);
+		List<IptvResVer> vers = service.findListByTypeAndChildTypeImpl(IptvObjectEnum.cate,IptvObjectEnum.singer);
+		return vers;
+	}
+
+	//取分类下的资源,类型可能是[singer|diss|mv]等
+	public IptvPageResult get_cate_content_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, String pinyin, IptvPage page,
+			boolean test) throws Exception {
+		int offset = page.getOffset();
+		int size = page.getSize();
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, pinyin, null, null, "get_cate_content_list_impl", test);
+		return service.findCategoryContentList(rid, pinyin, offset, size);
+	}
+
+	//根据歌手rid取下面的歌曲
+	public IptvPageResult get_singer_song_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, IptvPage page, boolean test)
+			throws Exception {
+		int offset = page.getOffset();
+		int size = page.getSize();
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_singer_song_list_impl", test);
+		return service.findSingerContentList(rid, offset, size);
+	}
+
+	//取歌单分类
+	public List<IptvResVer> get_diss_category_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_diss_category_impl", test);
+		List<IptvResVer> vers = service.findListByTypeAndChildTypeImpl(IptvObjectEnum.cate,IptvObjectEnum.diss);
+		return vers;
+	}
+
+	//取歌单下的song
+	public IptvPageResult get_diss_song_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, IptvPage page, boolean test)
+			throws Exception {
+		int offset = page.getOffset();
+		int size = page.getSize();
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_diss_song_list_impl", test);
+		return service.findDissContentList(rid, offset, size);
+	}
+
+	//歌曲详情
+	public IptvResVer get_song_info_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_song_info_impl", test);
+		IptvResVer ver = service.findSongByRid(rid);
+		return ver;
+	}
+
+	//取榜单分类,共计两层
+	public List<IptvResVer> get_top_category_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_top_category_impl", test);
+		List<IptvResVer> vers = service.findListByTypeAndChildType2Impl(IptvObjectEnum.cate,IptvObjectEnum.top);
+		return vers;
+	}
+
+	//由榜单rid取下面的内容(song|mv)
+	public IptvPageResult get_top_content_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, IptvPage page, boolean test) throws Exception {
+		int offset = page.getOffset();
+		int size = page.getSize();
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_top_content_list_impl", test);
+		return service.findTopContentList(rid,offset,size);
+	}
+
+	//由栏目rid取下面的内容(song|mv|diss|column|singer)
+	public IptvPageResult get_column_content_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, IptvPage page, boolean test)
+			throws Exception {
+		int offset = page.getOffset();
+		int size = page.getSize();
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_column_content_list_impl", test);
+		return service.findColumnContentList(rid,offset,size);
+	}
+
+	//拼音首字母搜索
+	public IptvPageResult get_search_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, String pinyin, String type, int offset, int size, boolean test)
+			throws Exception {
+		if(type!=null && (type.equals(IptvObjectEnum.song.name()) || type.equals(IptvObjectEnum.mv.name()) || type.equals(IptvObjectEnum.singer.name()))){
+			IptvObjectEnum v = IptvObjectEnum.valueOf(type);
+			IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.search_by_pinyin, pinyin, v, null, "get_search_list_impl", test);
+			return service.findSearchList(v,pinyin,offset,size);
+		}else{
+			throw new IptvBusinessException(IptvError.SEARCH_TYPE_ERROR);
+		}
+	}
+	
+	//搜索页提供一部分推荐内容(type=[song|mv|singer])
+	public List<IptvResVer> get_search_reco_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, String type, Integer size, boolean test) throws Exception {
+		if(size == null){
+			size = 20;
+		}
+		if(type!=null && (type.equals(IptvObjectEnum.song.name()) || type.equals(IptvObjectEnum.mv.name()) || type.equals(IptvObjectEnum.singer.name()))){
+			IptvObjectEnum v = IptvObjectEnum.valueOf(type);
+			IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.search_recommend, null, v, null, "get_search_reco_list_impl", test);
+			return service.findRecoList(v, size);
+		}else{
+			throw new IptvBusinessException(IptvError.SEARCH_TYPE_ERROR);
+		}
+	}
+
+	//由mv的rid取详情
+	public IptvResVer get_mv_info_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_mv_info_impl", test);
+		IptvResVer ver = service.findMvByRid(rid);
+		return ver;
+	}
+
+	//用户取收藏(一次性取完)
+	public List<IptvResVer> get_user_collect_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.get_user_collect, null, null, null, "get_user_collect_list_impl", test);
+		return service.findUserCollectList(userId);
+	}
+
+	//用户添加收藏(最多100个,如果超过会顶掉最老的,如果有重复只更新时间)
+	public void user_collect_add_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.add_user_collect, null, null, null, "user_collect_add_impl", test);
+		service.addUserCollect(mac, userId, rid);
+	}
+
+	//用户删除收藏
+	public void user_collect_del_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.del_user_collect, null, null, null, "user_collect_add_impl", test);
+		service.delUserCollect(userId, rid);
+	}
+
+	//用户取播放历史(一次性取完)
+	public List<IptvResVer> user_play_history_list_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.get_user_history, null, null, null, "user_play_history_list_impl", test);
+		return service.findUserPlayHistoryList(userId);
+	}
+
+	//用户添加播放历史(type=[song|mv])
+	public void user_play_history_add_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.add_user_history, null, null, null, "user_play_history_add_impl", test);
+		service.addUserPlayHistory(mac, userId, rid);
+	}
+	
+	//用户删除播放历史
+	public void user_play_history_del_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, long rid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, IptvSpecialRid.del_user_history, null, null, null, "user_play_history_del_impl", test);
+		service.delUserPlayHistory(mac, userId, rid);
+	}
+
+	//取mv分类
+	public List<IptvResVer> get_mv_category_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, null, null, null, null, null, "get_mv_category_impl", test);
+		return service.findListByTypeAndChildTypeImpl(IptvObjectEnum.cate,IptvObjectEnum.mv);
+	}
+
+	//取免费内容(song|mv)
+	public IptvPageResult get_free_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, IptvObjectEnum type, int offset, int size, boolean test) throws Exception {
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, type, null, "get_free_impl", test);
+		return service.findFreeResImpl(type, offset, size);
+	}
+
+	//上报播放内容与时长(song|mv),以秒为单位
+	public void play_report_impl(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, Integer duration, boolean test) throws Exception {
+		platform = (platform==null)?IptvPlatform.apk:platform;
+		String data = IptvStatsLogger.data(IptvStatsAction.play, ip, mac, userId, prid, rid, null, null, null, duration, "play_report_impl", platform, test);
+		log.info(data);
+		this.iptvResDailyPlayDao.addDailyPlayNum(new Date(System.currentTimeMillis()), rid);
+	}
+	
+	//查找html5专题
+	public IptvResVer find_html_theme(IptvPlatform platform, String ip, String mac, String userId, Long prid, Long rid, boolean test) throws Exception {
+		platform = (platform==null)?IptvPlatform.apk:platform;
+		IptvStbAbstract service = this.getService(platform, ip, mac, userId, prid, rid, null, null, null, null, "find_html_theme", test);
+		return service.findHtmlThemeImpl(rid);
+	}
+	
+}

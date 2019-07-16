@@ -1,0 +1,82 @@
+package hk.reco.music.iptv.common.domain;
+
+
+public class EasyUiBaseQuery{
+
+    private Integer page=1;
+
+    private Integer rows=2;
+
+    private String type;
+
+    private String name;
+
+    private Boolean globalstatus;
+
+    private Boolean submit;
+    
+    private boolean singerAffect;//歌手上下线对数据的影响
+
+    public Boolean getGlobalstatus() {
+        return globalstatus;
+    }
+
+    public void setGlobalstatus(Boolean globalstatus) {
+        this.globalstatus = globalstatus;
+    }
+
+    public Boolean getSubmit() {
+        return submit;
+    }
+
+    public void setSubmit(Boolean submit) {
+        this.submit = submit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+	public boolean isSingerAffect() {
+		return singerAffect;
+	}
+
+	public void setSingerAffect(boolean singerAffect) {
+		this.singerAffect = singerAffect;
+	}
+
+	@Override
+	public String toString() {
+		return "EasyUiBaseQuery [page=" + page + ", rows=" + rows + ", type=" + type + ", name=" + name + ", globalstatus=" + globalstatus + ", submit="
+				+ submit + ", singerAffect=" + singerAffect + "]";
+	}
+    
+}

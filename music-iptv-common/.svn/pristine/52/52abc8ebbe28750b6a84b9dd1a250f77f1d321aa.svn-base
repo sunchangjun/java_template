@@ -1,0 +1,49 @@
+package hk.reco.music.iptv.common.service;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import hk.reco.music.iptv.common.dao.IptvConsoleUserDao;
+import hk.reco.music.iptv.common.domain.EasyUiBaseQuery;
+import hk.reco.music.iptv.common.domain.EasyUiListResult;
+import hk.reco.music.iptv.common.domain.IptvConsoleUser;
+import hk.reco.music.iptv.common.utils.BaseDaoSupport;
+
+@Service
+public class IptvConsoleUserService extends BaseDaoSupport{
+	
+	@Autowired
+	private IptvConsoleUserDao userDao;
+
+	public IptvConsoleUser findUserByUserName(String userName) {
+		// TODO Auto-generated method stub
+		return userDao.findUserByUserName(userName);
+	}
+	
+    
+	public EasyUiListResult<IptvConsoleUser> findAllUserForList() {
+		// TODO Auto-generated method stub
+		return this.getListPageSupportByWeb("hk.reco.music.iptv.common.dao.IptvConsoleUserDao.findAllUserForList", new EasyUiBaseQuery());
+	}
+
+
+	public void saveUser(IptvConsoleUser user) {
+		// TODO Auto-generated method stub
+		userDao.saveUser(user);
+	}
+
+
+	public IptvConsoleUser findUserById(Integer userId) {
+		// TODO Auto-generated method stub
+		return userDao.findUserById(userId);
+	}
+
+
+	public void deleteUser(Integer userId) {
+		// TODO Auto-generated method stub
+		userDao.deleteUser(userId);
+	}
+	
+
+}

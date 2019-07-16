@@ -1,0 +1,21 @@
+package hk.reco.music.iptv.common.utils;
+
+public class Constant {
+	/**
+	 * session中的用户
+	 */
+	final public static String USER_IN_SESSION = "user_in_session";
+	/**
+	 * session中的用户
+	 */
+	final public static String CONSOLE_USER_IN_SESSION = "console_user_in_session";
+	/**
+	 * session中的验证码
+	 */
+	final public static String VALIDATECODE_IN_SESSION = "validatecode_in_session";
+	/**
+	 * 系统环境
+	 */
+	final public static String SYSTEM_ENV = "sysenv";
+
+}

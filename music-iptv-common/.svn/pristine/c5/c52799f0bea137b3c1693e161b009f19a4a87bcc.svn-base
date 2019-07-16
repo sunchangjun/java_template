@@ -1,0 +1,79 @@
+package hk.reco.music.iptv.common.ctrl;
+
+
+import hk.reco.music.iptv.common.domain.EasyUiTreeModel;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.service.IptvConsolePrivilegeService;
+import hk.reco.music.iptv.common.service.IptvConsoleResService;
+import hk.reco.music.iptv.common.utils.JsonUtils;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+@RequestMapping("console/privilege")
+public class IptvConsolePrivilegeController {
+	
+	
+	@Autowired
+	private IptvConsolePrivilegeService privilegeService;
+	@Autowired
+	private IptvConsoleResService iptvConsoleResService;
+
+	@RequestMapping("list")
+	public String list() {
+		return "privilege/list";
+	}
+	
+
+	@RequestMapping("listData")
+	@ResponseBody
+	public Object listData() {
+		return privilegeService.findAllPrivilegeForList();
+	}
+
+
+	@RequestMapping("layoutData")
+	@ResponseBody
+	public Object layoutData() {
+		List<IptvResVer> vers = this.iptvConsoleResService.consoleFindLayoutTree(3,false);
+		System.out.println(JsonUtils.toJson(vers));
+		List<EasyUiTreeModel> model = new ArrayList<>();
+		for (IptvResVer ver : vers) {
+			EasyUiTreeModel md = new EasyUiTreeModel();
+			md.setId(ver.getRid());
+			md.setText(ver.getName());
+			md.setData(ver);
+			md.setIconCls("icon-unsubmit");
+			if(ver.getCommit()){
+				md.setIconCls("icon-submit");
+			}
+			List<IptvResVer> links = ver.getList();
+			List<EasyUiTreeModel> children = new ArrayList<>();
+			for (IptvResVer link : links) {
+				EasyUiTreeModel child = new EasyUiTreeModel();
+				child.setId(link.getRid());
+				child.setText(link.getName());
+				child.setData(link);
+				child.setIconCls("icon-submit");
+				if(!link.getCommit()){
+					child.setIconCls("icon-unsubmit");
+				}
+				children.add(child);
+			}
+			md.setChildren(children);
+			model.add(md);
+		}
+		return model;
+	}
+
+
+
+
+
+}

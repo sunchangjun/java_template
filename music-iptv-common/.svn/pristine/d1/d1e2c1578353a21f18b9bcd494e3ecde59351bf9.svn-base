@@ -1,0 +1,31 @@
+package hk.reco.music.iptv.common.service;
+
+import hk.reco.music.iptv.common.utils.IptvFileUtils;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+/**
+ * 文件服务工具加载service,如果要使用文件服务,请用IptvFileUtils.java
+ * @author zhangsl
+ * @date 2019年2月22日
+ */
+@Service
+public class IptvFileService {
+	
+	@Value("${iptv.file.root}")
+	private String root;
+	@Value("${iptv.file.http.prefix}")
+	private String httpPrefix;
+	
+	/**
+	 * 初始化IptvFileUtils
+	 */
+	@PostConstruct
+	public void initIptvFileUtils(){
+		IptvFileUtils.initFileEnv(root, httpPrefix);
+	}
+	
+}

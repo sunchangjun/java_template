@@ -1,0 +1,457 @@
+package hk.reco.music.iptv.common.tool;
+
+import com.jcraft.jsch.JSchException;
+
+import hk.reco.music.iptv.common.dao.IptvMultiSingerDao;
+import hk.reco.music.iptv.common.dao.IptvResDao;
+import hk.reco.music.iptv.common.dao.IptvResVerDao;
+import hk.reco.music.iptv.common.domain.IptvRes;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.service.IptvConsoleResService;
+import hk.reco.music.iptv.common.ssh.JschConnect;
+import hk.reco.music.iptv.common.utils.HttpUtils;
+import hk.reco.music.iptv.common.utils.IptvFileUtils;
+import hk.reco.music.iptv.common.utils.QmPicUtils;
+import hk.reco.music.iptv.common.utils.IptvPinyinUtils;
+import hk.reco.music.iptv.common.wthx.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PreDestroy;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 初始化工具类,用于singer,song,mv等资源的导入
+ * @author zhangsl
+ * @date 2019年2月25日
+ */
+@Service("iptvImportApi")
+public class IptvImportApi {
+	
+	@Value("${iptv.file.ssh.ip}")
+	private String ip;
+	@Value("${iptv.file.ssh.user}")
+	private String user;
+	@Value("${iptv.file.ssh.pwd}")
+	private String pwd;
+	@Value("${iptv.mv.cate.def}")
+	private String mvCateDef;
+	@Autowired
+	private IptvResDao iptvResDao;
+	@Autowired
+	private IptvResVerDao iptvResVerDao;
+	@Autowired
+	private IptvMultiSingerDao iptvMultiSingerDao;
+	@Autowired
+	private IptvConsoleResService iptvConsoleResService;
+	@Autowired
+	private QmResourceService qmService;
+	private static Logger logger = LoggerFactory.getLogger(IptvImportApi.class);
+	protected static Map<String,IptvResVer> singerCategorys = new HashMap<String,IptvResVer>();
+	protected static JschConnect ssh;
+	private List<String> mvCates;//预定义的mv分类
+	
+	static{
+		singerCategorys.put("t4,0",IptvResVer.createCategory(IptvObjectEnum.singer, "内地男歌手", "t4,0", "d:/singer-category/内地男歌手.png",5));
+		singerCategorys.put("t4,1",IptvResVer.createCategory(IptvObjectEnum.singer, "内地女歌手", "t4,1", "d:/singer-category/内地女歌手.png",5));
+		singerCategorys.put("t4,2",IptvResVer.createCategory(IptvObjectEnum.singer, "内地组合", "t4,2", "d:/singer-category/内地组合.png",5));
+		singerCategorys.put("t5,0",IptvResVer.createCategory(IptvObjectEnum.singer, "港台男歌手", "t5,0", "d:/singer-category/港台男歌手.png",5));
+		singerCategorys.put("t5,1",IptvResVer.createCategory(IptvObjectEnum.singer, "港台女歌手", "t5,1","d:/singer-category/港台女歌手.png", 5));
+		singerCategorys.put("t5,2",IptvResVer.createCategory(IptvObjectEnum.singer, "港台组合", "t5,2", "d:/singer-category/港台组合.png",5));
+		singerCategorys.put("t6,0",IptvResVer.createCategory(IptvObjectEnum.singer, "韩国男歌手", "t6,0", "d:/singer-category/韩国男歌手.png",5));
+		singerCategorys.put("t6,1",IptvResVer.createCategory(IptvObjectEnum.singer, "韩国女歌手", "t6,1", "d:/singer-category/韩国女歌手.png",5));
+		singerCategorys.put("t6,2",IptvResVer.createCategory(IptvObjectEnum.singer, "韩国组合", "t6,2", "d:/singer-category/韩国组合.png",5));
+		singerCategorys.put("t7,0",IptvResVer.createCategory(IptvObjectEnum.singer, "日本男歌手", "t7,0", "d:/singer-category/日本男歌手.png",5));
+		singerCategorys.put("t7,1",IptvResVer.createCategory(IptvObjectEnum.singer, "日本女歌手", "t7,1", "d:/singer-category/日本女歌手.png",5));
+		singerCategorys.put("t7,2",IptvResVer.createCategory(IptvObjectEnum.singer, "日本组合", "t7,2", "d:/singer-category/日本组合.png",5));
+		singerCategorys.put("t8,0",IptvResVer.createCategory(IptvObjectEnum.singer, "欧美男歌手", "t8,0", "d:/singer-category/欧美男歌手.png",5));
+		singerCategorys.put("t8,1",IptvResVer.createCategory(IptvObjectEnum.singer, "欧美女歌手", "t8,1", "d:/singer-category/欧美女歌手.png",5));
+		singerCategorys.put("t8,2",IptvResVer.createCategory(IptvObjectEnum.singer, "欧美组合", "t8,2","d:/singer-category/欧美组合.png", 5));
+	}
+	
+	@Autowired
+	public void initSsh(){
+		try {
+			ssh = new JschConnect(ip,user,pwd);
+		} catch (JSchException e) {
+			e.printStackTrace();
+			throw new java.lang.IllegalStateException(e.getMessage());
+		}
+		//解析mv分类的预定义
+		mvCates = StringUtils.isBlank(mvCateDef)?new ArrayList<String>():Arrays.asList(mvCateDef.split(","));
+	}
+	
+	/**
+	 * 歌单导入,指定下面的歌曲
+	 * @param res_id 歌单res_id
+	 * @param song_ids 歌曲的res_ids
+	 * @param batch_num
+	 * @param applyToProduct
+	 * @param appendVer
+	 * @return
+	 * @throws Exception
+	 */
+	public IptvRes handleDiss(QmDiss diss, String targetTag, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		//创建歌单(如果不存在res_id相同的)
+		IptvResVer iptv_diss = IptvResVer.createDiss(diss.getDiss_name(), diss.getPic_local(), diss.getPic_local(),
+				diss.getRes_id(), diss.getDiss_id(), diss.getListen_num(),batch_num);
+		this.createIptvResVerIfResIdNotFound(iptv_diss, applyToProduct, appendVer);
+        //处理歌单的分类
+        IptvRes diss_cate = this.iptvResDao.findByCateIds(targetTag + ",6");//歌单的类型为6
+        if(diss_cate == null){//不存在则开始创建diss-cate
+            diss_cate = this.handleDissCategory(targetTag, batch_num, applyToProduct, appendVer);
+        }
+        if(iptv_diss.isNewCreate() || diss_cate.isNewCreate()){
+            IptvResVer iptv_link = IptvResVer.createLink(diss_cate.getRid(), iptv_diss.getRid(),batch_num);
+            this.importLink(iptv_link,applyToProduct);
+        }
+		List<QmSong> songs = this.qmService.findSongByDissid(diss.getDiss_id());
+		for(QmSong song : songs){
+			long song_id = song.getRes_id();
+			IptvRes iptv_song = this.handleSong(song_id, batch_num, applyToProduct, appendVer);
+			if(iptv_diss.isNewCreate() || iptv_song.isNewCreate()){
+				IptvResVer iptv_link = IptvResVer.createLink(iptv_diss.getRid(), iptv_song.getRid(),batch_num);
+				this.importLink(iptv_link,applyToProduct);
+			}
+		}
+		return iptv_diss;
+	}
+	
+	/**
+	 * 创建歌单的cate
+	 * @param targetTag
+	 * @param batch_num
+	 * @param applyToProduct
+	 * @param appendVer
+	 * @return
+	 * @throws Exception
+	 */
+	public IptvRes handleDissCategory(String targetTag, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		QmTags tag = this.qmService.findTagById(Long.parseLong(targetTag.substring(1)));//找到这个tag
+		IptvResVer diss_cate = IptvResVer.createCategory(IptvObjectEnum.diss, tag.getTag_name(), targetTag + ",6", tag.getPic_url(), batch_num);
+		IptvImportApi.sshPosterToServer(diss_cate);//传输封面图片
+		this.iptvConsoleResService.createResVer(diss_cate, applyToProduct);
+		return diss_cate;
+	}
+	
+	/**
+	 * 导入歌曲资源,处理方法如下:
+	 * 1-当歌曲存在时,导入的歌曲作为test的最新版,当歌曲不存在时,新导入的也作为test的最新版
+	 * 2-歌曲导入时会在qm库中查找singer资源,如果不存在则会导入
+	 * @param song 歌曲res_id
+	 * @param applyToProduct true 导入的歌曲到product; false 只是先提交到测试环境作为最新版,后期在管理平台上手动提交到product
+	 * @param appendVer song对象存在时,是再次上传song形成这个歌手的新版本
+	 * @return
+	 * @throws Exception
+	 */
+	public IptvRes handleSong(long res_id, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		QmSong song = this.qmService.findSongByResid(res_id);
+		if(song == null){
+			throw new Exception("song res_id:"+ res_id+" not exist");
+		}
+		//处理singer begin
+		QmSinger singer = this.qmService.findSingerByid(song.getSinger_id());
+		IptvRes iptv_singer = this.handleSinger(singer.getRes_id(), batch_num, applyToProduct, appendVer);//如果存在,不修改歌手信息
+		//处理singer end
+		QmAlbum album = this.qmService.findAlbumById(song.getAlbum_id());//找到歌的专辑
+		String song_pic_mid_url = (album != null)?QmPicUtils.getAlbumImg300x300(album.getAlbum_mid()):QmPicUtils.getSingerImg300x300(singer.getSinger_mid());//专辑为空时,使用歌手的图片
+		String song_pic_big_url = (album != null)?QmPicUtils.getAlbumImg500x500(album.getAlbum_mid()):QmPicUtils.getSingerImg500x500(singer.getSinger_mid());//专辑为空时,使用歌手的图片
+		IptvResVer iptv_song = IptvResVer.createSong(song.getSong_name(), IptvPinyinUtils.getShortPinYin(song.getSong_name()), song_pic_mid_url, song_pic_big_url,
+				null,song.getLyric_local(),song.getRes_id(), song.getSong_id(), song.getMv_id(), batch_num);
+		this.createIptvResVerIfResIdNotFound(iptv_song, applyToProduct, appendVer);
+		
+		//如果有mv,则将关联的mv导入进来
+		if(song.getMv_id()!=null){
+			QmMv qmMv = this.qmService.findMvByMvid(song.getMv_id());
+			// add by alistair.chow for qmMv 非空判断
+			if(qmMv != null){
+				this.handleMv(qmMv.getRes_id(), qmMv.getTags(), batch_num, applyToProduct, appendVer);
+			}
+			// end add
+		}
+		
+		//创建song<->singer的link
+		if(iptv_singer.isNewCreate() || iptv_song.isNewCreate()){
+			IptvResVer iptv_link = IptvResVer.createLink(iptv_singer.getRid(), iptv_song.getRid(),batch_num);
+			this.importLink(iptv_link,applyToProduct);
+		}
+		//创建multi_singer的link
+		if(iptv_song.isNewCreate()){
+			this.iptvMultiSingerDao.insert(iptv_singer.getRid(), iptv_song.getRid());
+		}
+		return iptv_song;
+	}
+
+    //导入mv
+	public IptvRes handleMv(long res_id, String tags, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		QmMv mv = this.qmService.findMvByResid(res_id);
+		if(mv == null){
+			throw new Exception("mv res_id:"+ res_id+" not exist");
+		}
+		//处理singer begin
+		QmSinger singer = this.qmService.findSingerByid(mv.getSinger_id());
+		//如果存在,不修改歌手信息
+		IptvRes iptv_singer = this.handleSinger(singer.getRes_id(), batch_num, applyToProduct, appendVer);
+		//处理singer end
+		IptvResVer iptv_mv = IptvResVer.createMv(mv.getMv_title(), IptvPinyinUtils.getShortPinYin(mv.getMv_title()), 
+				QmPicUtils.getMvMidUrl(mv.getMv_vid()),QmPicUtils.getMvBigUrl(mv.getMv_vid()),
+				res_id, mv.getMv_id(), mv.getMv_play_time(), batch_num);
+		this.createIptvResVerIfResIdNotFound(iptv_mv, applyToProduct, appendVer);
+
+        if(iptv_mv.isNewCreate() && tags!=null){
+        	for(String tag : tags.split(",")){
+        		if(mvCates.contains(tag)){
+        			IptvRes mv_cate = this.iptvResDao.findByCateIds(tag);
+                    if(mv_cate == null){//不存在则开始创建mv-cate
+                        mv_cate = this.handleMvCategory(tag, batch_num, applyToProduct, appendVer);
+                    }
+                    IptvResVer iptv_link = IptvResVer.createLink(mv_cate.getRid(), iptv_mv.getRid(),batch_num);
+                    this.importLink(iptv_link,applyToProduct);
+        		}
+        	}
+        }
+
+		//创建song<->singer的link
+		if(iptv_singer.isNewCreate() || iptv_mv.isNewCreate()){
+			IptvResVer iptv_link = IptvResVer.createLink(iptv_singer.getRid(), iptv_mv.getRid(),batch_num);
+			this.importLink(iptv_link,applyToProduct);
+		}
+		if(iptv_mv.isNewCreate()){
+			this.iptvMultiSingerDao.insert(iptv_singer.getRid(), iptv_mv.getRid());
+		}
+		return iptv_mv;
+	}
+
+	//处理mv的分类
+	public IptvRes handleMvCategory(String ttag, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		QmTags tag = this.qmService.findTagById(Long.parseLong(ttag.substring(1)));//找到这个tag
+		IptvResVer mv_cate = IptvResVer.createCategory(IptvObjectEnum.mv, tag.getTag_name(), ttag, tag.getPic_url(), batch_num);
+		IptvImportApi.sshPosterToServer(mv_cate);//传输封面图片
+		this.iptvConsoleResService.createResVer(mv_cate, applyToProduct);
+		return mv_cate;
+	}
+	
+	//导入歌手时,注意将singer的tag查出来,并且将标签
+	public IptvRes handleSinger(long res_id, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception {
+		QmSinger qms = this.qmService.findSingerByResid(res_id);
+		if(qms == null){
+			throw new Exception("singer res_id:"+ res_id+" not exist");
+		}
+		IptvResVer iptv_singer = IptvResVer.createSinger(qms.getSinger_name(), qms.getCountry(), qms.getType(),IptvPinyinUtils.getShortPinYin(qms.getSinger_name()),
+				QmPicUtils.getSingerImg300x300(qms.getSinger_mid()),QmPicUtils.getSingerImg500x500(qms.getSinger_mid()),
+				qms.getRes_id(), qms.getSinger_id(), batch_num);
+		this.createIptvResVerIfResIdNotFound(iptv_singer, applyToProduct, appendVer);
+		if(iptv_singer.isNewCreate()){//歌手必须是新建的,才处理他的category
+			this.handleSingerCategory(qms, iptv_singer, batch_num, applyToProduct, appendVer);
+		}
+		return iptv_singer;
+	}
+	
+	//处理或创建分类,这个可以被子类继承
+	public void handleSingerCategory(QmSinger qms, IptvResVer iptv_singer, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		if(qms.getTags()==null || qms.getTags().equals("")){//有些歌手没有标签
+			return;
+		}
+		String[] ps = qms.getTags().split(",");
+		for(String p : ps){
+			String cate_ids = p+","+qms.getType();
+			if(singerCategorys.containsKey(cate_ids)){
+				IptvResVer cate = singerCategorys.get(cate_ids);
+				if(cate.getRid() == null){
+					IptvRes dbcate = this.iptvResDao.findByCateIds(cate_ids);
+					if(dbcate == null){//没入库,准备开始入库
+						IptvImportApi.sshPosterToServer(cate);
+						this.iptvConsoleResService.createResVer(cate, false);
+					}else{
+						cate.setRid(dbcate.getRid());
+					}
+				}
+				//创建cate<->singer的link
+				IptvResVer iptv_link = IptvResVer.createLink(cate.getRid(),iptv_singer.getRid(), batch_num);
+				this.importLink(iptv_link,applyToProduct);
+			}
+		}
+	}
+	
+	public IptvRes handleTop(QmTop top, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		//创建榜单(不存在cate_ids相同的就创建)
+		IptvResVer iptv_top = IptvResVer.createTop(IptvObjectEnum.song, top.getTop_name(), top.getTop_header_pic(), "top:"+top.getGroup_id()+","+top.getTop_id(),batch_num);
+		this.createIptvResVerIfCateIdsNotFound(iptv_top, applyToProduct, appendVer);
+		//创建榜单所属分类
+		if(iptv_top.isNewCreate()){
+			IptvResVer iptv_top_cate = IptvResVer.createTopCategory(IptvObjectEnum.top, top.getGroup_name(), null, "top:"+top.getGroup_id(), batch_num);
+			this.createIptvResVerIfCateIdsNotFound(iptv_top_cate, applyToProduct, appendVer);
+			IptvResVer iptv_link = IptvResVer.createLink(iptv_top_cate.getRid(), iptv_top.getRid(),batch_num);//link
+			this.importLink(iptv_link,applyToProduct);
+		}
+		
+		List<QmSong> songs = this.qmService.findSongByTopid(top.getId());
+		for(QmSong song : songs){
+			long song_id = song.getRes_id();
+			IptvRes iptv_song = this.handleSong(song_id, batch_num, applyToProduct, appendVer);
+			if(iptv_top.isNewCreate() || iptv_song.isNewCreate()){
+				IptvResVer iptv_link = IptvResVer.createLink(iptv_top.getRid(), iptv_song.getRid(),batch_num);
+				this.importLink(iptv_link,applyToProduct);
+			}
+		}
+		return iptv_top;
+	}
+	
+	public IptvRes handleMvTop(QmMvTop top, String tag, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		//创建榜单(不存在cate_ids相同的就创建)// mv的group_id固定为2
+		IptvResVer iptv_top = IptvResVer.createTop(IptvObjectEnum.mv, top.getTop_name(), top.getTop_pic(), "top:"+top.getGroup_id()+","+top.getId(),batch_num);
+		this.createIptvResVerIfCateIdsNotFound(iptv_top, applyToProduct, appendVer);
+		//创建榜单所属分类
+		if(iptv_top.isNewCreate()){//创建父子联系(MV巅峰榜<->MV内地榜等)
+			IptvResVer iptv_top_cate = IptvResVer.createTopCategory(IptvObjectEnum.top, top.getGroup_name(), null, "top:"+top.getGroup_id(), batch_num);
+			this.createIptvResVerIfCateIdsNotFound(iptv_top_cate, applyToProduct, appendVer);
+			IptvResVer iptv_link = IptvResVer.createLink(iptv_top_cate.getRid(), iptv_top.getRid(),batch_num);//link
+			this.importLink(iptv_link,applyToProduct);
+		}
+		
+		List<QmMv> mvs = this.qmService.findMvByTopid(top.getId());
+		for(QmMv mv : mvs){
+			long res_id = mv.getRes_id();
+			IptvRes iptv_mv = this.handleMv(res_id, tag, batch_num, applyToProduct, appendVer);
+			if(iptv_top.isNewCreate() || iptv_mv.isNewCreate()){
+				IptvResVer iptv_link = IptvResVer.createLink(iptv_top.getRid(), iptv_mv.getRid(), Float.valueOf(mv.getSort()), batch_num);
+				this.importLink(iptv_link,applyToProduct);
+			}
+		}
+		return iptv_top;
+	}
+	
+	//导入mv栏目
+	public IptvRes handleColumn(String columnName, IptvObjectEnum child, boolean regular, long[] exist_mv_rids, int batch_num, boolean applyToProduct, boolean appendVer) throws Exception{
+		//1-创建栏目(此处不检测库内已经存在)
+		IptvResVer iptv_column = IptvResVer.createColumn(IptvObjectEnum.column, child, columnName, 2, regular, batch_num);
+		this.iptvConsoleResService.createResVer(iptv_column, applyToProduct);
+		for(long mv_rid : exist_mv_rids){
+			IptvResVer iptv_link = IptvResVer.createLink(iptv_column.getRid(), mv_rid,batch_num);
+			this.importLink(iptv_link,applyToProduct);
+		}
+		return iptv_column;
+	}
+	
+	/**
+	 * 导入各类资源,res_id重复的不会再创建
+	 * @param ver
+	 * @param toProduct
+	 * @param appendVer
+	 * @throws Exception
+	 */
+	public void createIptvResVerIfResIdNotFound(IptvResVer ver, boolean toProduct, boolean appendVer) throws Exception{
+		Long res_id = ver.getRes_id();
+		IptvRes res = this.iptvConsoleResService.findByResId(res_id);
+		if(res == null){
+			IptvImportApi.sshPosterToServer(ver);
+			this.iptvConsoleResService.createResVer(ver, toProduct);
+			logger.info("create res:"+ver.toString());
+		}else if(appendVer){//存在时,添加新版本
+			IptvImportApi.sshPosterToServer(ver);
+			this.iptvConsoleResService.appendResVer(ver, toProduct);
+			logger.info("append res:"+ver.toString());
+		}else{//存在,不添加新版本,不作任何修改
+			ver.setNewCreate(false);
+			ver.setRid(res.getRid());
+			logger.info("skip exist res:"+ver.toString());
+		}
+	}
+	
+	public void createIptvResVerIfCateIdsNotFound(IptvResVer ver, boolean toProduct, boolean appendVer) throws Exception{
+		IptvRes res = this.iptvResDao.findByCateIds(ver.getCate_ids());
+		if(res == null){
+			IptvImportApi.sshPosterToServer(ver);
+			this.iptvConsoleResService.createResVer(ver, toProduct);
+			logger.info("create res:"+ver.toString());
+		}else if(appendVer){//存在时,添加新版本
+			IptvImportApi.sshPosterToServer(ver);
+			this.iptvConsoleResService.appendResVer(ver, toProduct);
+			logger.info("append res:"+ver.toString());
+		}else{//存在,不添加新版本,不作任何修改
+			ver.setNewCreate(false);
+			ver.setRid(res.getRid());
+			logger.info("skip exist res:"+ver.toString());
+		}
+	}
+	
+	/**
+	 * 导入link
+	 * @param link
+	 * @param applyToProduct
+	 * @throws Exception
+	 */
+	public void importLink(IptvResVer link, boolean applyToProduct) throws Exception{
+		this.iptvConsoleResService.createResVer(link, applyToProduct);
+	}
+	
+	/**
+	 * 将图片传输到远端服务器上,完成后会将bposter及sposter置为服务器上相对地址
+	 * 当bposter及sposter相同时,只传一份到服务器
+	 * @param ver
+	 * @throws Exception
+	 */
+	private static void sshPosterToServer(IptvResVer ver) throws Exception{
+		String surl = ver.getSposter();
+		if(StringUtils.isNotBlank(surl)){
+			ver.setSposter(transferBySsh(surl));
+			if(surl.equals(ver.getBposter())){//图片相同,指向同一地址,不再上传
+				ver.setBposter(ver.getSposter());
+			}else{
+				//单独处理地址不同的大图片
+				if(StringUtils.isNotBlank(ver.getBposter())){
+					ver.setBposter(transferBySsh(ver.getBposter()));
+				}
+			}
+		}
+		//处理歌词文件
+		if(StringUtils.isNotBlank(ver.getMedia_lyric())){
+			ver.setMedia_lyric(transferBySsh(ver.getMedia_lyric()));
+		}
+	}
+	
+	/**
+	 * 传输方法,当url为http时与本地文件实现不同
+	 * http协议地址会先将文件byte下载到内存,因此文件不能超过10M
+	 * @param url
+	 * @return 服务器上的相对地址
+	 * @throws Exception
+	 */
+	public static String transferBySsh(String url) {
+		try{
+			String path = null;
+			if(url.startsWith("http")){
+				byte[] bs = HttpUtils.getImageBytes(url);
+				path = IptvFileUtils.createFileAbsPath(bs);
+				InputStream is = new ByteArrayInputStream(bs); 
+				ssh.transfer(is, path);
+			}else{
+				path = IptvFileUtils.createFileAbsPath(url);
+				ssh.transfer(url, path);
+			}
+			return IptvFileUtils.getRelative(path);
+		} catch (Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@PreDestroy
+	public void destory(){
+		ssh.close();
+	}
+	
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hk.reco.music.iptv.common.dao.IptvUserDao" >
+
+	<insert id="insert" parameterType="hk.reco.music.iptv.common.domain.IptvUser">
+		INSERT INTO iptv_user(user_id,mac,create_time,test)values(#{user_id},#{mac},now(),#{test})
+	</insert>
+	
+	<insert id="ignoreInsertWhenExist" parameterType="hk.reco.music.iptv.common.domain.IptvUser">
+		INSERT IGNORE INTO iptv_user(user_id,mac,create_time,test)values(#{user_id},#{mac},now(),#{test})
+	</insert>
+	
+	<select id="findById" resultType="hk.reco.music.iptv.common.domain.IptvUser">
+		SELECT * FROM iptv_user u WHERE id=#{id}
+	</select>
+	
+</mapper>

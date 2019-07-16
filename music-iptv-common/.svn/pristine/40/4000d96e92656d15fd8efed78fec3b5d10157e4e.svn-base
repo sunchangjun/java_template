@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hk.reco.music.iptv.common.dao.IptvConsolePrivilegeDao">
+     
+     <select id="findTopPrivileges" resultType="hk.reco.music.iptv.common.domain.IptvConsolePrivilege">
+        SELECT * FROM  iptv_console_privilege WHERE parent_id IS NULL
+     </select>
+     
+     <select id="findPrivilegesByRoleId" resultType="hk.reco.music.iptv.common.domain.IptvConsolePrivilege" parameterType="int">
+        SELECT p.* FROM iptv_console_privilege p
+        JOIN iptv_console_role_privilege_ref rp ON p.id = rp.privilege_id
+        WHERE rp.role_id = #{roleId}
+     </select>
+     
+     <select id="findAllPrivilegeForList" resultType="hk.reco.music.iptv.common.domain.IptvConsolePrivilege">
+        SELECT * FROM iptv_console_privilege
+     </select>
+     
+     <select id="findAllPrivilegeForList_count" resultType="int">
+        SELECT COUNT(1) FROM iptv_console_privilege
+     </select>
+     
+     
+     
+</mapper>

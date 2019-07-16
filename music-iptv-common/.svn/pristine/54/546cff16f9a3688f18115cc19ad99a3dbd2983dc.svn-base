@@ -1,0 +1,129 @@
+package hk.reco.music.iptv.common.service.stb;
+
+import hk.reco.music.iptv.common.domain.IptvPageResult;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.exception.IptvBusinessException;
+import hk.reco.music.iptv.common.utils.IptvFileUtils;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+@Service
+public class IptvStbTestService extends IptvStbAbstract {
+
+	public IptvStbTestService() {
+		super(true);
+	}
+
+	@Override
+	public IptvResVer findSingerByRid(long rid)  throws IptvBusinessException{
+		return super.findResByRid(IptvObjectEnum.singer, rid);
+	}
+	
+	@Override
+	public IptvResVer findMvByRid(long rid)  throws IptvBusinessException{
+		return super.findResByRid(IptvObjectEnum.mv, rid);
+	}
+	
+	@Override
+	public IptvPageResult findSingerContentList(long prid, int offset, int size) {
+		return super.findListByRid(IptvObjectEnum.singer, IptvObjectEnum.song, prid, null, offset, size);
+	}
+	
+	@Override
+	public IptvPageResult findDissContentList(long prid, int offset, int size) {
+		return super.findListByRid(IptvObjectEnum.diss, null, prid, null,offset, size);
+	}
+	
+	@Override
+	public IptvResVer findSongByRid(long rid)  throws IptvBusinessException{
+		return super.findResByRid(IptvObjectEnum.song, rid);
+	}
+	
+	@Override
+	public List<IptvResVer> findLayoutByRid(long prid) {
+		return super.findLayoutByRidImpl(prid);
+	}
+	
+	@Override
+	public List<IptvResVer> findLayoutList() throws IptvBusinessException{
+		return findLayoutListImpl();
+	}
+
+	@Override
+	public List<IptvResVer> findListByTypeAndChildTypeImpl(IptvObjectEnum type, IptvObjectEnum childtype) {
+		return super.findListByTypeAndChildType(type,childtype);
+	}
+
+	@Override
+	public IptvPageResult findCategoryContentList(long prid, String pinyin, int offset, int size) {
+		return super.findListByRid(IptvObjectEnum.cate, null, prid, pinyin, offset, size);
+	}
+
+	@Override
+	public List<IptvResVer> findTopCategoryList() {
+		List<IptvResVer> cates = this.iptvResVerDao.findResListByTypeAndChildType(IptvObjectEnum.cate, IptvObjectEnum.top, test);//查出top分类
+		for(IptvResVer cate : cates){
+			List<IptvResVer> tops = this.iptvResVerDao.findResListPageable(IptvObjectEnum.cate, null, cate.getRid(), null, 0, 100000, test);
+			IptvFileUtils.toHttp(tops);
+			cate.setList(tops);
+		}
+		return cates;
+	}
+	
+	@Override
+	public IptvPageResult findTopContentList(long prid, int offset, int size) {
+		return super.findListByRid(IptvObjectEnum.top, null, prid, null,offset, size);
+	}
+
+	@Override
+	public IptvPageResult findColumnContentList(long prid, int offset, int size) {
+		return super.findListByRid(IptvObjectEnum.column, null, prid, null, offset, size);
+	}
+
+	@Override
+	public IptvPageResult findSearchList(IptvObjectEnum type, String pinyin, Integer offset, Integer size) {
+		return super.findSearchListImpl(type, pinyin, offset, size);
+	}
+
+	@Override
+	public List<IptvResVer> findRecoList(IptvObjectEnum type, int size) {
+		return super.findRecoListImpl(type, size);
+	}
+
+	@Override
+	public List<IptvResVer> findUserCollectList(String userid) {
+		return super.findUserCollectListImpl(userid);
+	}
+
+	@Override
+	public void addUserCollect(String mac, String userid, long rid)  throws IptvBusinessException{
+		super.addUserCollectImpl(mac, userid, rid);
+	}
+
+	@Override
+	public void delUserCollect(String userid, long rid) throws IptvBusinessException {
+		super.delUserCollectImpl(userid, rid);
+	}
+
+	@Override
+	public List<IptvResVer> findUserPlayHistoryList(String userid) {
+		return super.findUserPlayHistoryListImpl(userid);
+	}
+
+	@Override
+	public void addUserPlayHistory(String mac, String userid, long rid) throws IptvBusinessException {
+		super.addUserPlayHistoryImpl(mac, userid, rid);
+	}
+
+	@Override
+	public void delUserPlayHistory(String mac, String userid, long rid) throws IptvBusinessException {
+		super.delUserPlayHistoryImpl(mac, userid, rid);
+	}
+
+	@Override
+	public IptvPageResult findFreeResImpl(IptvObjectEnum type, int offset, int size) {
+		return super.findFreeRes(type, offset, size);
+	}
+}

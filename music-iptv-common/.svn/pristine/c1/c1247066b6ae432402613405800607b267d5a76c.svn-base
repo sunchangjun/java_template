@@ -1,0 +1,69 @@
+package hk.reco.music.iptv.common.service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import hk.reco.music.iptv.common.dao.IptvResDao;
+import hk.reco.music.iptv.common.dao.IptvResVerDao;
+import hk.reco.music.iptv.common.domain.IptvPageResult;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.utils.IptvFileUtils;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ * 资源服务
+ * @author zhangsl
+ * @date 2019年6月13日
+ */
+@Service
+public class IptvResVerService{
+
+	@Autowired
+	private IptvResDao iptvResDao;
+	@Autowired
+	private IptvResVerDao iptvResVerDao;
+
+	public List<IptvResVer> findListIncludeGlobalDisable(long prid, boolean test) {
+		List<IptvResVer> vers = this.iptvResVerDao.findResListIncludeGlobalDisable(prid, test);
+		for(IptvResVer ver : vers){
+			Boolean res_disable = ver.getGlobal_disable();
+			Boolean singer_disable = ver.getSinger_global_disable();
+			if((res_disable!=null && res_disable) || (singer_disable!=null && singer_disable)){
+				ver.setAvailable(false);
+			}else{
+				ver.setAvailable(true);
+			}
+			ver.setGlobal_disable(null);
+			ver.setSinger_global_disable(null);
+		}
+		IptvFileUtils.toHttp(vers);//处理地址
+		return vers;
+	}
+	
+	public List<IptvResVer> findListExcludeGlobalDisable(IptvObjectEnum type, IptvObjectEnum ctype, long prid, boolean test) {
+		List<IptvResVer> vers = this.iptvResVerDao.findResListPageable(type,ctype,prid,null,0,100000,test);
+		for(IptvResVer ver : vers){
+			ver.setAvailable(true);
+		}
+		IptvFileUtils.toHttp(vers);//处理地址
+		return vers;
+	}
+	
+	public IptvPageResult findListExcludeGlobalDisablePageable(IptvObjectEnum type, IptvObjectEnum ctype, long prid, String pinyin, int offset, int size, boolean test) {
+		IptvPageResult result = new IptvPageResult();
+		int total = this.iptvResVerDao.findResListPageableCount(type,ctype,prid,pinyin,test);
+		if(total>0){
+			List<IptvResVer> vers = this.iptvResVerDao.findResListPageable(type, ctype, prid, pinyin, offset, size, test);
+			IptvFileUtils.toHttp(vers);
+			result.setVers(vers);
+			result.setTotal(total);
+		}else{
+			result.setVers(new ArrayList<IptvResVer>());
+			result.setTotal(0);
+		}
+		return result;
+	}
+}

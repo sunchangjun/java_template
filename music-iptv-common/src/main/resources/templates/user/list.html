@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="head :: cssAndJs(title=~{::title/text()})">
+    <title>QQ音乐后台管理系统</title>
+  </head>
+<body>
+<div class="easyui-layout" data-options="fit:true">
+    <!-- Begin of toolbar -->
+    <div id="wu-toolbar-2">
+        <div class="wu-toolbar-button">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openAdd('wu-form','wu-dialog','addUser')" plain="true">添加</a>
+<!--             <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openEdit('wu-form','wu-dialog','dg','findUser','editor')" plain="true">修改</a> -->
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="remove('dg','deleteUser')" plain="true">删除</a>
+        </div>
+    </div>
+    <!-- End of toolbar -->
+    <table id="dg" class="easyui-datagrid" title="用户列表" style="height:100%;width:100%;"
+			data-options="singleSelect:true,collapsible:true,url:'listData',method:'get',pagination:true,
+				pageSize:10" toolbar="#wu-toolbar-2">
+		<thead>
+			<tr>
+				<th data-options="field:'id',width:100,align:'center'">ID</th>
+				<th data-options="field:'username',width:100,align:'center'">用户名</th>
+				<th data-options="field:'password',width:300,align:'center'">密码</th>
+				<th data-options="field:'roleName',width:100,align:'center'">用户角色</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+
+<div id="wu-dialog" class="easyui-dialog " data-options="closed:true,iconCls:'icon-save'" style="width:300px; padding:10px;">
+	<form id="wu-form" class="wu" method="post">
+        <table>
+        <input class="easyui-validatebox wu-text" type="hidden" name="id"/>
+            <tr style="margin-bottom: 10px;">
+                <td width="60" align="right">用户名:</td>
+                <td><input class="easyui-validatebox" type="text" name="username" data-options="prompt:'用户名',required:true"/></td>
+            </tr>
+            <tr style="margin-bottom: 10px;">
+                <td align="right">密码:</td>
+                <td><input class="easyui-validatebox"  type="text" name="password" data-options="prompt:'不填写默认为123456',required:true"/></td>
+            </tr>
+            <tr>
+                <td align="right">角色:</td>
+                <td><input class="easyui-combobox"  type="text" name="roleId" data-options="required:true,valueField:'id',textField:'name',url:'../role/allRoles'"/></td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		$('#dg').datagrid({loadFilter:pagerFilter});
+	});
+</script>
+</html>

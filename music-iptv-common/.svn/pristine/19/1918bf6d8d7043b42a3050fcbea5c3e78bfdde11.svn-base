@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="framecssAndJs (title)">
+    <title th:text="${title}"></title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <script type="text/javascript" th:src="@{/show/js/function.js}"></script>
+    <style>
+        *{
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        table,tr,td{
+            position: relative;
+            z-index: 5;
+        }
+
+
+        body{
+            overflow: hidden;
+        }
+
+        .main{
+            width: 1280px;
+            height: 720px;
+            /*background: blue;*/
+        }
+
+        .main-body{
+            left:65px;
+            top:0px;
+            width: 1150px;
+        }
+
+        .top{
+            top: 0;
+            left: 0;
+            padding:30px 0px;
+            text-align: center;
+            width: 1150px;
+        }
+
+        #columnBody{
+            width: 1150px;
+            height: auto;
+        }
+
+        .layout{
+            position: relative;
+            width: 100px;
+            display: inline;
+            margin: 0 15px;
+        }
+
+        .title{
+            position: static;
+            font-size: 20px;
+            font-weight:700;
+            padding-bottom: 3px;
+            font-size: 25px;
+            color: white;
+        }
+
+        .title-active{
+            color: rgb(0, 255, 84);
+            border-bottom: 4px solid rgb(0, 255, 84);
+        }
+
+        .title-on{
+            color: rgb(0, 255, 84);
+        }
+        /**
+        滚动条以后调兼容
+         */
+        .column-body{
+            top:135px;
+            width: 100%;
+            height: 585px;
+            overflow: hidden;
+          -ms-overflow-style: none;
+          overflow: -moz-scrollbars-none;
+        }
+
+        .column-body::-webkit-scrollbar { width: 0 !important }
+
+
+        .column-title{
+            width: 1150px;
+            height:38px;
+            line-height:38px;
+            font-size:22px;
+            color: #ffffff;
+        }
+
+        .column_pages{
+            width: 300px;
+            line-height: 38px;
+            height: 38px;
+            overflow: hidden;
+        }
+
+        .column_pages>img{
+            position: static;
+            width: 15px;
+            height: 15px;
+            margin-right: 13px;
+            line-height: 38px;
+            float: right;
+            vertical-align: middle;
+            margin-top: 9px;
+        }
+
+        .column{
+            width: 1150px;
+            height: auto;
+        }
+
+        .column1 img{
+            display: none;
+        }
+
+        .column2 img{
+            display: none;
+        }
+
+        #self_ad_focus{
+            position: absolute;
+            left: 30px;
+            top: 166px;
+            width: 240px;
+            height: 174px;
+            z-index: 5;
+            visibility: hidden;
+        }
+
+        #focus_link{
+            top:28px;
+            left:28px;
+            z-index: 4;
+        }
+
+        #focus_img{
+            height: 100%;
+            width: 100%;
+        }
+        .logo{
+            top:25px;
+            left: 50px;
+        }
+
+        .test{
+            top:20px;
+            color:red;
+            background: transparent;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 50;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            right: 30px;
+            display: none;
+        }
+
+        .log{
+            width: 1280px;
+            top:20px;
+            color:white;
+            background: black;
+            z-index: 25;
+            height: 300px;
+        }
+
+        .item-name{
+            left: 0;
+            bottom: 0;
+            color:white;
+            padding: 5px;
+        }
+
+        #focus_title{
+            left: 10px;
+            bottom: 10px;
+            color:white;
+            height: 24px;
+            line-height: 24px;
+        }
+        marquee{
+            width: 100% !important;
+            height: 100%;
+            line-height: 24px;
+        }
+    </style>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,309 @@
+package hk.reco.music.iptv.common.service.stb;
+
+import hk.reco.music.iptv.common.dao.IptvResDailyPlayDao;
+import hk.reco.music.iptv.common.dao.IptvResDao;
+import hk.reco.music.iptv.common.dao.IptvResVerDao;
+import hk.reco.music.iptv.common.dao.IptvUserCollectDao;
+import hk.reco.music.iptv.common.dao.IptvUserDao;
+import hk.reco.music.iptv.common.dao.IptvUserPlayHistoryDao;
+import hk.reco.music.iptv.common.domain.IptvPageResult;
+import hk.reco.music.iptv.common.domain.IptvRes;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.domain.IptvUser;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.exception.IptvBusinessException;
+import hk.reco.music.iptv.common.exception.IptvError;
+import hk.reco.music.iptv.common.service.IptvResVerService;
+import hk.reco.music.iptv.common.utils.IptvFileUtils;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public abstract class IptvStbAbstract {
+
+	@Autowired
+	protected IptvResDao iptvResDao;
+	@Autowired
+	protected IptvResVerDao iptvResVerDao;
+	@Autowired
+	protected IptvResVerService iptvResVerService;
+	@Autowired
+	protected IptvUserDao iptvUserDao;
+	@Autowired
+	protected IptvUserCollectDao iptvUserCollectDao;
+	@Autowired
+	protected IptvResDailyPlayDao iptvResDailyPlayDao;
+	@Autowired
+	protected IptvUserPlayHistoryDao iptvUserPlayHistoryDao;
+	
+	protected boolean test;
+	
+	public IptvStbAbstract(boolean test) {
+		this.test = test;
+	}
+
+	/**
+	 * 查找顶层布局,这是每个apk客户端进入时都要首先调用的,在生产环境会有缓存
+	 * @return
+	 */
+	public abstract List<IptvResVer> findLayoutList() throws IptvBusinessException;
+	public List<IptvResVer> findLayoutListImpl() throws IptvBusinessException{
+		List<IptvResVer> vers = this.iptvResVerDao.findResListByType(IptvObjectEnum.layout, 0, 10000, test);
+		IptvFileUtils.toHttp(vers);
+		return vers;
+	}
+	
+	public abstract List<IptvResVer> findLayoutByRid(long prid);
+	public List<IptvResVer> findLayoutByRidImpl(long prid){
+		List<IptvResVer> tree = new ArrayList<IptvResVer>();
+		this.recurisiveLayout(prid, true, 2, null, tree);
+		return tree;
+	}
+	public void recurisiveLayout(long prid, boolean regular, int deep, IptvResVer ver, List<IptvResVer> tree){
+		if(deep > 0){
+			List<IptvResVer> vers = regular?this.iptvResVerService.findListExcludeGlobalDisable(null, null, prid, test)
+					:this.iptvResVerService.findListIncludeGlobalDisable(prid, test);
+			if(ver == null){//顶层
+				tree.addAll(vers);
+			}else{
+				if(vers.size()>0){
+					ver.setList(vers);
+				}
+			}
+			for(IptvResVer sub : vers){
+				sub.setSort(null);
+				sub.setListen_num(null);
+				sub.setVid(null);
+				sub.setSort(null);
+				sub.setNewCreate(null);
+				sub.setLink_rid(null);
+				sub.setLink_vid(null);
+				IptvFileUtils.toHttp(sub);
+				boolean sub_regular = (sub.getLayout_regular()==null|| sub.getLayout_regular())?true:false;
+				recurisiveLayout(sub.getRid(), sub_regular, deep-1, sub, tree);
+			}
+		}
+	}
+	
+	/**
+	 * 查询h5专题
+	 * @param rid 专题id
+	 * @param test 环境
+	 * @return
+	 * @throws IptvBusinessException 
+	 */
+	public IptvResVer findHtmlThemeByRid(long rid) throws IptvBusinessException {
+		IptvResVer theme = this.findResByRid(IptvObjectEnum.theme, rid);
+		IptvFileUtils.toHttp(theme);//处理专题的地址
+		List<IptvResVer> vers = this.iptvResVerService.findListIncludeGlobalDisable(rid, test);
+		theme.setList(vers);
+		return theme;
+	}
+	public abstract IptvResVer findHtmlThemeByRidImpl(long rid) throws IptvBusinessException;
+	
+	public IptvPageResult findHtmlThemeList(IptvObjectEnum type, int offset, int size) throws IptvBusinessException{
+		IptvPageResult result = new IptvPageResult();
+		int total = this.iptvResVerDao.findResListByTypeCount(type, test);
+		if(total>0){
+			List<IptvResVer> vers = this.iptvResVerDao.findResListByType(type, offset, size, test);
+			IptvFileUtils.toHttp(vers);
+			result.setVers(vers);
+			result.setTotal(total);
+		}else{
+			result.setVers(new ArrayList<IptvResVer>());
+			result.setTotal(0);
+		}
+		return result;
+	}
+	
+	public abstract IptvPageResult findHtmlThemeListImpl(IptvObjectEnum type, int offset, int size) throws IptvBusinessException;
+	
+	public abstract List<IptvResVer> findListByTypeAndChildTypeImpl(IptvObjectEnum type, IptvObjectEnum childtype);//查找分类
+	
+	public abstract List<IptvResVer> findListByTypeAndChildType2Impl(IptvObjectEnum type, IptvObjectEnum childtype);//查找分类
+	
+	
+	protected IptvPageResult findFreeRes(IptvObjectEnum type, int offset, int size){
+		IptvPageResult result = new IptvPageResult();
+		int total = this.iptvResVerDao.findFreeResListByTypeCount(type, test);
+		if(total>0){
+			List<IptvResVer> vers = this.iptvResVerDao.findFreeResListByType(type, offset, size, test);
+			IptvFileUtils.toHttp(vers);
+			result.setVers(vers);
+			result.setTotal(total);
+		}else{
+			result.setVers(new ArrayList<IptvResVer>());
+			result.setTotal(0);
+		}
+		return result;
+	}
+	public abstract IptvPageResult findFreeResImpl(IptvObjectEnum type, int offset, int size);//查找免费的资源
+	
+	/**
+	 * 查找资源,如果想查找特定资源,下面有包装方法
+	 * @param type
+	 * @param rid
+	 * @return
+	 * @throws IptvBusinessException 
+	 */
+	public IptvResVer findResByRid(IptvObjectEnum type, long rid) throws IptvBusinessException{
+		IptvResVer ver = this.iptvResVerDao.findResByRid(type, rid, test);
+		if(ver == null){
+			throw new IptvBusinessException(IptvError.RES_NOT_EXIST);//没有查询到,报错'资源不存在'
+		}else{
+			if(type==IptvObjectEnum.mv || type==IptvObjectEnum.song){
+				if(ver.getSinger_name()==null){//如果没有歌手,则说明歌手已经下线,现在报错
+					throw new IptvBusinessException(IptvError.RES_SINGER_OFFLINE);
+				}
+			}
+		}
+		IptvFileUtils.toHttp(ver);
+		return ver;
+	}
+	public abstract IptvResVer findSongByRid(long rid) throws IptvBusinessException;
+	public abstract IptvResVer findMvByRid(long rid) throws IptvBusinessException;
+	public abstract IptvResVer findSingerByRid(long rid) throws IptvBusinessException;
+	
+	/**
+	 * 查找资源的直接子资源
+	 * 如果想要查找特定资源singer,diss等,下面也有包装的方法
+	 * @param type
+	 * @param prid
+	 * @param offset
+	 * @param size
+	 * @return
+	 */
+//	protected IptvPageResult findListByRid(IptvObjectEnum type, IptvObjectEnum listType, long prid, String pinyin, int offset, int size){
+//		IptvPageResult result = new IptvPageResult();
+//		int total = this.iptvResVerDao.findResListPageableCount(type, listType, prid, pinyin, test);
+//		if(total>0){
+//			List<IptvResVer> vers = this.iptvResVerDao.findResListPageable(type, listType, prid, pinyin, offset, size, test);
+//			IptvFileUtils.toHttp(vers);
+//			result.setVers(vers);
+//			result.setTotal(total);
+//		}else{
+//			result.setVers(new ArrayList<IptvResVer>());
+//			result.setTotal(0);
+//		}
+//		return result;
+//	}
+
+	public abstract IptvPageResult findSingerContentList(long prid, int offset,int size);//查singer下的歌
+	public abstract IptvPageResult findSingerSongAndMvList(long prid, int offset,int size);//查singer下的song+mv,混合输出
+	
+	public abstract IptvPageResult findCategoryContentList(long prid, String pinyin, int offset,int size); //通用方法
+	
+	public abstract IptvPageResult findDissContentList(long prid, int offset,int size);//由diss查下面的歌
+	
+	public abstract IptvPageResult findTopContentList(long prid,int offset, int size);
+	
+	public abstract IptvPageResult findColumnContentList(long prid,int offset, int size);
+	
+	public abstract List<IptvResVer> findUserCollectList(String userid);
+	protected List<IptvResVer> findUserCollectListImpl(String userid){
+		List<IptvResVer> vers = this.iptvUserCollectDao.findCollectByUserid(userid, test);
+		IptvFileUtils.toHttp(vers);
+		return vers;
+	}
+	
+	public abstract void addUserCollect(String mac, String userid, long rid) throws IptvBusinessException;//添加收藏
+	protected void addUserCollectImpl(String mac, String userid, long rid) throws IptvBusinessException{
+		IptvRes res = this.iptvResDao.findByRid(rid);
+		int count = this.iptvUserCollectDao.findCollectCount(userid, res.getType().name(), test);
+		if(count>=100){
+			throw new IptvBusinessException(IptvError.USER_COLLECT_LIMIT_ERROR);
+		}
+		IptvObjectEnum type = res.getType();
+		if(type==IptvObjectEnum.song || type==IptvObjectEnum.mv || type==IptvObjectEnum.diss || type==IptvObjectEnum.column){
+		}else{
+			throw new IptvBusinessException(IptvError.USER_COLLECT_TYPE_ERROR);
+		}
+		try{
+			IptvUser user = new IptvUser();
+			user.setUser_id(userid);
+			user.setMac(mac);
+			user.setTest(test);
+			this.iptvUserDao.ignoreInsertWhenExist(user);//不会报错,如果存在
+			this.iptvUserCollectDao.addCollect(userid, rid, new java.util.Date(), test);
+		}catch(org.springframework.dao.DataIntegrityViolationException e){
+			throw new IptvBusinessException(IptvError.USER_COLLECT_ERROR);
+		}
+	}
+	
+	public abstract void delUserCollect(String userid, long rid) throws IptvBusinessException;//del收藏
+	protected void delUserCollectImpl(String userid, long rid) throws IptvBusinessException{
+		this.iptvUserCollectDao.delCollect(userid, rid, test);
+	}
+	
+	public abstract List<IptvResVer> findUserPlayHistoryList(String userid);
+	protected List<IptvResVer> findUserPlayHistoryListImpl(String userid){
+		List<IptvResVer> vers = this.iptvUserPlayHistoryDao.findHistoryByUserid(userid, test);
+		IptvFileUtils.toHttp(vers);
+		return vers;
+	}
+	
+	public abstract void addUserPlayHistory(String mac, String userid, long rid) throws IptvBusinessException;//添加收藏
+	protected void addUserPlayHistoryImpl(String mac, String userid, long rid) throws IptvBusinessException{
+		try{
+			IptvUser user = new IptvUser();
+			user.setUser_id(userid);
+			user.setMac(mac);
+			user.setTest(test);
+			this.iptvUserDao.ignoreInsertWhenExist(user);//不会报错,如果存在
+			
+			IptvRes res = this.iptvResDao.findByRid(rid);
+			List<Long> ids = this.iptvUserPlayHistoryDao.findPlayHistoryIds(userid, res.getType().name(), test);
+			if(ids.size()==100){
+				this.iptvUserPlayHistoryDao.delPlayHistory(userid, ids.get(99), test);
+			}
+			this.iptvUserPlayHistoryDao.addPlayHistory(userid, rid, new java.util.Date(), test);
+		}catch(org.springframework.dao.DataIntegrityViolationException e){
+			throw new IptvBusinessException(IptvError.USER_COLLECT_ERROR);
+		}
+	}
+	
+	public abstract void delUserPlayHistory(String mac, String userid, long rid) throws IptvBusinessException;//删除播放历史
+	protected void delUserPlayHistoryImpl(String mac, String userid, long rid) throws IptvBusinessException{
+		this.iptvUserPlayHistoryDao.delPlayHistory(userid, rid, test);
+	}
+	
+	///////////////////////////////////////search section
+	public abstract IptvPageResult findSearchList(IptvObjectEnum type, String pinyin, Integer offset, Integer size);
+	
+	protected IptvPageResult findSearchListImpl(IptvObjectEnum type, String pinyin, Integer offset, Integer size){
+		IptvPageResult result = new IptvPageResult();
+		int total = this.iptvResVerDao.searchResByKeywordCount(type, pinyin, test);
+		if(total>0){
+			List<IptvResVer> vers = this.iptvResVerDao.searchResByKeyword(type, pinyin, offset, size, test);
+			IptvFileUtils.toHttp(vers);
+			result.setVers(vers);
+			result.setTotal(total);
+		}else{
+			result.setVers(new ArrayList<IptvResVer>());
+			result.setTotal(0);
+		}
+		return result;
+	}
+	
+	//////////////////////////////////// reco推荐 section
+	public abstract List<IptvResVer> findRecoList(IptvObjectEnum type, int size);
+	protected List<IptvResVer> findRecoListImpl(IptvObjectEnum type, Integer size){
+		//查找思路,查找最近1周的按资源热度排序的结果,如果不够,则random几个出来
+		long ts = System.currentTimeMillis();
+		Date to = new Date(ts);
+		Date from = new Date(ts-6*24*60*60*1000);
+		List<Long> hots = this.iptvResDailyPlayDao.findWeekResVid(type, from, to, size, test);//查出最近7天的热度统计,同时考虑到了禁用的情况,需要先联合查出来
+		hots.clear();
+		if(hots.size()<size){//不够则补齐
+			List<Long> others = this.iptvResVerDao.randomVid(type, hots, size-hots.size(), test);
+			hots.addAll(others);
+		}
+		List<IptvResVer> vers = this.iptvResVerDao.findRecoVerByVids(hots, test);
+		IptvFileUtils.toHttp(vers);
+		return vers;
+	}
+	
+}

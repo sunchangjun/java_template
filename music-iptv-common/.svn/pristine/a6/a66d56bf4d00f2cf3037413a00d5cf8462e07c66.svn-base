@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<!--头部-->
+<div  class="top" id="maintop" th:fragment="layout(layoutData)">
+    <div  th:each="lay:${layoutData}"  class="layout">
+         <span class="title" th:text="${lay.name}" th:id="${lay.rid}"></span>
+    </div>
+</div>
+<!--自由布局-->
+<div class="column-body" th:fragment="customlayout(columns)">
+    <div th:each="column,stat:${columns}" th:style="'top:'+${column.top}+'px'+';width：1150px;z-index:'+${stat.index}">
+        <div  class="column-title">
+            <span th:if="${column.layout_show_title and column.layout_regular}" th:text="${column.name}" style="top: 0;left: 0"></span>
+            <span  style="top: 0;right: 0" class="column_pages"></span>
+        </div>
+        <div th:if="${column.layout_regular}"  th:style="'top:'+ @{(${column.layout_show_title} ? '35px' : '0px')} + ';width:1150px;z-index:'+${stat.index}">
+            <div th:replace="column :: regularColumn(column=${column},stat=${stat.index})">
+
+            </div>
+        </div>
+        <div th:if="${!column.layout_regular}" th:style="'top:'+ @{(${column.layout_show_title} ? '35px' : '0px')} + ';width:1150px;z-index:'+${stat.index}">
+            <div th:replace="column :: irregularColumn(column=${column},stat=${stat.index})">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="column-body" th:fragment="defaultlayout(cates)">
+     <div class="column irregular cate" title="100 cate" style="padding-bottom: 50px;">
+         <a class="item" th:each="cate:${cates}"  th:style="'width:'+${cate.width}+';height:'+${cate.height}+';top:'+${cate.absolute_x}+';left:'+${cate.absolute_y}+';padding-bottom:75px;'"
+            th:title="''+${cate.doMajor()}+''">
+             <img th:src="${cate.bposter==null?'/defaultSong.jpg':cate.bposter}"
+                  th:style="'width:'+${cate.width}+';height:'+${cate.height}+';'">
+         </a>
+     </div>
+</div>
+
+</body>
+</html>

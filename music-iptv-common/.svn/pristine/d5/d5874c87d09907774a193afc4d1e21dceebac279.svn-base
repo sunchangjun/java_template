@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	 <head th:fragment="cssAndJs (title)">
+	 <title th:text="${title}"></title>
+		 <meta name="page-view-size" content="1280*720">
+	 <meta http-equiv="content-type" content="text/html;charset=utf-8">
+	 <link rel="stylesheet" type="text/css" th:href="@{/static/jquery-easyui-1.7.0/themes/default/easyui.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/static/jquery-easyui-1.7.0/wu/wu.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/static/jquery-easyui-1.7.0/wu/icon.css}"/>
+		<link rel="stylesheet" type="text/css" th:href="@{/static/css/my.css}"/>
+		 <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" th:src="@{/static/jquery-easyui-1.7.0/jquery.easyui.min.js}"></script>
+		 <script type="text/javascript" th:src="@{/static/jquery-easyui-1.7.0/datagrid-dnd.js}"></script>
+		<script type="text/javascript" th:src="@{/static/jquery-easyui-1.7.0/locale/easyui-lang-zh_CN.js}"></script>
+		 <script type="text/javascript" th:inline="javascript">
+             /*<![CDATA[*/
+             ctxPath = /*[[@{/}]]*/ '';
+             /*]]>*/
+             console.info(ctxPath);
+		 </script>
+		<script type="text/javascript" th:src="@{/static/js/common.js}"></script>
+	</head>
+	<body>
+	</body>
+</html>

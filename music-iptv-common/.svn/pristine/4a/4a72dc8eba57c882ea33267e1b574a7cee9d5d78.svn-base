@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="head :: cssAndJs(title=~{::title/text()})">
+    <title>QQ音乐后台管理系统</title>
+  </head>
+<body class="easyui-layout">
+	<!-- 头部 -->
+	<div data-options="region:'north',border:false" style="height:30px;background:#E6EEF8;">
+		<div style="height:100%;float: right;line-height: 30px;font-size: 10px;padding-right: 12px;">欢迎您：<span th:text="${session.user_in_session.username}"></span> &nbsp;&nbsp;<a href="/logout">退出登录</a></div>
+	</div>
+	<!-- 菜单导航 -->
+	<div class="wu-sidebar" data-options="region:'west',title:'导航菜单',collapsible:false" style="width:250px;">
+	       <div class="easyui-accordion" data-options="border:false,fit:true">
+	        	<div th:each="prod : ${privileges}" th:title="${prod.name}" data-options="iconCls:'${prod.icon}'" style="padding:5px;" th:class="|prod${prod.url}|">
+	    			<ul th:class="|wu-side-tree ${prod.url}tree|">
+	                    <li th:each="c : ${prod.childs}" th:iconCls="${c.icon}"><a href="javascript:void(0)" data-th-data-icon="${c.icon}" data-th-data-link="${c.url}" iframe="0" th:text="${c.name}"></a></li>
+	                </ul>
+	            </div>
+        </div>
+	</div>
+	<!-- 底部 -->
+	<div data-options="region:'south',border:true" style="background: #E6EEF8;">
+	</div>
+	<!-- 主体 -->
+	<div data-options="region:'center',title:''">
+		<div id="mainbody" class="easyui-tabs" style="height: 100%">
+			<div title="首页"></div>
+		</div>
+	</div>
+    <!--栏目菜单-->
+	<div id="layoutmenu" class="easyui-menu" data-options="onClick:menuHandler" style="width:120px;">
+		<div data-options="name:'newtop',iconCls:'icon-add'">新建布局</div>
+		<div data-options="name:'exit'">关闭</div>
+	</div>
+    <!--增加顶层布局-->
+	<div id="addToplayPannel" class="easyui-window" title="添加布局" data-options="modal:true,closed:true,iconCls:'Lockgo',closable:true,resizable:false,draggable:false,collapsible:false,minimizable:false,maximizable:false" style="width:300px;padding:20px 25px 20px 25px;">
+		<form id="addTopform" method="post" action="login" >
+			<div style="margin-bottom:10px">
+				<label for="topname">布局名称:</label>
+				<input class="easyui-validatebox" id="topname" name="name" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="layout_sort">布局排序:</label>
+				<input class="easyui-validatebox" id="layout_sort" name="sort" style="width:75%;height:25px;padding:12px" data-options="prompt:'排序',iconCls:'icon-man',iconWidth:38,required:true"/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="add_layout_child_type">资源类型:</label>
+				<select name="child_type" id="add_layout_child_type" class="easyui-combobox"  data-options="prompt:'布局类型',required:true" style="width: 75%;">
+					<option value="layout_custom">自定义</option>
+					<option value="layout_singer">歌手</option>
+					<option value="layout_diss">歌单</option>
+					<option value="layout_top">榜单</option>
+				</select>
+				<!--<input class="easyui-validatebox" id="type" name="type" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>-->
+			</div>
+			<div style="text-align: center;">
+				<a href="javascript:;" onclick="addTop()" class="easyui-linkbutton"  style="padding:5px 0px;width:50%;height: 25px;">
+					<span style="font-size:14px;">提交</span>
+				</a>
+			</div>
+		</form>
+	</div>
+    <!--修改顶层布局-->
+	<div id="editorToplayPannel" class="easyui-window" title="修改布局" data-options="modal:true,closed:true,iconCls:'Lockgo',closable:true,resizable:false,draggable:false,collapsible:false,minimizable:false,maximizable:false" style="width:300px;padding:20px 25px 20px 25px;">
+		<form id="editorTTopform" method="post" action="login" >
+			<div style="margin-bottom:10px">
+				<label for="editor_topname">布局名称:</label>
+				<input class="easyui-validatebox" id="editor_topname" readonly="readonly" name="name" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="editor_layout_sort">布局排序:</label>
+				<input class="easyui-validatebox" id="editor_layout_sort" name="sort" style="width:75%;height:25px;padding:12px" data-options="prompt:'排序',iconCls:'icon-man',iconWidth:38,required:true"/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="add_layout_child_type">资源类型:</label>
+				<select name="child_type" id="editor_layout_child_type" class="easyui-combobox" readonly="" data-options="prompt:'布局类型',required:true" style="width: 75%;">
+					<option value="layout_custom">自定义</option>
+					<option value="layout_singer">歌手</option>
+					<option value="layout_diss">歌单</option>
+					<option value="layout_top">榜单</option>
+				</select>
+				<!--<input class="easyui-validatebox" id="type" name="type" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>-->
+			</div>
+			<div style="text-align: center;">
+				<a href="javascript:;" onclick="editTopLayout()" class="easyui-linkbutton"  style="padding:5px 0px;width:50%;height: 25px;">
+					<span style="font-size:14px;">提交</span>
+				</a>
+			</div>
+		</form>
+	</div>
+	<!--增加栏目-->
+	<div id="addlayPannel" class="easyui-window" title="添加栏目" data-options="modal:true,closed:true,iconCls:'Lockgo',closable:true,resizable:false,draggable:false,collapsible:false,minimizable:false,maximizable:false" style="width:300px;padding:20px 25px 20px 25px;">
+		<form id="addlayoutform" method="post" action="login" >
+			<div style="margin-bottom:10px">
+				<label for="name">栏目名称:</label>
+				<input class="easyui-validatebox" id="name" name="name" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="column_sort">栏目排序:</label>
+				<input class="easyui-numberbox" id="column_sort"  name="sort" style="width:75%;height:25px;padding:12px" data-options="min:1,required:true" required/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="layout_line">栏目行数:</label>
+				<div style="width: 75%;float: right" id="layout_line">
+				<input  name="layout_line" type="radio"  value="1" checked>1行
+				<input name="layout_line" type="radio"  value="2">2行
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="name">显示标题:</label>
+				<div style="width: 75%;float: right" id="layout_show_title">
+					<input name="layout_show_title" type="radio"  value="true" checked>显示
+					<input name="layout_show_title" type="radio"  value="false">不显示
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="layout_show_child_title">子&nbsp;标&nbsp;题:</label>
+				<div  style="width: 75%;float: right;" id="layout_show_child_title">
+					<input  name="layout_show_child_title" type="radio" value="true" checked>显示
+					<input  name="layout_show_child_title" type="radio" value="false">不显示
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="layout_show_child_title">布局类型</label>
+				<div  style="width: 75%;float: right;" id="layout_regular">
+					<input  name="layout_regular" type="radio" value="true" checked>规则
+					<input  name="layout_regular" type="radio" value="false">不规则
+				</div>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="child_type">资源类型:</label>
+				<select name="child_type" id="child_type" class="easyui-combobox"  data-options="prompt:'布局类型',required:true" style="width: 75%;">
+                     <option value="song">歌曲</option>
+                     <option value="mv">MV</option>
+                     <option value="singer">歌手</option>
+                     <option value="diss">歌单</option>
+                     <option value="column">栏目</option>
+                     <option value="cate">分类</option>
+				</select>
+				<!--<input class="easyui-validatebox" id="type" name="type" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>-->
+			</div>
+			<div style="text-align: center;">
+				<a href="javascript:;" onclick="addLayout()" class="easyui-linkbutton"  style="padding:5px 0px;width:50%;height: 25px;">
+					<span style="font-size:14px;">提交</span>
+				</a>
+			</div>
+		</form>
+	</div>
+	<!--修改栏目-->
+	<div id="editlayPannel" class="easyui-window" title="修改栏目" data-options="modal:true,closed:true,iconCls:'Lockgo',closable:true,resizable:false,draggable:false,collapsible:false,minimizable:false,maximizable:false" style="width:300px;padding:20px 25px 20px 25px;">
+		<form id="editlayoutform" method="post" action="addIptvRes" >
+			<div style="margin-bottom:10px">
+				<label for="editname">栏目名称:</label>
+				<input class="easyui-validatebox" readonly="readonly" id="editname" name="name" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="edit_column_sort">栏目排序:</label>
+				<input class="easyui-numberbox" id="edit_column_sort"  name="sort" style="width:75%;height:25px;padding:12px" data-options="min:1,required:true" required/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="edit_layout_line">栏目行数:</label>
+				<div  style="width: 75%;float: right;" id="edit_layout_line">
+				<input name="layout_line" type="radio"  value="1" checked required>1行
+					<input name="layout_line" type="radio"  value="2" required>2行
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="edit_layout_show_title">显示标题:</label>
+				<div style="width: 75%;float: right" id="edit_layout_show_title">
+					<input name="layout_show_title" type="radio"  value="true" checked>显示
+					<input name="layout_show_title" type="radio"  value="false">不显示
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="edit_layout_show_child_title">子&nbsp;标&nbsp;题:</label>
+				<div  style="width: 75%;float: right;" id="edit_layout_show_child_title">
+					<input  name="layout_show_child_title" type="radio" value="true" checked>显示
+					<input  name="layout_show_child_title" type="radio" value="false">不显示
+				</div>
+			</div>
+			<div style="text-align: center;">
+				<a href="javascript:;" onclick="editLayout()" class="easyui-linkbutton"  style="padding:5px 0px;width:50%;height: 25px;">
+					<span style="font-size:14px;">提交</span>
+				</a>
+			</div>
+		</form>
+	</div>
+     <!--树菜单-->
+	<div id="treemenu" class="easyui-menu" data-options="onClick:menuHandler" style="width:120px;">
+		<div data-options="name:'new',iconCls:'icon-add'">新建栏目</div>
+		<div data-options="name:'concat'">关联栏目</div>
+		<div data-options="name:'del',iconCls:'icon-delete'">删除栏目</div>
+		<div data-options="name:'edit',iconCls:'icon-edit'">修改栏目</div>
+		<div data-options="name:'summitpro',iconCls:'icon-summitpro'">提交</div>
+		<div class="menu-sep"></div>
+		<div data-options="name:'exit'">关闭</div>
+	</div>
+
+	<div id="contactColumn" class="easyui-window" title="关联栏目" data-options="modal:true,closed:true,iconCls:'Lockgo',closable:true,resizable:false,draggable:false,collapsible:false,minimizable:false,maximizable:false" style="width:300px;padding:20px 25px 20px 25px;">
+		<form id="contactColumnform" method="post" action="addIptvRes" >
+			<div style="margin-bottom:10px">
+				<label for="contact_child_type">栏目名称:</label>
+				<input id="contact_child_type" class="easyui-combobox" style="width: 75%;" name="crid" data-options="
+				loader: contact,
+				mode: 'remote',
+				valueField: 'rid',
+				textField: 'name'
+			">
+				<!--<input class="easyui-validatebox" id="type" name="type" style="width:75%;height:25px;padding:12px" data-options="prompt:'布局名称',iconCls:'icon-man',iconWidth:38,required:true"/>-->
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="concat_column_sort">栏目排序:</label>
+				<input class="easyui-numberbox" id="concat_column_sort"  name="sort" style="width:75%;height:25px;padding:12px" data-options="min:1,required:true" required/>
+			</div>
+			<div style="margin-bottom:10px">
+				<label for="contact_layout_line">栏目行数:</label>
+				<div  style="width: 75%;float: right;" id="contact_layout_line">
+					<input name="layout_line" type="radio"  value="1" checked required>1行
+					<input name="layout_line" type="radio"  value="2" required>2行
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="name">显示标题:</label>
+				<div style="width: 75%;float: right" id="contact_layout_show_title">
+					<input name="layout_show_title" type="radio"  value="true" checked>显示
+					<input name="layout_show_title" type="radio"  value="false">不显示
+				</div>
+			</div>
+			<div style="margin-bottom:10px;overflow: hidden;">
+				<label for="contact_layout_show_child_title">子&nbsp;标&nbsp;题:</label>
+				<div  style="width: 75%;float: right;" id="contact_layout_show_child_title">
+					<input  name="layout_show_child_title" type="radio" value="true" checked>显示
+					<input  name="layout_show_child_title" type="radio" value="false">不显示
+				</div>
+			</div>
+			<div style="text-align: center;">
+				<a href="javascript:;" onclick="contactColumn()" class="easyui-linkbutton"  style="padding:5px 0px;width:50%;height: 25px;">
+					<span style="font-size:14px;">提交</span>
+				</a>
+			</div>
+		</form>
+	</div>
+
+
+
+</body>
+<script type="text/javascript">
+	 $(function(){
+
+
+         $(".prodlayout").bind('contextmenu',function(e){
+			  e.preventDefault();
+             menuHandler.prototype.treeSelect = false;
+			  $("#layoutmenu").menu('show',{
+			      top:e.pageY,
+				  left:e.pageX
+			  });
+		 });
+
+
+         $(".wu-side-tree").tree({
+             onClick:function (node) {
+                 var title =  $(node.text).text();
+                 var url =  $(node.text).attr("data-link");
+                 addTab(title,url);
+             }
+		 });
+
+
+
+         $(".layouttree").tree({
+             url:"privilege/layoutData",
+             onContextMenu:function(e,node){
+                 e.preventDefault();
+                 $('.layouttree').tree('select', node.target);
+                 var parent = $(".layouttree").tree('getParent',node.target);
+                 //禁用菜单
+                 var item = $('#treemenu').menu('findItem', '关联栏目');
+                 var item2 = $('#treemenu').menu('findItem', '新建栏目');
+                 if(parent){
+                     $('#treemenu').menu('disableItem', item.target);
+                     $('#treemenu').menu('disableItem', item2.target);
+				 }else{
+                     console.log(node);
+                     if(node.data.child_type!="layout_custom"){
+                         $('#treemenu').menu('disableItem', item.target);
+                         $('#treemenu').menu('disableItem', item2.target);
+                     }else{
+                         $('#treemenu').menu('enableItem', item.target);
+                         $('#treemenu').menu('enableItem', item2.target);
+					 }
+				 }
+                 menuHandler.prototype.treeSelect = true;
+                 $("#treemenu").menu('show',{
+                     top:e.pageY,
+                     left:e.pageX
+                 });
+			 },
+			 formatter:function(node){
+                 if(node.data.list){
+                   return node.text;
+				 }
+                 return '<a href="#" data-link="layout?type='+node.data.child_type+'&layoutId='+node.data.rid+'&layout='+node.data.layout_regular+'">'+node.text+'</a>';
+			 },
+			 onClick:function (node) {
+                 var type = node.data.child_type;
+                 var regular = node.data.layout_regular;
+                 var parent = $(".layouttree").tree('getParent',node.target);
+                 if(parent){
+                     addTab(node.text,"layout?type="+node.data.child_type+"&layoutId="+node.data.rid+"&layout="+node.data.layout_regular);
+                 }
+             }
+         });
+	 })
+
+	 var constant = {
+          treeNode:''
+	 }
+
+	 function addTab(title, url){
+		if ($('#mainbody').tabs('exists', title)){
+			$('#mainbody').tabs('select', title);
+		} else {
+			//url = "https://www.baidu.com"
+			var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+			$('#mainbody').tabs('add',{
+				title:title,
+				content:content,
+				closable:true
+			});
+		}
+	}
+
+	 function addTop(){
+        $("#addTopform").form('submit',{
+            url:'addLayOut',
+            onSubmit: function(param){
+                param.type = 'layout';
+                param.top = '1';
+            },
+			success:function(res){
+                res = JSON.parse(res);
+				if(res.success){
+                    reloadTree();
+                    $("#addToplayPannel").panel("close");
+                    $.messager.alert("消息提示","添加成功");
+				}else{
+				    $.messager.alert("消息提示",res.backmsg);
+				}
+			}
+		})
+	}
+
+	 function addLayout(){
+        var node = $(".layouttree").tree('getSelected');
+        $("#addlayoutform").form('submit',{
+            url:'addLayOut',
+            onSubmit: function(param){
+                param.prid = node.id;
+                param.type = "column";
+                if(!$("#name").val()){
+                    $.messager.alert("消息提示","栏目名称不能为空!!!!!!!");
+                    return false;
+                };
+                if(!$("#column_sort").val()){
+                    $.messager.alert("消息提示","排序不能为空!!!!!!!");
+                    return false;
+				};
+            },
+			success:function(res){
+                res = JSON.parse(res);
+				if(res.success){
+                    $("#addlayPannel").panel("close");
+                    reloadTree();
+                    $.messager.alert("消息提示","添加成功");
+				}else{
+				    $.messager.alert("消息提示",res.backmsg);
+				}
+			}
+		})
+	}
+
+     function editTopLayout(){
+         var node = $(".layouttree").tree('getSelected');
+         var parent = $(".layouttree").tree('getParent',node.target);
+         $("#editorTTopform").form('submit',{
+             url:'editLayOut',
+             onSubmit: function(param){
+                 param.rid = node.data.rid;
+                 param.vid = node.data.vid;
+             },
+             success:function(res){
+                 res = JSON.parse(res);
+                 if(res.success){
+                     $("#editorToplayPannel").panel("close");
+                     reloadTree();
+                     $.messager.alert("消息提示","修改成功");
+                 }else{
+                     $.messager.alert("消息提示",res.msg);
+                 }
+             }
+         })
+     }
+
+
+     function editLayout(){
+         var node = $(".layouttree").tree('getSelected');
+         var parent = $(".layouttree").tree('getParent',node.target);
+         $("#editlayoutform").form('submit',{
+             url:'editLayOut',
+             onSubmit: function(param){
+                 param.rid = node.data.link_rid;
+                 param.vid = node.data.link_vid;
+                 if(!$("#editname").val()){
+                     $.messager.alert("消息提示","栏目名称不能为空!!!!!!!");
+                     return false;
+                 };
+                 if(!$("#edit_column_sort").val()){
+                     $.messager.alert("消息提示","排序不能为空!!!!!!!");
+                     return false;
+                 };
+
+             },
+             success:function(res){
+                 res = JSON.parse(res);
+                 if(res.success){
+                     $("#editlayPannel").panel("close");
+                     reloadTree();
+                     $.messager.alert("消息提示","修改成功");
+                 }else{
+                     $.messager.alert("消息提示",res.msg);
+                 }
+             }
+         })
+     }
+
+     function contactColumn(){
+         var node = $(".layouttree").tree('getSelected');
+         $("#contactColumnform").form('submit',{
+             url:'contactColumn',
+             onSubmit: function(param){
+                 param.prid = node.data.rid;
+                var data =  $("#contact_child_type").combobox('getData');
+                 if(!$("#concat_column_sort").val()){
+                     $.messager.alert("消息提示","排序不能为空!!!!!!!");
+                     return false;
+                 };
+             },
+             success:function(res){
+                 res = JSON.parse(res);
+                 if(res.success){
+                     $("#contactColumn").panel("close");
+                     reloadTree();
+                     $.messager.alert("消息提示","关联成功");
+                 }else{
+                     $.messager.alert("消息提示",res.msg);
+                 }
+             }
+         })
+     }
+
+	 function menuHandler(item){
+         var node = $(".layouttree").tree('getSelected');
+         if(node&&menuHandler.prototype.treeSelect){
+            console.log(node);
+		 }
+		 if (item.name=="new"){
+             //新增布局
+             $("#addlayoutform").form("reset");
+             $("#addlayPannel").panel("open");
+		 } else if(item.name=="del"){
+             //提交版本
+             $.messager.confirm('确认删除','您确认将'+node.data.name+'删除么?',function(r){
+                 var parent = $(".layouttree").tree('getParent',node.target);
+                 var link_vid =parent?node.data.link_vid:node.data.vid;
+                 console.log(link_vid);
+                 if (r){
+                     $.ajax({
+                         url:"deleteLayOut",
+                         type:"post",
+                         data:{
+                             link_vid:link_vid
+                         },
+                         success:function(data){
+                             if(data.success){
+                                 $.messager.alert("消息提示","操作成功");
+                                 if ($('#mainbody').tabs('exists', node.text)){
+                                     $('#mainbody').tabs('close', node.text);
+                                 }
+                                 reloadTree();
+                             }else{
+                                 $.messager.alert(data.msg);
+                             }
+                         }
+                     });
+                 }
+             })
+
+		 }else if(item.name=="edit"){
+             var parent = $(".layouttree").tree('getParent',node.target);
+             //编辑栏目
+			 if(parent){
+                 $("#editlayoutform").form('reset');
+                 $("#editlayoutform").form('load',node.data);
+                 $("#editlayPannel").panel("open");
+			 }else{
+                 $("#editorTTopform").form('reset');
+                 $("#editorTTopform").form('load',node.data);
+                 $("#editorToplayPannel").panel("open");
+			 }
+		 }else if(item.name=="newtop"){
+             $("#addTopform").form("reset");
+             $("#addToplayPannel").panel("open");
+		 }else if(item.name == "concat"){
+             //关联栏目
+			 $("#contactColumnform").form('reset');
+			 $("#contactColumn").panel('open');
+		 } else if(item.name=="summitpro"){
+			 //提交版本
+             $.messager.confirm('确认发布','您确认将"'+node.data.name+'"提交到正式环境吗?',function(r){
+                 if (r){
+                     $.ajax({
+                         url:"submitLayOut",
+                         type:"post",
+                         data:{
+                             rid:node.data.rid,
+                             prid:node.data.link_prid,
+                             link_vid:node.data.link_vid
+                         },
+                         success:function(data){
+                             if(data.success){
+                                 $.messager.alert("消息提示","操作成功");
+                                 reloadTree();
+                             }else{
+                                 $.messager.alert(data.msg);
+                             }
+                         }
+                     });
+                 }
+             })
+		 }
+     }
+
+     function contact(param,success,error){
+         var q = param.q || '';
+         if (q.length <= 1){return false}
+         $.ajax({
+             url: 'listData',
+             data: {
+                 featureClass: "P",
+                 style: "full",
+				 type:'column',
+				 rows:20,
+                 page:1,
+                 name: q
+             },
+             success: function(data){
+                 success(data.rows);
+             },
+             error: function(){
+                 error.apply(this, arguments);
+             }
+         });
+	 }
+
+	 function reloadTree(){
+         $(".layouttree").tree('reload');
+	 }
+</script>
+</html>
+<!--
+
+
+-->

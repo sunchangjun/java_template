@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:replace="head :: cssAndJs(title=~{::title/text()})">
+    <title>QQ音乐后台管理系统</title>
+  </head>
+<body>
+	<div class="easyui-layout" data-options="fit:true">
+			<div region="west" split="true" title="子分类" style="width:150px;">
+				<ul id="column" class="easyui-tree" data-th-type="${type}" style="padding-top: 20px;"></ul>
+			</div>
+			<div id="content" region="center" title="资源列表" style="overflow: hidden;">
+				<iframe src="" style="width: 100%;height: 100%;border: 0;padding: 0;margin: 0;overflow: hidden;">
+
+				</iframe>
+			</div>
+		</div>
+</body>
+<script type="text/javascript">
+	$("#column").tree({
+	    url:"childColumnData?type="+$("#column").attr("type"),
+        loadFilter:function(data){
+            $.each(data,function (index,ele) {
+                ele.text = ele.name;
+            });
+            return data;
+		}
+	});
+</script>
+</html>
