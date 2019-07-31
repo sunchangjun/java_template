@@ -1,0 +1,153 @@
+/**
+ * 
+ */
+package hk.reco.music.iptv.common.interceptor;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.stereotype.Component;
+
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
+
+import hk.reco.music.iptv.common.annotation.LogDetail;
+import hk.reco.music.iptv.common.domain.OperationLog;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.enums.IptvPlatform;
+import hk.reco.music.iptv.common.utils.Constant;
+import hk.reco.music.iptv.common.utils.NetworkUtils;
+import lombok.extern.log4j.Log4j2;
+
+/**
+ * @Description 用于日志处理
+ * @author Randy ran
+ * @Date 2019年7月30日 下午3:06:24
+ */
+@Aspect
+@Component
+@Log4j2
+public class LogServiceAspect {
+	
+	@Pointcut("@annotation(hk.reco.music.iptv.common.annotation.LogDetail)")
+	public void annotationPoinCut() {
+	}
+
+	@Before("annotationPoinCut()")
+	public void before(JoinPoint joinPoint) {
+		try {
+			OperationLog ol = new OperationLog();
+			MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+			Method method = signature.getMethod();
+			Object[] args = joinPoint.getArgs();
+			String [] pnns = signature.getParameterNames();
+			
+			Parameter[] ps = method.getParameters();
+			/**
+			 * 获取HttpServletRequest，用于解析IP地址
+			 */
+			if (ArrayUtils.isNotEmpty(ps)) {
+				HttpServletRequest req = null;
+				for (int i = 0, size = ps.length; i < size; i++) {
+					Parameter p = ps[i];
+					String typeName = p.getParameterizedType().getTypeName();
+					if (typeName.equals(HttpServletRequest.class.getName())) {
+						req = (HttpServletRequest)args[i];
+						break;
+					}
+				}
+				if (req != null) {
+					ol.setIp(NetworkUtils.getIpAddress(req));
+					System.out.println(ol.getIp());
+				}
+			}
+			/**
+			 * 获取注解信息
+			 */
+			LogDetail logDetail = method.getAnnotation(LogDetail.class);
+			
+			/**
+			 * 封装入参名称=>参数值
+			 */
+			Map<String,Object > nameAndArgs = Maps.newHashMap();
+			for (int i = 0, size = pnns.length; i < size; i++) {
+				nameAndArgs.put(pnns[i], args[i]);
+			}
+			
+			/**
+			 * 开始注入日志所需参数
+			 */
+			ol.setAction(logDetail.action());
+			ol.setMethod(logDetail.method());
+			if (StringUtils.isNoneBlank(logDetail.rid()))
+				ol.setRid(Long.valueOf(logDetail.rid()));
+			if (StringUtils.isNoneBlank(logDetail.extrid()))
+				ol.setRid(Long.valueOf(logDetail.extrid()));
+			for (Entry<String, Object> entry : nameAndArgs.entrySet()) {
+				Object v = entry.getValue();
+				switch (entry.getKey()) {
+				case Constant.PARAM_NAME_DURATION:
+					ol.setDuration(v != null ? (Integer) v : null);
+					break;
+				case Constant.PARAM_NAME_EXTRID:
+					ol.setExtrid(ol.getExtrid() == null && v != null ? (Long) v : null);
+					break;
+				case Constant.PARAM_NAME_IP:
+					ol.setIp(ol.getIp() == null && v != null ? String.valueOf(v) : null);
+					break;
+				case Constant.PARAM_NAME_MAC:
+					ol.setMac(v != null ? String.valueOf(v) : null);
+					break;
+				case Constant.PARAM_NAME_PINYIN:
+					ol.setPinyin(v != null ? String.valueOf(v) : null);
+					break;
+				case Constant.PARAM_NAME_PLATFORM:
+					ol.setPlatform(v != null ? (IptvPlatform) v : IptvPlatform.apk);
+					break;
+				case Constant.PARAM_NAME_PRID:
+					ol.setPrid(v != null ? (Long) v : null);
+					break;
+				case Constant.PARAM_NAME_RID:
+					ol.setRid(ol.getRid() == null && v != null ? (Long) v : null);
+					break;
+				case Constant.PARAM_NAME_TEST:
+					ol.setTest(v != null ? (boolean) v : Boolean.FALSE);
+					break;
+				case Constant.PARAM_NAME_USER_ID:
+					ol.setUserId(v != null ? String.valueOf(v) : null);
+					break;
+				case Constant.PARAM_NAME_TYPE:
+					if (v != null) {
+						if (v instanceof IptvObjectEnum) {
+							ol.setType((IptvObjectEnum) v);
+						} else {
+							ol.setType(IptvObjectEnum.valueOf((String)v));
+						}
+					}
+					
+					break;
+				}
+			}
+			if (StringUtils.isNoneBlank(ol.getMac()) && ol.getMac().indexOf(":") != -1) {
+				ol.setMac(ol.getMac().replaceAll(":", "-"));
+			}
+			/**
+			 * 统一日志打印格式，便于后续解析处理
+			 */
+			log.info("monitorLog:{}", JSON.toJSONString(ol));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}

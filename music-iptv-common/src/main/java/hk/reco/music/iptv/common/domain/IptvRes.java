@@ -34,7 +34,6 @@ public class IptvRes implements java.io.Serializable{
 	private Boolean version_disable;
 	protected Boolean newCreate;//代表新增
 	protected Integer mv_rid;//关联mv的rid
-	protected Boolean free_change;//免费状态更改
 
 	public Long getRid() {
 		return rid;
@@ -194,12 +193,6 @@ public class IptvRes implements java.io.Serializable{
 	}
 	public void setRes_flag(int res_flag) {
 		this.res_flag = res_flag;
-	}
-	public Boolean getFree_change() {
-		return free_change;
-	}
-	public void setFree_change(Boolean free_change) {
-		this.free_change = free_change;
 	}
 	@Override
 	public String toString() {
