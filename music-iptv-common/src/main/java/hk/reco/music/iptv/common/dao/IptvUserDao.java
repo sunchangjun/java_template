@@ -22,4 +22,11 @@ public interface IptvUserDao extends IptvGenericDao<IptvUser>{
 	@Override
 	public int delete(@Param("id")int id);
 	
+	/**
+	 * 统计当天创建的用户
+	 * @param date
+	 * @return
+	 */
+	public int countUserByDate(@Param("date")String date);
+	
 }

@@ -1,27 +1,11 @@
-/**
- * Program  : JsonUtil.java
- * Author   : wangzc
- * Create   : 2014-11-18下午04:05:23
- *
- * Copyright 2006 by Embedded Internet Solutions Inc.,
- * All rights reserved.
- *
- * This software is the confidential and proprietary information
- * of Embedded Internet Solutions Inc.("Confidential Information").  
- * You shall not disclose such Confidential Information and shall 
- * use it only in accordance with the terms of the license agreement 
- * you entered into with Embedded Internet Solutions Inc.
- *
- */
 package hk.reco.music.iptv.common.utils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.JavaType;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.JavaType;
 
 /**
  * @author wangzc

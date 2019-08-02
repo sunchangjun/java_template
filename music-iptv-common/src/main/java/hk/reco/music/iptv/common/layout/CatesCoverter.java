@@ -33,7 +33,6 @@ public class CatesCoverter {
     public static List<IptvResVerForPage> coverCates( List<IptvResVer> list){
         List<IptvResVerForPage> pagelist = new ArrayList<>();
         Integer top = 7;
-        Integer init_line = 0;
         if(list!=null&&list.size()>0){
             for (int i=0;i< list.size();i++) {
                 IptvResVerForPage page = new IptvResVerForPage(list.get(i));

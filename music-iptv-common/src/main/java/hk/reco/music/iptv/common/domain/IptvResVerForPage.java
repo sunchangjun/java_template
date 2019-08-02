@@ -39,9 +39,10 @@ public class IptvResVerForPage extends IptvResVer implements java.io.Serializabl
     private String width;
 
     private String height;
-
+    //广电专版使用
     private int resHeight;
-
+    private int resWidth;
+    private String resTitle;
     public String getWidth() {
         return width;
     }
@@ -372,6 +373,26 @@ public class IptvResVerForPage extends IptvResVer implements java.io.Serializabl
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public  int getResWidth(){
+        try {
+            String height = this.width.substring(0,this.width.length()-2);
+            this.resWidth = Integer.valueOf(height);
+            return this.resWidth;
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public  String getResTitle(){
+        if(this.getType().equals(IptvObjectEnum.mv)){
+             this.resTitle = hk.reco.music.iptv.common.utils.StringUtils.getWordCount(this.getName(),32);
+        }else{
+             this.resTitle =hk.reco.music.iptv.common.utils.StringUtils.getWordCount(this.getName(),22);
+        }
+        return this.resTitle;
     }
 
     @Override

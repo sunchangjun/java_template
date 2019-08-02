@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +36,7 @@ public abstract class IptvBaseStbCtrl {
 
     @Autowired
     protected IptvStbCommonService stbService;
-
+	private static final Logger log = LoggerFactory.getLogger(IptvBaseStbCtrl.class);
     @RequestMapping(value = "/get_layouts", method = RequestMethod.POST)
     @ApiOperation(value = "布局列表", notes = "获取顶层的多个布局", response = RestResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
@@ -43,7 +45,8 @@ public abstract class IptvBaseStbCtrl {
                                     @RequestParam(required = true) Boolean test,
                                     HttpServletRequest req) {
         try {
-            List<IptvResVer> vers = this.stbService.get_layouts_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, IptvMsicUtils.parseTest(test));
+        	log.info("log info==>get_layouts_impl");
+            List<IptvResVer> vers = this.stbService.get_layouts_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, true, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
             return response;
@@ -65,7 +68,7 @@ public abstract class IptvBaseStbCtrl {
                                        HttpServletRequest req) {
         try {
             RestResponse response = new RestResponse();
-            List<IptvResVer> vers = this.stbService.get_layout_by_rid_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, 0l, rid, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_layout_by_rid_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, 0l, rid, IptvMsicUtils.parseTest(test));
             response.setData(vers);
             return response;
         } catch (IptvBusinessException e) {
@@ -87,7 +90,7 @@ public abstract class IptvBaseStbCtrl {
                                             HttpServletRequest req) {
         try {
             RestResponse response = new RestResponse();
-            List<IptvResVer> vers = this.stbService.get_singer_category_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_singer_category_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             response.setData(vers);
             return response;
         } catch (IptvBusinessException e) {
@@ -113,7 +116,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_cate_content_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, pinyin, page, IptvMsicUtils.parseTest(test));
+            IptvPageResult result = this.stbService.get_cate_content_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, pinyin, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
@@ -140,7 +143,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_singer_song_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
+            IptvPageResult result = this.stbService.get_singer_song_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
@@ -167,7 +170,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_singer_song_and_mv_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
+            IptvPageResult result = this.stbService.get_singer_song_and_mv_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
@@ -190,7 +193,7 @@ public abstract class IptvBaseStbCtrl {
                                           @RequestParam(required = true) Boolean test,
                                           HttpServletRequest req) {
         try {
-            List<IptvResVer> vers = this.stbService.get_diss_category_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_diss_category_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
             return response;
@@ -216,7 +219,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_diss_song_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
+            IptvPageResult result = this.stbService.get_diss_song_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
@@ -240,7 +243,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            IptvResVer ver = this.stbService.get_song_info_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            IptvResVer ver = this.stbService.get_song_info_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(ver);
             return response;
@@ -264,7 +267,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             RestResponse response = new RestResponse();
-            IptvResVer ver = this.stbService.get_mv_info_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            IptvResVer ver = this.stbService.get_mv_info_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             response.setData(ver);
             return response;
         } catch (IptvBusinessException e) {
@@ -287,7 +290,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             RestResponse response = new RestResponse();
-            List<IptvResVer> vers = this.stbService.get_top_category_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_top_category_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             response.setData(vers);
             return response;
         } catch (IptvBusinessException e) {
@@ -312,7 +315,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_top_content_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
+            IptvPageResult result = this.stbService.get_top_content_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
@@ -339,7 +342,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_column_content_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
+            IptvPageResult result = this.stbService.get_column_content_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
@@ -368,7 +371,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_search_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId,
+            IptvPageResult result = this.stbService.get_search_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId,
                     prid, rid, pinyin, type, page.getOffset(), page.getSize(), IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
@@ -395,7 +398,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            List<IptvResVer> vers = this.stbService.get_search_reco_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId,
+            List<IptvResVer> vers = this.stbService.get_search_reco_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId,
                     prid, rid, type, size, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
@@ -419,7 +422,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            List<IptvResVer> vers = this.stbService.get_user_collect_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_user_collect_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
             return response;
@@ -442,7 +445,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            this.stbService.user_collect_add_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            this.stbService.user_collect_add_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             return new RestResponse();
         } catch (IptvBusinessException e) {
             return new RestResponse(e.getError());
@@ -463,7 +466,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            this.stbService.user_collect_del_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            this.stbService.user_collect_del_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             return new RestResponse();
         } catch (IptvBusinessException e) {
             return new RestResponse(e.getError());
@@ -484,7 +487,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            List<IptvResVer> vers = this.stbService.user_play_history_list_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req),
+            List<IptvResVer> vers = this.stbService.user_play_history_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req),
                     mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
@@ -509,7 +512,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             //需求:历史最多存60条,已经存在的现在再播,则放到最前面
-            this.stbService.user_play_history_add_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            this.stbService.user_play_history_add_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             return new RestResponse();
         } catch (IptvBusinessException e) {
             return new RestResponse(e.getError());
@@ -531,7 +534,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             //需求:历史最多存60条,已经存在的现在再播,则放到最前面
-            this.stbService.user_play_history_del_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
+            this.stbService.user_play_history_del_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, IptvMsicUtils.parseTest(test));
             return new RestResponse();
         } catch (IptvBusinessException e) {
             return new RestResponse(e.getError());
@@ -552,7 +555,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            List<IptvResVer> vers = this.stbService.get_mv_category_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, rid, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_mv_category_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, rid, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
             return response;
@@ -578,7 +581,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_free_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId,
+            IptvPageResult result = this.stbService.get_free_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId,
                     prid, rid, IptvObjectEnum.mv, page.getOffset(), page.getSize(), IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
@@ -606,7 +609,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = stbService.get_free_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId,
+            IptvPageResult result = stbService.get_free_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId,
                     prid, rid, IptvObjectEnum.song, page.getOffset(), page.getSize(), IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
@@ -632,7 +635,7 @@ public abstract class IptvBaseStbCtrl {
             @RequestParam(required = true) Boolean test,
             HttpServletRequest req) {
         try {
-            this.stbService.play_report_impl(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId,
+            this.stbService.play_report_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId,
                     prid, rid, duration, IptvMsicUtils.parseTest(test));
             return new RestResponse();
         } catch (IptvBusinessException e) {
@@ -658,7 +661,7 @@ public abstract class IptvBaseStbCtrl {
             HttpServletRequest req) {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.find_html_theme_list(IptvPlatform.apk, NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page.getOffset(), page.getSize(), test);
+            IptvPageResult result = this.stbService.find_html_theme_list(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page.getOffset(), page.getSize(), test);
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());

@@ -29,5 +29,9 @@
 		INSERT INTO iptv_res_daily_play(daily,rid,play_num)VALUES(#{date},#{rid},1) ON DUPLICATE KEY UPDATE play_num=play_num+1
 	 </update>
 	 
+	 <select id="todo">
+	 	
+	 </select>
+	 
 
 </mapper>

@@ -16,6 +16,9 @@ public class Constant {
 	public final static String PARAM_NAME_TEST = "test";
 	public final static String PARAM_NAME_USER_ID = "userId";
 	public final static String PARAM_NAME_TYPE = "type";
+	public final static String PARAM_NAME_CTYPE = "ctype";
+	public final static String PARAM_NAME_OFFSET = "offset";
+	public final static String PARAM_NAME_SIZE = "size";
 	//===============================end
 	/**
 	 * session中的用户

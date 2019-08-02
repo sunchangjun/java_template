@@ -1,16 +1,27 @@
 package hk.reco.music.iptv.common.service;
 
-import hk.reco.music.iptv.common.enums.IptvObjectEnum;
-import hk.reco.music.iptv.common.utils.IptvRedisKey;
+import java.io.IOException;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.ConvertingCursor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.Set;
+import com.google.common.collect.Sets;
+
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.utils.IptvRedisKey;
 /**
  * 包装了redis的缓存服务
  * @author zhangsl
@@ -74,10 +85,34 @@ public class IptvCacheService {
 	 * @param keyPattern
 	 * @return
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Set<String> getKeys(String keyPattern){
-		Set<String> keys = this.redisTemplate.keys(keyPattern);
+		Set<String> keys = Sets.newHashSet();
+		try {
+			/**
+			 * scan替换keys，处理redis性能问题
+			 */
+			ScanOptions options = ScanOptions.scanOptions().match(keyPattern).count(1000).build();
+	        Cursor<String> cs =  (Cursor) redisTemplate.executeWithStickyConnection(new RedisCallback() {
+	            public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
+	                return new ConvertingCursor<>(redisConnection.scan(options), redisTemplate.getKeySerializer()::deserialize);
+	            }
+	        });
+	        
+	        cs.forEachRemaining(k->{
+				keys.add(k);
+			});
+        
+			cs.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("获取redis Cursor异常：查看redis相关配置信息");
+		}
 		return keys;
 	}
+
 	
 	/**
 	 * 删除单个key

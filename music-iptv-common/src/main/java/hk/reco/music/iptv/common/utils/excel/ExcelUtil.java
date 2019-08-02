@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public class ExcelUtil {
     /**
      * 读取 Excel(多个 sheet)
      *
-     * @param path    文件
+     * @param path     文件
      * @param rowModel 实体类映射，继承 BaseRowModel 类
      * @return Excel 数据 list
      */
@@ -46,7 +48,7 @@ public class ExcelUtil {
     /**
      * 读取某个 sheet 的 Excel
      *
-     * @param path    文件
+     * @param path     文件
      * @param rowModel 实体类映射，继承 BaseRowModel 类
      * @param sheetNo  sheet 的序号 从1开始
      * @return Excel 数据 list
@@ -58,7 +60,7 @@ public class ExcelUtil {
     /**
      * 读取某个 sheet 的 Excel
      *
-     * @param path       文件
+     * @param path        文件
      * @param rowModel    实体类映射，继承 BaseRowModel 类
      * @param sheetNo     sheet 的序号 从1开始
      * @param headLineNum 表头行数，默认为1
@@ -91,6 +93,34 @@ public class ExcelUtil {
         sheet.setSheetName(sheetName);
         writer.write(list, sheet);
         writer.finish();
+    }
+
+    /**
+     * 功能描述:
+     * 〈数据写入excel〉
+     *
+     * @param list      待写入数据
+     * @param fileName  写入文件名称
+     * @param typeEnum  文件格式
+     * @param sheetName 工作表
+     * @param cla       对应Class
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/8/1 13:16
+     */
+    public static void writeExcel(List<? extends BaseRowModel> list, String fileName, ExcelTypeEnum typeEnum,
+                                  String sheetName, Class<? extends BaseRowModel> cla) throws Exception {
+        Path path = Paths.get(fileName);
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        try (OutputStream out = new FileOutputStream(path.toFile())) {
+            ExcelWriter writer = new ExcelWriter(out, typeEnum);
+            Sheet sheet1 = new Sheet(1, 0, cla);
+            sheet1.setSheetName(sheetName);
+            writer.write(list, sheet1);
+            writer.finish();
+        }
     }
 
     /**
@@ -133,7 +163,7 @@ public class ExcelUtil {
     /**
      * 返回 ExcelReader
      *
-     * @param path         需要解析的 Excel 文件
+     * @param path          需要解析的 Excel 文件
      * @param excelListener new ExcelListener()
      */
     private static ExcelReader getReader(Path path,

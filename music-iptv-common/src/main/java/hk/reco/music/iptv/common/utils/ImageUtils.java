@@ -1,6 +1,3 @@
-/**
- *
- */
 package hk.reco.music.iptv.common.utils;
 
 import java.awt.Color;

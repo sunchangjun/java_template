@@ -29,6 +29,8 @@ public class WthxResourceService {
 
     private static final String FIND_WTHXMEDIA_BY_RESID = "select * from wthx_media where res_id=?";
 
+    private static final String FIND_ALL = "select * from wthx_media";
+
     public WthxTop findTopById(long topId) {
         return this.jdbcTemplate.queryForObject(FIND_TOP_BY_ID, new Object[]{topId}, new BeanPropertyRowMapper<>(WthxTop.class));
     }
@@ -43,5 +45,9 @@ public class WthxResourceService {
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public List<WthxMedia> findMediaAll() {
+        return this.jdbcTemplate.query(FIND_ALL, new Object[]{}, new BeanPropertyRowMapper<>(WthxMedia.class));
     }
 }

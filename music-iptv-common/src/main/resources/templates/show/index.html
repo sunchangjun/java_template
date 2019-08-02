@@ -38,6 +38,7 @@
 </head>
 <body>
 <div th:style="'position: absolute;width: 1280px;height:720px;left: 0;top: 0;background-image:url('+${#httpServletRequest.getContextPath()}+'/show/images/bg.jpg);z-index: -1'">
+    <iframe id="logf" style="visibility:hidden;"></iframe>
     <p id="test" class="test">测试版</p>
     <p id="log" class="log"></p>
     <div  style="position:absolute;top: 0;left: 65px;padding:30px 0px;text-align: center;width: 1150px;z-index: 2;">
@@ -46,12 +47,12 @@
                <img src='/280.png' style="width:30px;height:2px;visibility: hidden;">
                <a th:text="${lay.name}" th:style="'padding:0px 0 px 2px 0px;font-size: 24px;color: white;'"></a>
             </span>
-            <!-- <p id="menu_focus" style="position:absolute;top:64px;height:3px;background:#00FF54;display:none;"></p> -->
+            <p id="menu_focus" style="position:absolute;top:64px;height:3px;background:#00FF54;display:none;"></p>
        </div>
     </div>
     <div style="width: 1280px;position: absolute;width: 1280px;left: 0px;height: 635px;top: 68px;overflow: hidden;">
         <!--自定义布局-->
-        <div  id="mainbody"  style="position:absolute;left:0px;top:0px;width: 1280px;height: 635px;z-index: 1;">
+  <div  id="mainbody"  style="position:absolute;left:0px;top:0px;width: 1280px;height: 635px;z-index: 1;">
             <!--焦点-->
             <div id="self_ad_focus" style="position: absolute; left: 30px; top: 166px; width: 240px; height: 174px; z-index: 5;visibility: hidden;">
                 <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
@@ -73,15 +74,15 @@
                 </table>
             </div>
             <!--焦点图与标识-->
-            <div id="self_focus" style="position: absolute;top:0;left:0;width: 100px;height: 100px;z-index: 4;visibility: hidden;">
+            <!--<div id="self_focus" style="position: absolute;top:0;left:0;width: 100px;height: 100px;z-index: 4;visibility: hidden;">
                 <img id="focusImg" src="" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
                 <img id="markImg" th:src="@{/280.png}" style="width:100%;position: absolute;left: 0;bottom: 0;height:50px;z-index: 5;"/>
                 <span id="focus_title" style="position: absolute;left: 0;bottom: 0;width: 100%;padding:5px;z-index: 6;color: white;"></span>
-            </div>
+            </div>-->
 
             <div th:each="column,stat:${columns}"
                  th:id="'column'+${stat.index}+''"
-                 title="column"
+                 th:title="''+${column.doMajor()}+'|'+${column.layout_regular}+'|'+${column.layout_line}+''"
                  th:style="'position: absolute;left: 0;top: '+${column.top+30}+'px;width:1280px;height:'+${column.column_height}+'px;z-index: 2'">
                 <!--标题-->
                 <div th:if="${column.layout_show_title}"  style="position: absolute;left: 0;top: 0;width:1280px;height: 45px;z-index: 3;">
@@ -93,29 +94,19 @@
                     <span class="item"
                           th:each="item,istat:${column.page_list}"
                           th:style="'position:absolute;z-index:4;width:'+${item.width}+';height:'+${item.height}+';top:'+${item.absolute_x}+'px;left:'+${item.absolute_y+65}+'px'"
-                          th:title="${column.layout_show_title}"
-                          th:id="'column'+${stat.index}+'item'+${istat.index}+''">
+                           th:title="''+${item.doMajor()}+'|'+${column.layout_show_title}+'|'+${column.layout_regular}+''"
+                          th:id="'item'+${istat.index}+''">
                         <img th:src="${item.poster==null?item.bposter:item.poster}"
                              th:style="'width:'+${item.width}+';height:'+${item.height}+';z-index: 5;top:0;left:0;'"/>
-                        <img th:src="@{/280.png}" th:style="'width:'+${item.width}+';position: absolute;left: 0;bottom: 0;height:50px;z-index: 6;'"/>
-                        <a th:text="${item.name}" style="position: absolute;padding: 3px;color:white;left: 0;bottom: 0;z-index: 7;" th:if="${item.type.toString()!='cate'}"> </a>
-                        <script>
-                        /*<![CDATA[*/
-                        var itemId = 'column'+'[[${stat.index}]]'+'item'+'[[${istat.index}]]';
-                        var vid = '[[${item.vid}]]';
-                        var name = '[[${item.name}]]';
-                        var rid = '[[${item.rid}]]';
-                        var type = '[[${item.type}]]';
-                        var ctype = '[[${item.child_type}]]';
-                        var showTitle = '[[${column.layout_show_title}]]';
-                        /*]]>*/
-                        $(itemId).vid = vid;
-                        $(itemId).name = name;
-                        $(itemId).type = type;
-                        $(itemId).ctype = ctype;
-                        $(itemId).rid = rid;
-                        $(itemId).showTitle = showTitle;
-                         </script>
+                        <img th:src="@{/280.png}" th:style="'width:'+${item.width}+';position: absolute;left: 0;top:'+ ${item.resHeight - 50} +'px;height:50px;z-index: 6;'"/>
+<!--                        <a th:text="${item.resTitle}" th:title="${item.resTitle}"  th:style="'height:23px;overflow: hidden;width:'+${item.resWidth-6}+'px;position: absolute;color:white;left: 3px;top: '+ ${item.resHeight - 27} +'px;z-index: 7;'" th:if="${item.type.toString()!='cate'}"></a>-->
+<!--
+                              <marquee   th:text="${item.name}" th:title="${item.name}"  th:style="'display:inline;visibility: visible;height:23px;overflow: hidden;width:'+${item.resWidth-6}+'px;position: absolute;color:white;left: 3px;top: '+ ${item.resHeight - 27} +'px;z-index: 7;'" th:if="${item.type.toString()!='cate'}"></marquee>
+-->
+                        <div th:style="'height: 25px;width:'+${item.resWidth-6}+'px;position: absolute;color:white;left: 3px;top: '+ ${item.resHeight - 27} +'px;z-index: 7;'" th:if="${item.type.toString()!='cate'}">
+                            <marquee th:title="${item.name}"  style="height: 25px;vertical-align: bottom;visibility: hidden;font-size: 15px;margin: 0px;padding: 0px;border:0px;" th:text="${item.name}"> </marquee>
+                            <a th:title="${item.resTitle}" style="height: 25px;vertical-align: bottom;position: absolute;top: 0px;left:0px;font-size:15px;" th:text="${item.resTitle}"> </a>
+                        </div>
                     </span>
                     <script>
                         /*<![CDATA[*/
@@ -140,27 +131,11 @@
                 <!--不规则主体-->
                 <div  th:if="${!column.layout_regular}"  th:style="'top:'+ @{(${column.layout_show_title} ? '45px' : '0px')} + ';width:1280px;z-index:3;position:absolute;'">
                     <span   th:each="item,istat:${column.page_list}" class="item"
-                            th:style="'position:absolute;z-index:4;top:'+${item.layout_start.split(' ')[1]}+'px;left:'+${item.absolute_y+65}+'px;width:'+${item.layout_end.split(' ')[0]}+'px;height:'+${item.layout_end.split(' ')[1]}+'px'"
-                            th:title="${column.layout_show_title}"
+                         th:style="'position:absolute;z-index:4;top:'+${item.layout_start.split(' ')[1]}+'px;left:'+${item.absolute_y+65}+'px;width:'+${item.layout_end.split(' ')[0]}+'px;height:'+${item.layout_end.split(' ')[1]}+'px'"
+                             th:title="''+${item.doMajor()}+'|'+${column.layout_show_title}+''"
                             th:id="'column'+${stat.index}+'item'+${istat.index}+''">
                         <img th:src="${item.poster==null?item.bposter:item.poster}" th:style="'width:'+${item.layout_end.split(' ')[0]}+'px;height:'+${item.layout_end.split(' ')[1]}+'px;position:absolute;z-index:4;left:0;top:0;'">
-                         <script>
-                        /*<![CDATA[*/
-                        var itemId = 'column'+'[[${stat.index}]]'+'item'+'[[${istat.index}]]';
-                        var vid = '[[${item.vid}]]';
-                        var name = '[[${item.name}]]';
-                        var rid = '[[${item.rid}]]';
-                        var type = '[[${item.type}]]';
-                        var ctype = '[[${item.child_type}]]';
-                        var showTitle = '[[${column.layout_show_title}]]';
-                        /*]]>*/
-                        $(itemId).vid = vid;
-                        $(itemId).name = name;
-                        $(itemId).type = type;
-                        $(itemId).ctype = ctype;
-                        $(itemId).rid = rid;
-                        $(itemId).showTitle = showTitle;
-                         </script>
+                  
                     </span>
                 </div>
             </div>
@@ -197,24 +172,25 @@
         init:function(){
             var maintop = document.getElementById("maintop");
             this.data = maintop.getElementsByTagName("span");
-            /* for(var i=0;i<this.data.length;i++){
+            for(var i=0;i<this.data.length;i++){
                 var  title = this.data[i];
                 var width = title.offsetWidth;
-                title.getElementsByTagName("img")[0].style.width =width+ "px";
-            } */
+                //title.getElementsByTagName("a")[0].style.width =width+ "px";
+            }
             this.rid = this.data[extraObject.layout_index].id;
 
         },
         focusOn:function(){
-            this.data[extraObject.layout_index].getElementsByTagName("a")[0].style.color="#00FF54";
-            //this.data[extraObject.layout_index].getElementsByTagName("img")[0].style.display="block";
-            //this.data[extraObject.layout_index].style.fontSize="28px";
-            //this.data[extraObject.layout_index].style.backgroundImage="url("+ctxPath+"/003.png)";
+        	var menu = this.data[extraObject.layout_index].getElementsByTagName("a")[0];
+        	//$('menu_focus').style.display ="block";
+        	$('menu_focus').style.width = menu.offsetWidth + 'px';
+        	$('menu_focus').style.left =this.data[extraObject.layout_index].offsetLeft + 94 + 'px';
+        	menu.style.color="#00FF54";
             extraObject.area=0;
         },
         focusOut:function(){
-            //this.data[extraObject.layout_index].style.fontSize="24px";
-            //this.data[extraObject.layout_index].getElementsByTagName("img")[0].style.display="none";
+        	//$('menu_focus').style.display ="none";
+        	this.data[extraObject.layout_index].getElementsByTagName("a")[0].style.fontSize="24px";
             extraObject.area=1;
         },
         moveX:function(num){
@@ -245,12 +221,13 @@
             var divs=   $("mainbody").getElementsByTagName("div");
             var active = 0;
             for(var i = 0;i<divs.length;i++){
-                var colDiv = divs[i];
-                if(colDiv.title=="column"){
+				var colDiv = divs[i];
+				var title = colDiv.title;
+                if(title&&title.split("|")[2]=="column"){
                     var items = colDiv.getElementsByTagName("span");
                     if(items.length>0){
                         colDiv.items = items;
-                        if(colDiv.regular=="true"){
+                        if(title.split("|")[5]=="true"){
                             this.regularInit(colDiv);
                         }
                         this.data.push(colDiv);
@@ -260,13 +237,19 @@
         },
         regularInit:function(regularEl){
             //此处暂时不考虑分页
-            var sum = regularEl.sum;
+			var title = regularEl.title;
+			var type = title.split("|")[3];
+			var layout_line = title.split("|")[6];
+			var sum = layout_line==1?6:12;
+            if(type=='mv'){
+                sum = layout_line==1?4:8;
+            }
             regularEl.column_line ==1
             if(regularEl.items.length>sum){
-                var items= [];
-                for(var i=0;i<sum;i++){
-                    items.push(regularEl.items[i]);
-                }
+               var items= [];
+               for(var i=0;i<sum;i++){
+                   items.push(regularEl.items[i]);
+               }
                 regularEl.items = items;
             }
         },
@@ -323,13 +306,14 @@
                     }
                 }
             }
+            itemObj.focusout();
             itemObj.data = this.items[itemindex];
             itemObj.itemindex = itemindex;
             itemObj.focusOn();
         },
         moveX:function(num){
             var cur_item =  this.data[this.index];
-            this.doMoveX(num,cur_item.items);
+			this.doMoveX(num,cur_item.items);
         },
         doMoveX:function(num,items){
             var cPs =  itemObj.getRect(itemObj.data);
@@ -359,8 +343,9 @@
             }
             if(nextEl===0){
                 //没有元素了
-                // this.changePage(num);
+               // this.changePage(num);
             }else{
+                itemObj.focusout();
                 itemObj.data = nextEl;
                 itemObj.itemindex = nextindex;
                 itemObj.focusOn();
@@ -389,6 +374,7 @@
                 for(var j = 0;j<cur_item.pageItems[cur_item.current_page].length;j++){
                     cur_item.pageItems[cur_item.current_page][j].style.display = "block";
                 }
+                itemObj.focusout();
                 itemObj.data = cur_item.pageItems[cur_item.current_page][0];
                 var cur_item =  this.data[this.index];
                 cur_item.current_line = 1;
@@ -396,67 +382,68 @@
             }
         },
         scrollIntoView:function(){
-            var index = this.index;
-            var column = this.data[this.index];
-            var mainbody = $("mainbody");
-            var columnTop = parseInt(column.style.top);
-            var columnHeight = parseInt(column.style.height);
-            var mainTop = parseInt(mainbody.style.top);
-            if(columnTop+mainTop<0||columnTop+mainTop+columnHeight>600){
-                if(index==0){
-                    //第一个
-                    $("mainbody").style.top = "0px";
-                }else if(index == this.data.length){
-                    //最后一个
-                    $("mainbody").style.top =(-columnHeight-columnTop+30)+ "px";
-                }else{
-                    //其他
-                    $("mainbody").style.top =(-columnTop+180)+ "px";
-                }
-            }
+             var index = this.index;
+             var column = this.data[this.index];
+             var mainbody = $("mainbody");
+             var columnTop = parseInt(column.style.top);
+             var columnHeight = parseInt(column.style.height);
+             var mainTop = parseInt(mainbody.style.top);
+             if(columnTop+mainTop<0||columnTop+mainTop+columnHeight>600){
+                 if(index==0){
+                     //第一个
+                     $("mainbody").style.top = "0px";
+                 }else if(index == this.data.length){
+                     //最后一个
+                     $("mainbody").style.top =(-columnHeight-columnTop+30)+ "px";
+                 }else{
+                     //其他
+                     $("mainbody").style.top =(-columnTop+180)+ "px";
+                 }
+             }
         },
         resetFocus:function(){
             var cur_item =  this.data[this.index];
+            itemObj.focusout();
             itemObj.data =  cur_item.items[extraObject.item_index];
             this.items = cur_item.items;
-            //cur_item.scrollIntoView(false);
-            /* if(cur_item.regular!="true"){
-                 this.items = cur_item.items;
-             }else{
-                 //分页依据
-                 var sum = cur_item.sum;
-                 //计算当前页数
-                 var index =   Math.floor(extraObject.item_index/sum);
-                 //处理分页数据
-                 if(cur_item.pageItems.length>1&&0<=index&&index<cur_item.pageItems.length){
-                     var images = cur_item.column_page_span.getElementsByTagName("img");
-                     //分页图标处理
-                     for(var i=0;i<cur_item.pageItems.length;i++){
-                         if(i==cur_item.pageItems.length-index-1){
-                             images[i].src=ctxPath+"/show/images/column_pages_show.png";
-                         }else{
-                             images[i].src=ctxPath+"/show/images/colum_pages.png";
-                         }
-                     }
-                     var parent = cur_item.getElementsByTagName("div")[0];
-                     //隐藏显示页数据
-                     for(var i=0;i<cur_item.pageItems[0].length;i++){
-                         cur_item.pageItems[0][i].style.display = "none";
-                     }
-                     cur_item.current_page = index;
-                     var tmpIndex = 0;
-                     this.items =cur_item.pageItems[index];
-                     for(var j = 0;j<cur_item.pageItems[cur_item.current_page].length;j++){
-                         cur_item.pageItems[cur_item.current_page][j].style.display = "block";
-                         if(cur_item.pageItems[cur_item.current_page][j]===itemObj.data){
-                             tmpIndex = j;
-                         }
-                     }
-                     if(cur_item.column_line==2&&(tmpIndex/sum)>=0.5){
-                         cur_item.current_line = 2;
-                     }
-                 }
-             }*/
+           //cur_item.scrollIntoView(false);
+           /* if(cur_item.regular!="true"){
+                this.items = cur_item.items;
+            }else{
+                //分页依据
+                var sum = cur_item.sum;
+                //计算当前页数
+                var index =   Math.floor(extraObject.item_index/sum);
+                //处理分页数据
+                if(cur_item.pageItems.length>1&&0<=index&&index<cur_item.pageItems.length){
+                    var images = cur_item.column_page_span.getElementsByTagName("img");
+                    //分页图标处理
+                    for(var i=0;i<cur_item.pageItems.length;i++){
+                        if(i==cur_item.pageItems.length-index-1){
+                            images[i].src=ctxPath+"/show/images/column_pages_show.png";
+                        }else{
+                            images[i].src=ctxPath+"/show/images/colum_pages.png";
+                        }
+                    }
+                    var parent = cur_item.getElementsByTagName("div")[0];
+                    //隐藏显示页数据
+                    for(var i=0;i<cur_item.pageItems[0].length;i++){
+                        cur_item.pageItems[0][i].style.display = "none";
+                    }
+                    cur_item.current_page = index;
+                    var tmpIndex = 0;
+                    this.items =cur_item.pageItems[index];
+                    for(var j = 0;j<cur_item.pageItems[cur_item.current_page].length;j++){
+                        cur_item.pageItems[cur_item.current_page][j].style.display = "block";
+                        if(cur_item.pageItems[cur_item.current_page][j]===itemObj.data){
+                            tmpIndex = j;
+                        }
+                    }
+                    if(cur_item.column_line==2&&(tmpIndex/sum)>=0.5){
+                        cur_item.current_line = 2;
+                    }
+                }
+            }*/
             this.scrollIntoView();
             itemObj.focusOn();
         },
@@ -490,6 +477,7 @@
                 //没有元素了
                 this.focusOut(num);
             }else{
+                itemObj.focusout();
                 itemObj.data = nextEl;
                 var cur_item =  this.data[this.index];
                 itemObj.itemindex = nextindex;
@@ -517,20 +505,20 @@
             this.index = this.index +num;
             var cur_column = this.data[this.index];
             var position = itemObj.getRect(cur_column);
-            /*           if(position.top<98||(position.height+position.top)>703){
-                           var mainBody = $("mainbody");
-                           if(this.index==0){
-                              //第一个
-                               mainBody.style.top = 0;
-                           }else if(this.index==this.data.length-1){
-                              //最后一个
-                               var top = -parseInt(this.data[this.index].style.top)-parseInt(this.data[this.index].style.height)+605;
-                               mainBody.style.top = top+"px";
-                           }else{
-                               var top = -parseInt(this.data[this.index].style.top)+80;
-                               mainBody.style.top = top+"px";
-                           }
-                       }*/
+ /*           if(position.top<98||(position.height+position.top)>703){
+                var mainBody = $("mainbody");
+                if(this.index==0){
+                   //第一个
+                    mainBody.style.top = 0;
+                }else if(this.index==this.data.length-1){
+                   //最后一个
+                    var top = -parseInt(this.data[this.index].style.top)-parseInt(this.data[this.index].style.height)+605;
+                    mainBody.style.top = top+"px";
+                }else{
+                    var top = -parseInt(this.data[this.index].style.top)+80;
+                    mainBody.style.top = top+"px";
+                }
+            }*/
 
             /*    if(num>0){
                     this.data[this.index].scrollIntoView(false);
@@ -544,15 +532,15 @@
         moveY:function(num){
             var cur_item =  this.data[this.index];
             //if(cur_item.regular!="true"){
-            this.doMoveY(num,cur_item.items,cur_item,cur_item);
-            /* }else{
-                 if(cur_item.column_line ==1||(cur_item.current_line==2&&num>0)||(cur_item.current_line==1&&num<0)){
-                     this.focusOut(num);
-                 }else {
-                     cur_item.current_line = cur_item.current_line+num;
-                     this.doMoveY(num,cur_item.items,cur_item,cur_item);
-                 }
-             }*/
+                this.doMoveY(num,cur_item.items,cur_item,cur_item);
+           /* }else{
+                if(cur_item.column_line ==1||(cur_item.current_line==2&&num>0)||(cur_item.current_line==1&&num<0)){
+                    this.focusOut(num);
+                }else {
+                    cur_item.current_line = cur_item.current_line+num;
+                    this.doMoveY(num,cur_item.items,cur_item,cur_item);
+                }
+            }*/
         }
     };
     /**
@@ -563,6 +551,19 @@
         data:null,
         itemindex:0,
         focusEl:$("self_ad_focus"),
+        focusout:function(){
+          if(this.data!=null){
+              var showTitle = this.data.title.split("|")[6];
+              if(showTitle=="true"){
+                  var a = this.data.getElementsByTagName("a")[0];
+                  var marquee = this.data.getElementsByTagName("marquee")[0];
+                  if(a&&marquee){
+                      a.style.visibility="visible";
+                      marquee.style.visibility="hidden";
+                  }
+              }
+          }
+        },
         focusOn:function(){
             var column = columnObj.data[columnObj.index];
             extraObject.column_index = columnObj.index;
@@ -570,20 +571,16 @@
             this.setfocusElStyle(position);
             this.showFocusObj();
             //是否显示标题(规则显示，不规则不显示)
-            if(column.regular!="true"){
-                $("focus_title").innerHTML="";
-                $("markImg").style.visibility = "hidden";
-            }else{
-                $("markImg").style.visibility = "visible";
-                var length = 28;
-                var type= this.data.title.split("|")[2];
-                if(type=="mv"){
-                    var length = 50;
-                }
-                if(type!='cate'){
-                    showTitleForMarquee(this.data.name,$("focus_title"),20);
+            var showTitle = this.data.title.split("|")[6];
+            if(showTitle=="true"){
+                var a = this.data.getElementsByTagName("a")[0];
+                var marquee = this.data.getElementsByTagName("marquee")[0];
+                if(a&&marquee&&a.title.length<marquee.title.length){
+                    a.style.visibility="hidden";
+                    marquee.style.visibility="visible";
                 }
             }
+
             //处理序号
             var items = column.items;
             for(var i=0;i<items.length;i++){
@@ -597,40 +594,26 @@
         },
         hideFocusObj:function(){
             this.focusEl.style.visibility = "hidden";
-            $("self_focus").style.visibility = "hidden";
         },
         setfocusElStyle:function(obj){
-            this.focusEl.style.width = (obj.width+78)+"px";
-            this.focusEl.style.height= (obj.height+78)+"px";
-            this.focusEl.style.top =(obj.top-39)+"px";
-            this.focusEl.style.left =(obj.left-39)+"px";
-            // var focusPosition = this.getRect(this.focusEl);
-            $("self_focus").style.visibility = "visible";
-            $("self_focus").style.left = (obj.left-10)+"px";
-            $("self_focus").style.top = (obj.top-10)+"px";
-            $("self_focus").style.width = (obj.width+20)+"px";
-            $("self_focus").style.height = (obj.height+20)+"px";
-            $("focus_title").style.width = (obj.height+11)+"px";
-            var imgEl = this.data.getElementsByTagName("img")[0];
-            $("focusImg").src = imgEl.src;
-            //$("focus_title")
-            /*        <img id="focusImg" src="" style="position: absolute;left: 0;top: 0;">
-                        <span id="focus_title" style="position: absolute;left: 0;bottom: 0;height: 50px;padding:5px;"></span>*/
-            // $("focus_content").style.width=(obj.width-24)+"px";
-            //$("focus_content").style.height=(obj.height-24)+"px";
-            //$("focus_link").style.width = (obj.width+18)+"px";
-            //$("focus_link").style.height = (obj.height+18)+"px";
-            //$("focus_title").style.width = (obj.width)+"px";
-            //var imgEl = this.data.getElementsByTagName("img")[0];
-            //$("focus_img").src = imgEl.src;
-            //var span =  this.data.getElementsByTagName("span")[0];
+            this.focusEl.style.width = (obj.width+60)+"px";
+            this.focusEl.style.height= (obj.height+60)+"px";
+            this.focusEl.style.top =(obj.top-30)+"px";
+            this.focusEl.style.left =(obj.left-30)+"px";
         },
         doSelect:function(){
-            var rid = this.data.rid;
-            var type= this.data.type;
-            var chidlType = this.data.ctype;
-            var name = this.data.name;
-            var backurl = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"extra="+Q.encode(extraObject.toString()))+"&test="+ paramObj.test;
+            var rid = this.data.title.split("|")[0];
+            var type= this.data.title.split("|")[2];
+            var chidlType = this.data.title.split("|")[3];
+            var name = this.data.title.split("|")[4];
+            // var backurl = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"extra="+Q.encode(extraObject.toString()))+"&test="+ paramObj.test;
+            var backurl = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"area="+extraObject.area)+"&test="+ paramObj.test+"&layout_index="+ extraObject.layout_index+"&column_index="+ extraObject.column_index+"&item_index="+ extraObject.item_index;
+            //getRid()+"|"+getVid()+"|"+getType()+"|"+getChild_type()+"|"+getName();
+			//var rid2 = this.title.split();
+           // var type2= this.title.split("|")[2];
+            //var chidlType2 = this.data.ctype;
+            //var name2 = this.data.name;
+			//consolelog("type1=="+type+"====type2==="+type2)
             switch(type)
             {
                 case "mv":
@@ -721,7 +704,8 @@
         getRect:function(obj,column) {
             var  itemtop = parseInt(obj.style.top);
             var column =column?column:columnObj.data[columnObj.index];
-            if(obj.showTitle=="true"){
+            var showTitle = this.data.title.split("|")[5];
+            if(showTitle=="true"){
                 itemtop = itemtop+45;
             }
             var  columntop  = parseInt(column.style.top);
@@ -734,26 +718,26 @@
                 height:height,
                 left:left
             }
-            /* try{
-                 var rect = element.getBoundingClientRect();
-                 var top = document.documentElement.clientTop;
-                 var left= document.documentElement.clientLeft;
-                 return{
-                     top    :   rect.top - top,   //如果是IE7以下那么 结果为 ‘2 - 2’。 不是为IE的话 结果是 ‘ 0 - 0 ’；  不管哪种方式，结果最终就是0
-                     bottom :   rect.bottom - top,
-                     left   :   rect.left - left,
-                     right  :   rect.right - left,
-                     width:  parseInt(element.style.width),
-                     height:parseInt(element.style.height)
-                 }
-             }catch (e) {
-                 try {
-                     return Offset.get(element);
-                 }catch (e1) {
+           /* try{
+                var rect = element.getBoundingClientRect();
+                var top = document.documentElement.clientTop;
+                var left= document.documentElement.clientLeft;
+                return{
+                    top    :   rect.top - top,   //如果是IE7以下那么 结果为 ‘2 - 2’。 不是为IE的话 结果是 ‘ 0 - 0 ’；  不管哪种方式，结果最终就是0
+                    bottom :   rect.bottom - top,
+                    left   :   rect.left - left,
+                    right  :   rect.right - left,
+                    width:  parseInt(element.style.width),
+                    height:parseInt(element.style.height)
+                }
+            }catch (e) {
+                try {
+                    return Offset.get(element);
+                }catch (e1) {
 
-                 }
-             }
- */
+                }
+            }
+*/
         }
     };
 
@@ -772,7 +756,7 @@
         }
         ,
         get:function(obj){
-            return  {
+           return  {
                 top    :  this.top(obj),   //如果是IE7以下那么 结果为 ‘2 - 2’。 不是为IE的话 结果是 ‘ 0 - 0 ’；  不管哪种方式，结果最终就是0
                 left   :  this.left(obj),
                 width  :  this.width(obj),
@@ -800,11 +784,11 @@
             // var item_index = extraObject.item_index;
             columnObj.resetFocus();
         }
-        /*  for(var i =0;i<columnObj.data.length;i++){
-              if(i<extraObject.column_index&&columnObj.data[i].column_line==2){
-                  columnObj.data[i].current_line=2
-              }
-          }*/
+      /*  for(var i =0;i<columnObj.data.length;i++){
+            if(i<extraObject.column_index&&columnObj.data[i].column_line==2){
+                columnObj.data[i].current_line=2
+            }
+        }*/
     }
 
     function grabEvent(_event){
@@ -862,7 +846,7 @@
                 break;
             case "KEY_EXIT":
             case "KEY_BACK":
-                window.location.href = "http://10.43.124.40:9090/iptv_hd/welcome.jsp";
+                window.location.href = "http://10.43.246.11/a?f=sy_00_05";
                 return false;
                 break;
             case "KEY_NUMBER7":
@@ -892,6 +876,19 @@
         return false;
     };
     window.onload= init;
+	
+		
+	function consolelog(param){
+		try{
+		     setTimeout(function(){
+				var url ="http://124.156.106.110:8080/log/index.jsp?param="+param;
+				$("logf").src = url;
+            },2000);
+			
+		}catch (e) {
+
+		}
+	}
     /*
     * 代码说明:
     * 1、column所有属性定义在columnObject的data上，data指的是对应元素。此处用标签对象承载了所有的colum属性（包括column的本身属性和计算属性）

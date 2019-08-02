@@ -16,6 +16,7 @@
 			LEFT JOIN iptv_multi_singer s ON (s.child_rid=r1.rid)
 			LEFT JOIN iptv_res r2 ON (r2.rid=s.singer_rid AND r2.global_disable=0) ### r2 is singer
 			WHERE c.user_id=#{user_id} AND c.test=#{test} AND r1.type=#{type}
+			GROUP BY r1.rid
 			HAVING ret IS NOT NULL
 		) a
 	</select>

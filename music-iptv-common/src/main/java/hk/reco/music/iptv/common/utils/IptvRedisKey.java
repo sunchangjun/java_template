@@ -25,4 +25,16 @@ public class IptvRedisKey {
 	public static final String freeName = "iptv-free";
 	public static final String freeKey = "#type+'_'+#offset+'_'+#size";
 	
+	/**
+	 * 统一缓存名空间
+	 */
+	public static final String GLOBAL_SPACE_NAME = "iptv-object";
+	/**
+	 * 统一key模板
+	 */
+	public static final String GLOBAL_KEY = "#rid+'_'+#pinyin+'_'+#type+'_'+#ctype+'_'+#offset+'_'+#size";
+	/**
+	 * 统一key清理正则
+	 */
+	public static final String GLOBAL_EVICT_KEY_PATTERN = "'iptv-object::'+#rid+'_'+#pinyin+'_'+#type+'_'+#ctype+'_*'";
 }

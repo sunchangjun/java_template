@@ -83,7 +83,8 @@ public class XmlUtils {
         return writer.toString();
     }
 
-    public static <T extends Serializable> T deserialize(String xml, Class clazz)
+    @SuppressWarnings("unchecked")
+	public static <T extends Serializable> T deserialize(String xml, Class<T> clazz)
             throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshal = context.createUnmarshaller();
@@ -91,7 +92,8 @@ public class XmlUtils {
         return (T) unmarshal.unmarshal(reader);
     }
 
-    public static <T extends Serializable> T deserializeDelNamespanc(String xml, Class clazz)
+    @SuppressWarnings("unchecked")
+	public static <T extends Serializable> T deserializeDelNamespanc(String xml, Class<T> clazz)
             throws JAXBException, ParserConfigurationException, SAXException {
         JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();

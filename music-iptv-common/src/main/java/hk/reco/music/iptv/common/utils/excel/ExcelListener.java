@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2019/2/27 16:04
  * @Version 1.0
  */
-public class ExcelListener extends AnalysisEventListener {
+public class ExcelListener extends AnalysisEventListener<Object> {
 
     /**
      * 存储data

@@ -7,10 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -141,6 +143,85 @@ public class FtpUtils {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    /**
+     * 初始化ftp服务器
+     */
+    public void initFtpClient() {
+        ftpClient = new FTPClient();
+        ftpClient.setControlEncoding("utf-8");
+        ftpClient.setConnectTimeout(5*60*1000);
+        ftpClient.setDefaultTimeout(5*60*1000);
+        ftpClient.setDataTimeout(5*60*1000);
+        try {
+            System.out.println("connecting...ftp服务器:"+this.host+":"+this.port);
+            ftpClient.connect(host, port); //连接ftp服务器
+            ftpClient.login(username, password); //登录ftp服务器
+            int replyCode = ftpClient.getReplyCode(); //是否成功登录服务器
+            if(!FTPReply.isPositiveCompletion(replyCode)){
+                System.out.println("connect failed...ftp服务器:"+this.username+":"+this.port);
+            }
+            System.out.println("connect successfu...ftp服务器:"+this.password+":"+this.port);
+        }catch (MalformedURLException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 上传文件
+     * @param pathName ftp服务保存地址
+     * @param fileName 上传到ftp的文件名
+     *  @param originfilename 待上传文件的名称（绝对地址） *
+     * @return
+     */
+    public boolean uploadFile(String pathName, String fileName,String originfilename) throws Exception{
+        InputStream inputStream = null;
+        try{
+            System.out.println("开始上传文件");
+            inputStream = new FileInputStream(new File(originfilename));
+            initFtpClient();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            ftpClient.setBufferSize(1024*1024*10);
+            //检查上传路径是否存在 如果不存在返回false
+            boolean flag = ftpClient.changeWorkingDirectory(pathName);
+            if(!flag){
+                //创建上传的路径  该方法只能创建一级目录
+                ftpClient.makeDirectory(pathName);
+                //指定上传路径
+                ftpClient.changeWorkingDirectory(pathName);
+            }
+//          ftpClient.enterLocalActiveMode();    //主动模式
+            ftpClient.enterLocalPassiveMode(); //被动模式
+            ftpClient.storeFile(fileName, inputStream);
+            System.out.println("上传文件成功");
+            return true;
+        }catch (Exception e) {
+            System.out.println("上传文件失败" + fileName);
+            e.printStackTrace();
+            throw new Exception("上传文件失败" + fileName);
+        }finally{
+            if(ftpClient != null) {
+                ftpClient.logout();
+                if(ftpClient.isConnected()){
+                    try{
+                        ftpClient.disconnect();
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if(null != inputStream){
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
     /**
      * 上传文件到FTP服务器

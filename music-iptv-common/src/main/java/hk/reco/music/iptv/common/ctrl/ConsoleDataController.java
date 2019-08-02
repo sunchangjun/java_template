@@ -441,6 +441,12 @@ public class ConsoleDataController {
         if(IptvObjectEnum.column.equals(type)){
             link.setVersion_disable(false);
             iptvResVerService.appendResVer(link,false);
+            IptvResVer ver = new IptvResVer();
+            ver.setSort(link.getSort());
+            ver.setLayout_show_child_title(link.getLayout_show_child_title());
+            ver.setLayout_show_title(link.getLayout_show_title());
+            ver.setLayout_line(link.getLayout_line());
+            iptvConsoleResService.consoleModifyResVer(link.getLink_vid(),ver);
         }else{
             iptvConsoleResService.consoleUpdateLayoutInfo(link);
         }

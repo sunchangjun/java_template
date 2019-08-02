@@ -1,7 +1,6 @@
 package hk.reco.music.iptv.common.stats;
 
 import hk.reco.music.iptv.common.enums.IptvObjectEnum;
-import hk.reco.music.iptv.common.enums.IptvPlatform;
 
 /**
  * 日志行产生器
@@ -12,7 +11,7 @@ public class IptvStatsLogger {
 	
 	//创建统计数据
 	public static String data(IptvStatsAction action, String ip, String mac, String userId, Long prid, Long rid, Long extrid, 
-			String pinyin, IptvObjectEnum type, Integer duration, String method, IptvPlatform platform, boolean test) throws Exception{
+			String pinyin, IptvObjectEnum type, Integer duration, String method, String platform, long now, boolean test) throws Exception{
 		if(mac!=null && mac.indexOf(":")!=-1){
 			mac = mac.replaceAll(":", "-");
 		}
@@ -20,7 +19,7 @@ public class IptvStatsLogger {
 			throw new Exception("action不能为空!");
 		}
 		StringBuffer sb = new StringBuffer(action.name());
-		colonAppend(sb, System.currentTimeMillis());//时间
+		colonAppend(sb, now);//时间
 		colonAppend(sb, ip);//ip地址
 		colonAppend(sb, mac);//用户mac
 		colonAppend(sb, userId);//用户uid

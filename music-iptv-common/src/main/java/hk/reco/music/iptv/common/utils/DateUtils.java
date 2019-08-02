@@ -1,5 +1,6 @@
 package hk.reco.music.iptv.common.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +64,16 @@ public class DateUtils {
         return dayOfweek;
     }
 
+	public static String getYmd(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(date);
+	}
+	
+	public static String getYmd(long ts) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(new Date(ts));
+	}
+    
     /**
      * 日期转字符串
      *
@@ -78,9 +89,20 @@ public class DateUtils {
         return simpleDateFormat.format(date);
     }
 
-	public static Date getDate(String yymmdd) throws Exception{
+	public static Date getDate(String yymmdd) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return sdf.parse(yymmdd);
+		try {
+			return sdf.parse(yymmdd);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static java.sql.Date getSqlDate(String yymmdd) throws Exception{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = sdf.parse(yymmdd);
+		return new java.sql.Date(date.getTime());
 	}
 	
 	public static List<Date> validateDayRange(String from, String to) throws Exception {

@@ -1,6 +1,5 @@
 package hk.reco.music.iptv.common.domain;
 
-import hk.reco.music.iptv.common.enums.IptvPlatform;
 
 /**
  * 〈web端的用户信息〉
@@ -11,7 +10,7 @@ public class WebSessionUser {
 
     private String userId;
 
-    private IptvPlatform platform;
+    private String platform;
 
     public String getUserId() {
         return userId;
@@ -21,11 +20,11 @@ public class WebSessionUser {
         this.userId = userId;
     }
 
-    public IptvPlatform getPlatform() {
+    public String getPlatform() {
         return platform;
     }
 
-    public void setPlatform(IptvPlatform platform) {
+    public void setPlatform(String platform) {
         this.platform = platform;
     }
 }
