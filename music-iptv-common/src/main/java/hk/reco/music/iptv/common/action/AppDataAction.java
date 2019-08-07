@@ -8,6 +8,7 @@ import hk.reco.music.iptv.common.enums.IptvPlatform;
 import hk.reco.music.iptv.common.layout.CatesCoverter;
 import hk.reco.music.iptv.common.layout.Layout;
 import hk.reco.music.iptv.common.layout.LayoutFactory;
+import hk.reco.music.iptv.common.service.IptvStbService;
 import hk.reco.music.iptv.common.service.stb.IptvStbCommonService;
 import hk.reco.music.iptv.common.utils.*;
 
@@ -42,7 +43,7 @@ public abstract class AppDataAction  {
     final  private static Integer show_title_height = 45;
 
 	@Autowired
-	protected IptvStbCommonService stbService;
+	protected IptvStbService stbService;
     @Autowired
     protected IptvResVerDao iptvResVerDao;
 
@@ -54,11 +55,9 @@ public abstract class AppDataAction  {
         //处理用户信息
         Object o = request.getSession().getAttribute(Constant.USER_IN_SESSION);
         WebSessionUser user;
-        boolean first_enter = false;
         if(o==null){
             user = dealWithUserInfo(request);
             request.getSession().setAttribute(Constant.USER_IN_SESSION,user);
-            first_enter = true;
         }else{
             user = (WebSessionUser)o;
         }
@@ -71,7 +70,7 @@ public abstract class AppDataAction  {
         model.addAttribute("extroInfo",info);
         System.out.println("sysenv==>"+sysenv);
         //查询布局参数
-        List<IptvResVer> vers = this.stbService.get_layouts_impl(user.getPlatform(), NetworkUtils.getIpAddress(request), null,user.getUserId(), first_enter, sysenv);
+        List<IptvResVer> vers = this.stbService.get_layouts_impl(user.getPlatform(), NetworkUtils.getIpAddress(request), null,user.getUserId(), sysenv);
         String index = "index";
         if(vers!=null&&vers.size()>0){
             IptvResVer ver = vers.get(info.getLayout_index());

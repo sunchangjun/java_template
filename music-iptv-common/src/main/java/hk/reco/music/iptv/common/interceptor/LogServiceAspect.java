@@ -113,7 +113,11 @@ public class LogServiceAspect {
 					ol.setPinyin(v != null ? String.valueOf(v) : null);
 					break;
 				case Constant.PARAM_NAME_PLATFORM:
-					ol.setPlatform(v != null ? (IptvPlatform) v : IptvPlatform.apk);
+					if (v != null) {
+						ol.setPlatform(String.valueOf(v));
+					} else {
+						ol.setPlatform(IptvPlatform.apk.name());
+					}
 					break;
 				case Constant.PARAM_NAME_PRID:
 					ol.setPrid(v != null ? (Long) v : null);
@@ -135,7 +139,6 @@ public class LogServiceAspect {
 							ol.setType(IptvObjectEnum.valueOf((String)v));
 						}
 					}
-					
 					break;
 				}
 			}

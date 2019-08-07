@@ -275,7 +275,6 @@ public class IptvConsoleResService {
 
     /**
      * 栏目下新增item
-     *
      * @param prid
      * @param crid
      * @param position
@@ -303,7 +302,6 @@ public class IptvConsoleResService {
     /**
      * 取layout下面的子层级
      * 禁用但是test与prod不相同的也要显示
-     *
      * @param deep 深入
      * @return
      */
@@ -334,7 +332,7 @@ public class IptvConsoleResService {
         parent.setCommit(commit);
         if ((nowdeep + 1) <= maxdeep) {
             //这个方法搜索时,所有的version禁用的都会搜出来,是搜测试数据,同时带出了prod_vid版本信息,用于比较
-            List<IptvResVer> childs = this.iptvResVerDao.consoleResListLayoutTree(parent.getRid());
+            List<IptvResVer> childs = this.iptvResVerDao.consoleLayoutResList(parent.getRid());
             parent.setList(childs);
             Iterator<IptvResVer> it = childs.iterator();
             while (it.hasNext()) {
@@ -377,7 +375,6 @@ public class IptvConsoleResService {
 
     /**
      * 保存非规则的布局
-     *
      * @param prid
      * @param iptvResVers
      */
@@ -423,74 +420,70 @@ public class IptvConsoleResService {
         this.consoleDeleteChildLink(link_vid);
     }
 
+    /**
+     * 提交layout层时,prid=null;提交layout下面的结点时prid就是顶层layout的id
+     * @param prid
+     * @param rid
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public void consoleSubmitLayOut(Long prid, Long rid) {
         IptvResVer ver = this.iptvResVerDao.consoleBaseResVerByRid(rid);
-        consoleRecurisiveLayout(ver, "", 1, 0);
-        //最后来处理顶层缓存
-        if (ver.getType() == IptvObjectEnum.layout) {
-            this.iptvCacheService.deleteLayoutCache();
-        } else {
-            this.iptvCacheService.deleteLayoutCache();
-            this.iptvCacheService.deleteListCaches(prid);
-        }
+        this.recurisiveConsoleLayout(ver, "", 1, 0);
     }
 
     /**
      * 递归方式提交整个布局树,一个循环同时处理子link+res
-     *
      * @param ver
      * @param space
      * @param level
      * @param seq
      * @return
      */
-    @Transactional(propagation = Propagation.REQUIRED)
-    public int consoleRecurisiveLayout(IptvResVer ver, String space, int level, int seq) {
-        int change = 0;
-        if (ver.getLink_test_vid() != null) {//非root顶层
-            IptvResVer link = IptvResVer.getLinkInfo(ver);
-            int sub_link = this.consoleCommitResVerToProd(IptvResVer.getLinkInfo(ver), false);//提交link,延后杀缓存
-            if (sub_link > 0) {
-                System.out.println(space + level + "-" + seq + "提交:[rid=" + link.getRid() + ",name=" + ver.getName() + ",type=link]");
-            }
-            change += sub_link;
-        }
-        int res_change = this.consoleCommitResVerToProd(ver, false);//提交资源,延后杀缓存
-        if (res_change > 0) {
-            System.out.println(space + level + "-" + seq + "提交res:[rid=" + ver.getRid() + ",name=" + ver.getName() + ",type=" + ver.getType().name() + "]");
-            change += res_change;
-            this.iptvCacheService.deleteResCache(ver.getRid());
-        }
-
-        List<IptvResVer> subs = this.iptvResVerDao.consoleResListLayoutTree(ver.getRid());//查找直接子资源(一层)
-        int child_chg = 0;
+    private int recurisiveConsoleLayout(IptvResVer ver, String space, int level, int seq) {
+    	//1-首先处理child-list
+    	long rid = ver.getRid();
+		List<IptvResVer> subs = this.iptvResVerDao.consoleLayoutResList(ver.getRid());//查找直接子资源,包括未提交的
+        int child_change = 0;
         for (int i = 0; i < subs.size(); i++) {//循环处理link
             IptvResVer sub = subs.get(i);
-            child_chg += consoleRecurisiveLayout(sub, space + "\t", level + 1, i);//递归执行
+            child_change += this.recurisiveConsoleLayout(sub, space + "\t", level + 1, i);//递归执行
         }
-        if (child_chg > 0) {//如果直接子资源或link有改动,这里要杀list缓存
-            this.iptvCacheService.deleteListCaches(ver.getRid());
+        if (child_change > 0) {//如果直接子资源或link有改动,这里要杀list缓存
+        	this.iptvCacheService.kill_res_child_cache(rid, ver.getType());
         }
+        //2-再处理self对象
+    	int change = 0;
+    	if (ver.getTest_vid().longValue() != ver.getProd_vid().longValue()){//资源的test与prod不一致,需要提交
+    		System.out.println(space + level + "-" + seq + "提交:[rid=" + ver.getRid() + ",name=" + ver.getName() + ",type="+ver.getType().name()+"]");
+    		this.iptvResDao.markVersion(rid, ver.getVid(), null);
+    		this.iptvCacheService.kill_res_cache(rid);
+    		this.iptvCacheService.kill_type_cache(ver.getType());
+    		change++;
+    	}
+    	if(ver.getLink_test_vid() != null){//为null时是顶层
+    		if (ver.getLink_prod_vid().longValue() != ver.getLink_test_vid().longValue()){//资源link的test与prod不一致,需要提交
+        		System.out.println(space + level + "-" + seq + "提交res:[rid=" + ver.getLink_rid() + ",name=" + ver.getName() + ",type=link]");
+        		this.iptvResDao.markVersion(ver.getLink_rid(), ver.getLink_vid(), null);
+        		change++;
+        	}
+    	}
         return change;
     }
-
+    
     /**
      * 通过类型和子类型查询资源列表
-     *
      * @param type  父类型
      * @param ctype 子类型
      * @return
      */
     public List<IptvResVer> consoleResListByTypeAndChildType(IptvObjectEnum type, IptvObjectEnum ctype) {
-        List<IptvResVer> vers = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, true);
+        List<IptvResVer> vers = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, 0, 1000000, true);
         IptvFileUtils.toHttp(vers);
         return vers;
     }
 
     /**
      * 更新iptv_res_ver信息
-     *
      * @param ver
      */
     public void consoleUpdateResVer(IptvResVer ver) {
@@ -499,7 +492,6 @@ public class IptvConsoleResService {
 
     /**
      * 查询测试环境的res
-     *
      * @param rid res的rid
      * @return
      */
@@ -509,9 +501,8 @@ public class IptvConsoleResService {
     }
 
     /**
-     * 将指定rid下的媒资发布到生产环境,在此是发布下面的link,只影响prid对象下面的子资源
+     * 将指定prid下的媒资发布到生产环境,在此是发布下面的link,只影响prid对象下面的子资源
      * 如果下面的子资源没有prod版本,也会禁止提交
-     *
      * @param prid
      * @throws Exception
      */
@@ -544,12 +535,12 @@ public class IptvConsoleResService {
             }
         }
         //最后删除
-        this.iptvCacheService.deleteListCaches(prid);//杀(list:1*)缓存
+        IptvResVer parent = this.consoleResByRid(prid);
+        this.iptvCacheService.kill_res_child_cache(prid, parent.getType());
     }
 
     /**
      * 给指定的父资源id批量添加子资源(link)
-     *
      * @param prid
      * @param crids
      */
@@ -567,7 +558,6 @@ public class IptvConsoleResService {
 
     /**
      * 提交某个版本,使更改应用生产环境
-     *
      * @param vid
      */
     public int consoleCommitResVerToProd(long vid) {
@@ -591,7 +581,6 @@ public class IptvConsoleResService {
 
     /**
      * 提交link的vids到prod环境
-     *
      * @param link_vids 这里的vid一定与资源的test_vid是相同的
      * @return test_vid与prod_vid不同, 导致提交的数量
      */
@@ -607,67 +596,40 @@ public class IptvConsoleResService {
             }
         }
         if (count > 0) {
-            this.iptvCacheService.deleteListCaches(prid);
+        	IptvResVer parent = this.consoleResByRid(prid);
+        	this.iptvCacheService.kill_res_child_cache(prid, parent.getType());
         }
         return count;
     }
 
     /**
      * 管理台杀缓存
-     *
      * @param ver
      */
     public void consoleDeleteCache(IptvResVer ver) {
         long rid = ver.getRid();
         IptvObjectEnum type = ver.getType();
         System.out.println("del node: rid=>" + rid + "  type=>" + ver.getType().name());
-        switch (type) {
-            case layout:
-                this.iptvCacheService.deleteLayoutCache();//增加或删除了顶层菜单时,如[推荐,MV,综娱现场,儿歌,歌单,排行榜,歌手]
-                this.iptvCacheService.deleteResCache(rid);//删除这个layout的详情
-                break;
-            case link://当修改的是link这种上下级关系时,需要杀父prid的list类型cache
-                this.iptvCacheService.deleteListCaches(ver.getLink_prid());
-                break;
-            case song://歌曲
-            case mv://mv
-            case singer://歌手
-            case diss://歌单
-            case top://榜单
-            case column://栏目
-                this.iptvCacheService.deleteResCache(rid);//delete iptv-res:rid
-                if(ver.getFree()!=null && (ver.getType()==IptvObjectEnum.song || ver.getType()==IptvObjectEnum.mv)){//免费状态更改了
-                	this.iptvCacheService.deleteFreeCache(ver.getType());
-                }
-                for (IptvResVer p : this.iptvResVerDao.findTwoLevelParentByLinkCrid(rid)) {//查找两层
-                    this.iptvCacheService.deleteListCaches(p.getRid());
-                    if(p.getPtype()==IptvObjectEnum.layout){
-                    	this.iptvCacheService.deleteListCaches(p.getPrid());
-                    }
-                }
-                break;
-            case cate://分类, [页面上的, 闽南语,内地,港 台等]
-                this.iptvCacheService.deleteTypeCache(ver.getType(), ver.getChild_type());//分类的res就是举例(iptv-type::cate-singer)
-                for (Long prid : this.iptvResVerDao.findLinkByLinkCrid(rid)) {//查找link_crid为这个rid的prids
-                    this.iptvCacheService.deleteListCaches(prid);
-                }
-                break;
-            case theme://h5专题
-                this.iptvCacheService.deleteResCache(rid);//delete iptv-res:rid,杀掉h5专题详情页
-                for (Long pid : this.iptvResVerDao.findLinkByLinkCrid(rid)) {//查找link_crid为这个rid的prids
-                    this.iptvCacheService.deleteListCaches(pid);//杀掉h5专题被其他模块引用的情况
-                }
-                this.iptvCacheService.deleteThemeTypeCache();//杀掉全是htm5专题的分页列表
-                break;
-            default:
-                break;
+        //1-杀掉自己的详情
+        this.iptvCacheService.kill_res_cache(rid);
+        //2-杀掉type查询的
+        this.iptvCacheService.kill_type_cache(type);
+        //3-找直接父级查询并杀掉
+        List<IptvResVer> parents = this.iptvResVerDao.findParentResByLinkCrid(rid);//查找link_crid为这个rid的parents
+        for (IptvResVer parent : parents) {
+        	IptvObjectEnum ptype = parent.getType();
+        	Long prid = parent.getRid();
+        	if(ptype==IptvObjectEnum.cate){
+        		this.iptvCacheService.kill_category_cache(ptype, type);
+        	}else{
+        		this.iptvCacheService.kill_res_child_cache(prid, ptype);
+        	}
         }
     }
 
 
     /**
      * 更改资源的免费状态，此方法直接应用于生产环境，需要清除缓存
-     *
      * @param rid
      * @throws Exception
      */
@@ -683,10 +645,7 @@ public class IptvConsoleResService {
     }
 
     /**
-     *
      *  未来省份下线通知
-     *
-     *
      * @Author wangpq
      * @Param resId 资源ID
      * @Param operation 0 上线 1 下线

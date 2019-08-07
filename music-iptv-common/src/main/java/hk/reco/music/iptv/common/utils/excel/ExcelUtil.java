@@ -5,13 +5,15 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.metadata.BaseRowModel;
 import com.alibaba.excel.metadata.Sheet;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.google.common.collect.Lists;
+import hk.reco.music.iptv.common.utils.FileUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,19 +32,41 @@ public class ExcelUtil {
      * @param rowModel 实体类映射，继承 BaseRowModel 类
      * @return Excel 数据 list
      */
-    public static List<Object> readExcel(Path path, BaseRowModel rowModel) {
-        ExcelListener excelListener = new ExcelListener();
+    public static <T extends BaseRowModel> List<T> readExcel(Path path, Class<T> rowModel) {
+        ExcelListener excelListener = new ExcelListener<T>();
         ExcelReader reader = getReader(path, excelListener);
         if (reader == null) {
             return null;
         }
         for (Sheet sheet : reader.getSheets()) {
             if (rowModel != null) {
-                sheet.setClazz(rowModel.getClass());
+                sheet.setClazz(rowModel);
             }
             reader.read(sheet);
         }
         return excelListener.getDatas();
+    }
+
+
+    /**
+     * 功能描述:
+     * 〈获取文件资源ID〉
+     *
+     * @param filePath 文件路径
+     * @return : java.util.Set<java.lang.Long>
+     * @author : wangpq
+     * @date : 2019/7/31 18:07
+     */
+    public static <T extends BaseRowModel> List<T> readExcel(String filePath, Class<T> rowModel) {
+        List<Path> list = FileUtils.getPaths(filePath);
+        List<T> dataList = Lists.newArrayList();
+        list.forEach(p -> {
+            List<T> ts = ExcelUtil.readExcel(p, rowModel);
+            if (CollectionUtils.isNotEmpty(ts)) {
+                dataList.addAll(ts);
+            }
+        });
+        return dataList;
     }
 
     /**
@@ -53,7 +77,7 @@ public class ExcelUtil {
      * @param sheetNo  sheet 的序号 从1开始
      * @return Excel 数据 list
      */
-    public static List<Object> readExcel(Path path, BaseRowModel rowModel, int sheetNo) {
+    public static <T extends BaseRowModel> List<T> readExcel(Path path, Class<T> rowModel, int sheetNo) {
         return readExcel(path, rowModel, sheetNo, 1);
     }
 
@@ -66,14 +90,14 @@ public class ExcelUtil {
      * @param headLineNum 表头行数，默认为1
      * @return Excel 数据 list
      */
-    public static List<Object> readExcel(Path path, BaseRowModel rowModel, int sheetNo,
+    public static <T extends BaseRowModel> List<T> readExcel(Path path, Class<T> rowModel, int sheetNo,
                                          int headLineNum) {
         ExcelListener excelListener = new ExcelListener();
         ExcelReader reader = getReader(path, excelListener);
         if (reader == null) {
             return null;
         }
-        reader.read(new Sheet(sheetNo, headLineNum, rowModel.getClass()));
+        reader.read(new Sheet(sheetNo, headLineNum, rowModel));
         return excelListener.getDatas();
     }
 

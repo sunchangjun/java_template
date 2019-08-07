@@ -7,7 +7,7 @@ import hk.reco.music.iptv.common.enums.IptvObjectEnum;
 import hk.reco.music.iptv.common.enums.IptvPlatform;
 import hk.reco.music.iptv.common.exception.IptvBusinessException;
 import hk.reco.music.iptv.common.exception.IptvError;
-import hk.reco.music.iptv.common.service.stb.IptvStbCommonService;
+import hk.reco.music.iptv.common.service.IptvStbService;
 import hk.reco.music.iptv.common.utils.IptvMsicUtils;
 import hk.reco.music.iptv.common.utils.NetworkUtils;
 import io.swagger.annotations.ApiOperation;
@@ -35,8 +35,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public abstract class IptvBaseStbCtrl {
 
     @Autowired
-    protected IptvStbCommonService stbService;
+    protected IptvStbService stbService;
+    
 	private static final Logger log = LoggerFactory.getLogger(IptvBaseStbCtrl.class);
+	
     @RequestMapping(value = "/get_layouts", method = RequestMethod.POST)
     @ApiOperation(value = "布局列表", notes = "获取顶层的多个布局", response = RestResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
@@ -46,7 +48,7 @@ public abstract class IptvBaseStbCtrl {
                                     HttpServletRequest req) {
         try {
         	log.info("log info==>get_layouts_impl");
-            List<IptvResVer> vers = this.stbService.get_layouts_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, true, IptvMsicUtils.parseTest(test));
+            List<IptvResVer> vers = this.stbService.get_layouts_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(vers);
             return response;
@@ -144,33 +146,6 @@ public abstract class IptvBaseStbCtrl {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
             IptvPageResult result = this.stbService.get_singer_song_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
-            RestResponse response = new RestResponse();
-            response.setData(result.getVers());
-            response.setTotal(result.getTotal());
-            return response;
-        } catch (IptvBusinessException e) {
-            return new RestResponse(e.getError());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new RestResponse(IptvError.SYSTEM_ERROR);
-        }
-    }
-
-    @RequestMapping(value = "/get_singer_song_and_mv_list", method = RequestMethod.POST)
-    @ApiOperation(value = "歌手歌曲+mv列表接口", notes = "根据歌手rid取歌曲+mv列表", response = RestResponse.class)
-    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
-    public RestResponse get_singer_song_and_mv_list_impl(
-            @RequestParam(required = false) String mac,
-            @RequestParam(required = false) String userId,
-            @RequestParam(required = false) Long prid,
-            @RequestParam(required = false) Long rid,//歌手id
-            @RequestParam(required = false) Integer pageIndex,
-            @RequestParam(required = false) Integer pageSize,
-            @RequestParam(required = true) Boolean test,
-            HttpServletRequest req) {
-        try {
-            IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
-            IptvPageResult result = this.stbService.get_singer_song_and_mv_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test));
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());

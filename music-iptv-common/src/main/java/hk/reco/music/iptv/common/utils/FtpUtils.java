@@ -986,11 +986,11 @@ public class FtpUtils {
 
 
     public static void main(String[] args) {
-        FtpUtils ftpUtils2 = new FtpUtils("183.251.62.117", "wthxftpuser", "wthx1234");
-        String filePath = "\\\\192.168.3.100\\qqmusic\\songs\\q\\n\\343f7a860d5043a69d45abf6300c55d4.m4a";
+        FtpUtils ftpUtils2 = new FtpUtils("218.207.217.81", "qqmuisc", "6ghjK%SdAmN3s");
+        String filePath = "d:/temp/kdxf/20190717.txt";
 //        String filePath = "d://test.ts";
         Long beginTime = System.currentTimeMillis();
-        boolean result = ftpUtils2.uploadLocalFile("/song/", filePath, "test2.m4a");
+        boolean result = ftpUtils2.uploadLocalFile("/qqmusic/all", filePath, "test.txt");
         Long endTime = System.currentTimeMillis();
         System.out.println((endTime - beginTime) + "ms");
         System.out.println(result);

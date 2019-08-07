@@ -147,6 +147,11 @@
 	 	SELECT DISTINCT(v.link_prid) FROM iptv_res_ver v WHERE v.link_crid=#{rid}
 	 </select>
 	 
+	 <select id="findParentResByLinkCrid" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
+	 	SELECT r.* FROM iptv_res_ver v,iptv_res r WHERE v.link_crid=#{rid} AND r.rid=v.link_prid
+		GROUP BY r.rid
+	 </select>
+	 
 	 <select id="findTwoLevelParentByLinkCrid" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
 		SELECT r1.rid,r1.type,r2.rid prid,r2.type ptype
 		FROM iptv_res_ver v
@@ -220,7 +225,7 @@
 		WHERE vid=#{vid}
 	</update>
 	
-	<select id="consoleResListLayoutTree" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
+	<select id="consoleLayoutResList" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
 		SELECT  r1.test_vid link_test_vid,r1.prod_vid link_prod_vid,
 			v1.vid link_vid,v1.rid link_rid,v1.sort,v1.version_disable link_version_disable,v1.link_prid,v1.link_crid,
 			v2.*,r2.*
@@ -487,14 +492,20 @@
 			<when test="test">
 				SELECT * 
 				FROM iptv_res r,iptv_res_ver v 
-				WHERE r.rid=v.rid AND r.test_vid=v.vid AND r.type=#{type} AND r.child_type=#{child_type} AND r.global_disable=0 AND v.version_disable=0
-				ORDER BY v.sort,r.rid ASC
+				WHERE r.rid=v.rid AND r.test_vid=v.vid AND r.global_disable=0 AND v.version_disable=0
+				<if test="type!=null"> AND r.type=#{type}</if>
+				<if test="child_type!=null"> AND r.child_type=#{child_type}</if>
+				ORDER BY v.sort ASC,v.version_create_time DESC
+				LIMIT #{offset},#{size}
 			</when>
 			<otherwise>
 				SELECT * 
 				FROM iptv_res r,iptv_res_ver v 
-				WHERE r.rid=v.rid AND r.prod_vid=v.vid AND r.type=#{type} AND r.child_type=#{child_type} AND r.global_disable=0 AND v.version_disable=0
-				ORDER BY v.sort,r.rid ASC
+				WHERE r.rid=v.rid AND r.prod_vid=v.vid AND r.global_disable=0 AND v.version_disable=0
+				<if test="type!=null"> AND r.type=#{type}</if>
+				<if test="child_type!=null"> AND r.child_type=#{child_type}</if>
+				ORDER BY v.sort ASC,v.version_create_time DESC
+				LIMIT #{offset},#{size}
 			</otherwise>
 		</choose>
 	</select>

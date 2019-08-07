@@ -4,7 +4,6 @@
 package hk.reco.music.iptv.common.domain;
 
 import hk.reco.music.iptv.common.enums.IptvObjectEnum;
-import hk.reco.music.iptv.common.enums.IptvPlatform;
 import hk.reco.music.iptv.common.stats.IptvStatsAction;
 import lombok.Data;
 
@@ -26,7 +25,7 @@ public class OperationLog {
 	private IptvObjectEnum type;
 	private Integer duration;
 	private String method;
-	private IptvPlatform platform;
+	private String platform;
 	private boolean test;
 	private Long createTime = System.currentTimeMillis();
 }

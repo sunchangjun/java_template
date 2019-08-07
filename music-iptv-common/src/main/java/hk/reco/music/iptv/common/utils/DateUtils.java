@@ -124,6 +124,30 @@ public class DateUtils {
 		return ds;
 	}
 
+    /**
+     * 根据日期获取年份
+     *
+     * @param time
+     * @return java.lang.String
+     **/
+    public static String getYearFromTimeStr(String time){
+        String year = "";
+
+        if(StringUtils.isNotBlank(time)){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = simpleDateFormat.parse(time);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                year = String.valueOf(calendar.get(Calendar.YEAR));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return year;
+    }
+
 	/**
      * 秒转HH:MM:SS格式
      * @param seconds

@@ -13,18 +13,18 @@ import java.util.List;
  * @Date 2019/2/27 16:04
  * @Version 1.0
  */
-public class ExcelListener extends AnalysisEventListener<Object> {
+public class ExcelListener<T> extends AnalysisEventListener<T> {
 
     /**
      * 存储data
      */
-    private List<Object> datas = new ArrayList<>();
+    private List<T> datas = new ArrayList<>();
 
     /**
      * 通过 AnalysisContext 对象还可以获取当前 sheet，当前行等数据
      */
     @Override
-    public void invoke(Object t, AnalysisContext context) {
+    public void invoke(T t, AnalysisContext context) {
         //数据存储到list，供批量处理，或后续自己业务逻辑处理。
         datas.add(t);
         /*
@@ -44,11 +44,11 @@ public class ExcelListener extends AnalysisEventListener<Object> {
 //        datas.clear();
     }
 
-    public List<Object> getDatas() {
+    public List<T> getDatas() {
         return datas;
     }
 
-    public void setDatas(List<Object> datas) {
+    public void setDatas(List<T> datas) {
         this.datas = datas;
     }
 }

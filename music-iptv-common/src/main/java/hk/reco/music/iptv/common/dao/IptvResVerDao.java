@@ -16,6 +16,8 @@ public interface IptvResVerDao {
 	public List<IptvResVer> findAllVerByRid(@Param("rid")Long rid);
 	
 	public List<Long> findLinkByLinkCrid(@Param("rid") Long rid);//找子为rid的link
+	public List<IptvResVer> findParentResByLinkCrid(@Param("rid") Long rid);//找子为rid的res
+	
 	public List<Long> findLinkByLinkPrid(@Param("rid") Long rid);//找父为rid的link
 	
 	public List<IptvResVer> findTwoLevelParentByLinkCrid(@Param("rid") Long rid);//查找两层父对象,主要是layout有两层缓存
@@ -40,7 +42,15 @@ public interface IptvResVerDao {
 	public List<IptvResVer> consolefindLinkBylinkPrid(Long rid);
 	public void consoleDeleteByVid(Long vid);
 	public List<IptvResVer> consoleLayout();//test环境查类型type的list,version_disable的也显示
-	public List<IptvResVer> consoleResListLayoutTree(@Param("prid")long prid);//以test连接数据,但是version_disable=1的test数据不过滤
+	
+	/**
+	 * 以test环境连接数据,以便后台管理处理这些版本数据
+	 * version_disable=0的查出
+	 * version_disable=1的,test!=prod,测试未提交到生产的查出
+	 * @param prid
+	 * @return
+	 */
+	public List<IptvResVer> consoleLayoutResList(@Param("prid")long prid);
 	
 	///////////stb
 	public IptvResVer findResByRid(@Param("type")IptvObjectEnum type, @Param("rid")Long rid, @Param("test")boolean test);//TODO 改完后再调整
@@ -67,7 +77,8 @@ public interface IptvResVerDao {
 	public int findFreeResListByTypeCount(@Param("type")IptvObjectEnum type, @Param("test")boolean test);
 	
 	//根据类型和子类型查询,通常用于category
-	public List<IptvResVer> findResListByTypeAndChildType(@Param("type")IptvObjectEnum type, @Param("child_type")IptvObjectEnum child_type, @Param("test")boolean test);
+	public List<IptvResVer> findResListByTypeAndChildType(@Param("type")IptvObjectEnum type, @Param("child_type")IptvObjectEnum child_type, 
+			@Param("offset")int offset, @Param("size")int size, @Param("test")boolean test);
 	
 	//搜索接口
 	public List<IptvResVer> searchResByKeyword(@Param("type")IptvObjectEnum type, @Param("pinyin")String pinyin, 

@@ -127,7 +127,7 @@ public class IptvResVerService{
 	 * @return
 	 */
 	public List<IptvResVer> findListByTypeAndChildType2(IptvObjectEnum type, IptvObjectEnum ctype, boolean test){
-		List<IptvResVer> cates = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, test);//查第一层,第一层不需要图片
+		List<IptvResVer> cates = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, 0, 1000000, test);//查第一层,第一层不需要图片
 		for(IptvResVer cate : cates){//再查分类下的二级分类
 			List<IptvResVer> tops = this.findListExcludeGlobalDisable(type,ctype,cate.getRid(),test);
 			IptvFileUtils.toHttp(tops);
@@ -144,7 +144,13 @@ public class IptvResVerService{
 	 * @return
 	 */
 	public List<IptvResVer> findListByTypeAndChildType(IptvObjectEnum type, IptvObjectEnum ctype, boolean test){
-		List<IptvResVer> vers = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, test);
+		List<IptvResVer> vers = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, 0, 1000000, test);
+		IptvFileUtils.toHttp(vers);
+		return vers;
+	}
+	
+	public List<IptvResVer> findListByTypeAndChildType(IptvObjectEnum type, IptvObjectEnum ctype, Integer offset, Integer size, boolean test){
+		List<IptvResVer> vers = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, offset, size, test);
 		IptvFileUtils.toHttp(vers);
 		return vers;
 	}

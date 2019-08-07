@@ -37,4 +37,5 @@ public class IptvRedisKey {
 	 * 统一key清理正则
 	 */
 	public static final String GLOBAL_EVICT_KEY_PATTERN = "'iptv-object::'+#rid+'_'+#pinyin+'_'+#type+'_'+#ctype+'_*'";
+	public static final String GLOBAL_EVICT_CHILDS_KEY_PATTERN = "'iptv-object::'+#rid+'_'+#pinyin+'_'+#type+'_*'";
 }
