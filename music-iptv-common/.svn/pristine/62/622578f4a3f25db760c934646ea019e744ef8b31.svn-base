@@ -1,0 +1,208 @@
+package hk.reco.music.iptv.common.stats.chart;
+
+import hk.reco.music.iptv.common.stats.chart.msic.IptvJdbcDao;
+import hk.reco.music.iptv.common.stats.chart.msic.IptvStatsResPlay;
+import hk.reco.music.iptv.common.utils.DateUtils;
+
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+/**
+ * 资源[mv|song]访问报表,生成的mv及song的报表分别在两个sheet中
+ * @author zhangsl
+ * @date 2019年7月23日
+ */
+@Service
+public class IptvStatsResChart extends IptvStatsAbs{
+	
+	@Autowired
+	private IptvJdbcDao iptvJdbcDao;
+	@Value("${logging.path}")
+	private String loggingPath;
+	
+	public void consoleChart(String from, String to, int offset, int size) throws Exception{
+		//head
+		List<Date> range = DateUtils.validateDayRange(from, to);
+		Calendar dd = Calendar.getInstance();
+		dd.setTime(range.get(0));
+		List<String> heads = new ArrayList<String>();
+		heads.add("rid");
+		heads.add("name");
+		heads.add("type");
+		heads.add("free");
+		int day_num = 0;
+		while(dd.getTime().before(range.get(1)) || dd.getTime().equals(range.get(1))){//一直循环时间进行计算
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String ymd = sdf.format(dd.getTime());
+			heads.add(ymd);
+			day_num++;
+			dd.add(Calendar.DAY_OF_MONTH, 1);//天数加1
+		}
+		heads.add("total");
+		System.out.println(heads.toString());
+		//data
+		List<IptvStatsResPlay> lists = this.iptvJdbcDao.findFoo(from, to, "mv", offset, size);
+		for(IptvStatsResPlay res : lists){
+			Map<String,Object> o = new LinkedHashMap<String,Object>();
+			o.put("rid", res.getRid());
+			o.put("name", res.getName());
+			o.put("type", res.getType());
+			o.put("free", res.isFree());
+			Map<String,Long> daymap = new LinkedHashMap<String,Long>();
+			String all_day_str = res.getDaily_play_num();
+			String[] ps = all_day_str.split(",");
+			for(String p:ps){
+				String[] ss = p.split(":");
+				String day = ss[0];
+				long play_num = Long.parseLong(ss[1]);
+				daymap.put(day, play_num);
+			}
+			for(int i=4;i<(4+day_num);i++){
+				o.put(heads.get(i), daymap.get(heads.get(i)));
+			}
+			o.put("total", res.getTotal());
+			System.out.println(o.toString());
+		}
+	}
+	
+	@Override
+	public void run(String from, String to, String fileName, Integer top, long[] ids) throws Exception{
+		XSSFWorkbook book = new XSSFWorkbook();
+		CellStyle style = createDefaultStyle(book);
+		exexute(book.createSheet("song访问量"), from, to, top, "song", style);
+		exexute(book.createSheet("mv访问量"), from, to, top, "mv", style);
+        FileOutputStream os = new FileOutputStream(getOutputExcelPath(loggingPath, from, to, fileName));
+		book.write(os);
+		os.close();
+		book.close();
+	}
+	
+	private void exexute(XSSFSheet sheet, String from, String to, Integer top, String type, CellStyle style) throws Exception{
+		List<Date> range = DateUtils.validateDayRange(from, to);
+		List<String> date_list = new ArrayList<String>();
+		XSSFRow row0 = sheet.createRow(0);
+		XSSFCell hc0 = row0.createCell(0);
+		hc0.setCellStyle(style);
+		hc0.setCellValue("id");
+		
+		XSSFCell hc1 = row0.createCell(1);
+		hc1.setCellStyle(style);
+		hc1.setCellValue("name");
+		
+		XSSFCell hc2 = row0.createCell(2);
+		hc2.setCellStyle(style);
+		hc2.setCellValue("type");
+		
+		XSSFCell hc3 = row0.createCell(3);
+		hc3.setCellStyle(style);
+		hc3.setCellValue("free");
+		
+		Calendar dd = Calendar.getInstance();
+		dd.setTime(range.get(0));
+		int index = 4;
+		while(dd.getTime().before(range.get(1)) || dd.getTime().equals(range.get(1))){//一直循环时间进行计算
+			System.out.println(dd.getTime());
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String ymd = sdf.format(dd.getTime());
+			XSSFCell c = row0.createCell(index);
+			c.setCellStyle(style);
+			c.setCellValue(ymd);
+			date_list.add(ymd);
+			//at last
+			index++;
+			dd.add(Calendar.DAY_OF_MONTH, 1);//天数加1
+		}
+		XSSFCell ct = row0.createCell(index);
+		ct.setCellStyle(style);
+		ct.setCellValue("合计");
+		
+		List<IptvStatsResPlay> stat_songs = this.iptvJdbcDao.findStatsResPlay(from, to, type);
+		Map<Long,List<IptvStatsResPlay>> map = new HashMap<Long,List<IptvStatsResPlay>>();
+		//经过循环处理后,这个map下的list的第1个元素有total
+		for(IptvStatsResPlay stat_song:stat_songs){
+			Long rid = stat_song.getRid();
+			if(!map.containsKey(rid)){
+				List<IptvStatsResPlay> list = new ArrayList<IptvStatsResPlay>();
+				list.add(stat_song);
+				stat_song.setTotal(stat_song.getPlay_num());
+				map.put(rid, list);
+			}else{
+				List<IptvStatsResPlay> list = map.get(rid);
+				list.add(stat_song);
+				IptvStatsResPlay first = list.get(0);
+				first.setTotal(first.getTotal()+stat_song.getPlay_num());
+			}
+		}
+		//2-取出第1个的集合,进行total排序
+		List<IptvStatsResPlay> first_list = new ArrayList<IptvStatsResPlay>();
+		for(List<IptvStatsResPlay> list : map.values()){
+			first_list.add(list.get(0));
+		}
+		Collections.sort(first_list);
+		first_list = first_list.subList(0, (first_list.size()<=top)?first_list.size()-1:top);
+		
+		int rowNum = 1;
+		for(IptvStatsResPlay first : first_list){
+			List<IptvStatsResPlay> list = map.get(first.getRid());
+			XSSFRow row = sheet.createRow(rowNum);
+			// id,name,total
+			//c0
+			XSSFCell c0 = row.createCell(0);
+			c0.setCellStyle(style);
+			c0.setCellValue(String.valueOf(first.getRid()));
+			//c1
+			XSSFCell c1 = row.createCell(1);
+			c1.setCellStyle(style);
+			c1.setCellValue(first.getName());
+			//c2
+			XSSFCell c2 = row.createCell(2);
+			c2.setCellStyle(style);
+			c2.setCellValue(first.getType());
+			//c3
+			XSSFCell c3 = row.createCell(3);
+			c3.setCellStyle(style);
+			c3.setCellValue(String.valueOf(first.isFree()?1:0));
+			//total
+			XSSFCell last = row.createCell(date_list.size()+4);
+			last.setCellStyle(style);
+			last.setCellValue(String.valueOf(first.getTotal()));
+			
+			int seq = 4;
+			for(String key : date_list) {
+				int play_num = find(list,key);
+				XSSFCell cell = row.createCell(seq);
+				cell.setCellStyle(style);
+				cell.setCellValue(String.valueOf(play_num));
+				seq++;
+			}
+			rowNum++;
+		}
+	}
+	
+	private int find(List<IptvStatsResPlay> rs, String ymd){
+		for(IptvStatsResPlay r : rs){
+			if(r.getDaily().equals(ymd)){
+				return r.getPlay_num();
+			}
+		}
+		return 0;
+	}
+	
+}

@@ -1,0 +1,899 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="page-view-size" content="1280*720">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-store,no-cache,must-revalidate">
+    <meta http-equiv="expires" content="0">
+    <title>测试页</title>
+    <script type="text/javascript" th:src="@{/show/js/function.js}"></script>
+    <style>
+        .test{
+            top:20px;
+            color:red;
+            background: transparent;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 50;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            right: 30px;
+            display: none;
+            position:absolute;
+        }
+        .log{
+            width: 1280px;
+            top:20px;
+            z-index: 25;
+            height: 400px;
+            position:absolute;
+            color:white;
+            background: black;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div th:style="'position: absolute;width: 1280px;height:720px;left: 0;top: 0;background-image:url('+${#httpServletRequest.getContextPath()}+'/show/images/bg.jpg);z-index: -1'">
+    <iframe id="logf" style="visibility:hidden;"></iframe>
+    <p id="test" class="test">测试版</p>
+    <p id="log" class="log"></p>
+    <div  style="position:absolute;top: 0;left: 65px;padding:30px 0px;text-align: center;width: 1150px;z-index: 2;">
+     <div style="position: relative;margin: 0 auto;text-align:center"  id="maintop">
+            <span th:each="lay:${layouts}" style="position:relative;" th:id="${lay.rid}">
+               <img src='/280.png' style="width:30px;height:2px;visibility: hidden;">
+               <a th:text="${lay.name}" th:style="'padding:0px 0 px 2px 0px;font-size: 24px;color: white;'"></a>
+            </span>
+            <p id="menu_focus" style="position:absolute;top:64px;height:3px;background:#00FF54;display:none;"></p>
+       </div>
+    </div>
+    <div style="width: 1280px;position: absolute;width: 1280px;left: 0px;height: 635px;top: 68px;overflow: hidden;">
+        <!--自定义布局-->
+  <div  id="mainbody"  style="position:absolute;left:0px;top:0px;width: 1280px;height: 635px;z-index: 1;">
+            <!--焦点-->
+            <div id="self_ad_focus" style="position: absolute; left: 30px; top: 166px; width: 240px; height: 174px; z-index: 5;visibility: hidden;">
+                <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tr style="width: 100%">
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_lt.png); background-repeat:no-repeat;width: 50px;height: 50px;'"></td>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_t.png); background-repeat:repeat-x;height: 50px;'">&nbsp;</td>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_rt.png); background-repeat:no-repeat;width: 50px;height: 50px;'"></td>
+                    </tr>
+                    <tr>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_l.png); background-repeat:repeat-y;width: 50px;'"></td>
+                        <td id="focus_content">&nbsp;</td>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_r.png); background-repeat:repeat-y;width: 50px;'"></td>
+                    </tr>
+                    <tr>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_lb.png); background-repeat:no-repeat;width: 50px;height: 50px;'"></td>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_b.png); background-repeat:repeat-x;height: 50px;'">&nbsp;</td>
+                        <td th:style="'background:url('+${#httpServletRequest.getContextPath()}+'/show/images/focus/focus_rb.png); background-repeat:no-repeat;width: 50px;height: 50px;'"></td>
+                    </tr>
+                </table>
+            </div>
+            <!--焦点图与标识-->
+            <!--<div id="self_focus" style="position: absolute;top:0;left:0;width: 100px;height: 100px;z-index: 4;visibility: hidden;">
+                <img id="focusImg" src="" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
+                <img id="markImg" th:src="@{/280.png}" style="width:100%;position: absolute;left: 0;bottom: 0;height:50px;z-index: 5;"/>
+                <span id="focus_title" style="position: absolute;left: 0;bottom: 0;width: 100%;padding:5px;z-index: 6;color: white;"></span>
+            </div>-->
+
+            <div th:each="column,stat:${columns}"
+                 th:id="'column'+${stat.index}+''"
+                 th:title="''+${column.doMajor()}+'|'+${column.layout_regular}+'|'+${column.layout_line}+''"
+                 th:style="'position: absolute;left: 0;top: '+${column.top+30}+'px;width:1280px;height:'+${column.column_height}+'px;z-index: 2'">
+                <!--标题-->
+                <div th:if="${column.layout_show_title}"  style="position: absolute;left: 0;top: 0;width:1280px;height: 45px;z-index: 3;">
+                    <a  th:text="${column.name}" style="position:absolute;top: 0;left: 65px;height: 45px;width: 200px;font-size: 20px;z-index: 3;color: white;line-height: 45px;"></a>
+                    <a  style="position:absolute;top: 0;right: 65px;width: 500px;line-height: 45px;text-align: right;" title="column_pages"></a>
+                </div>
+                <!--规则主题-->
+                <div th:if="${column.layout_regular}"  th:style="'top:'+ @{(${column.layout_show_title} ? '45px' : '0px')} + ';width:1280px;z-index:3;position:absolute;'">
+                    <span class="item"
+                          th:each="item,istat:${column.page_list}"
+                          th:style="'position:absolute;z-index:4;width:'+${item.width}+';height:'+${item.height}+';top:'+${item.absolute_x}+'px;left:'+${item.absolute_y+65}+'px'"
+                           th:title="''+${item.doMajor()}+'|'+${column.layout_show_title}+'|'+${column.layout_regular}+''"
+                          th:id="'item'+${istat.index}+''">
+                        <img th:src="${item.poster==null?item.bposter:item.poster}"
+                             th:style="'width:'+${item.width}+';height:'+${item.height}+';z-index: 5;top:0;left:0;'"/>
+                        <img th:src="@{/280.png}" th:style="'width:'+${item.width}+';position: absolute;left: 0;top:'+ ${item.resHeight - 50} +'px;height:50px;z-index: 6;'"/>
+<!--                        <a th:text="${item.resTitle}" th:title="${item.resTitle}"  th:style="'height:23px;overflow: hidden;width:'+${item.resWidth-6}+'px;position: absolute;color:white;left: 3px;top: '+ ${item.resHeight - 27} +'px;z-index: 7;'" th:if="${item.type.toString()!='cate'}"></a>-->
+<!--
+                              <marquee   th:text="${item.name}" th:title="${item.name}"  th:style="'display:inline;visibility: visible;height:23px;overflow: hidden;width:'+${item.resWidth-6}+'px;position: absolute;color:white;left: 3px;top: '+ ${item.resHeight - 27} +'px;z-index: 7;'" th:if="${item.type.toString()!='cate'}"></marquee>
+-->
+                        <div th:style="'height: 25px;width:'+${item.resWidth-6}+'px;position: absolute;color:white;left: 3px;top: '+ ${item.resHeight - 27} +'px;z-index: 7;'" th:if="${item.type.toString()!='cate'}">
+                            <marquee th:title="${item.name}"  style="height: 25px;vertical-align: bottom;visibility: hidden;font-size: 15px;margin: 0px;padding: 0px;border:0px;" th:text="${item.name}"> </marquee>
+                            <a th:title="${item.resTitle}" style="height: 25px;vertical-align: bottom;position: absolute;top: 0px;left:0px;font-size:15px;" th:text="${item.resTitle}"> </a>
+                        </div>
+                    </span>
+                    <script>
+                        /*<![CDATA[*/
+                        var columnId = 'column'+'[[${stat.index}]]';
+                        var layout_line = '[[${column.layout_line}]]';
+                        var type = '[[${column.child_type.toString()}]]';
+                        /*]]>*/
+                        var sum = layout_line==1?6:12;
+                        if(type=='mv'){
+                            sum = layout_line==1?4:8;
+                        }
+                        $(columnId).regular ="true";
+                        $(columnId).sum =sum;
+                        var imgs = $(columnId).getElementsByTagName("span");
+                        for(var i=0;i<imgs.length;i++){
+                            if(i>=sum){
+                                imgs[i].style.display="none";
+                            }
+                        }
+                    </script>
+                </div>
+                <!--不规则主体-->
+                <div  th:if="${!column.layout_regular}"  th:style="'top:'+ @{(${column.layout_show_title} ? '45px' : '0px')} + ';width:1280px;z-index:3;position:absolute;'">
+                    <span   th:each="item,istat:${column.page_list}" class="item"
+                         th:style="'position:absolute;z-index:4;top:'+${item.layout_start.split(' ')[1]}+'px;left:'+${item.absolute_y+65}+'px;width:'+${item.layout_end.split(' ')[0]}+'px;height:'+${item.layout_end.split(' ')[1]}+'px'"
+                             th:title="''+${item.doMajor()}+'|'+${column.layout_show_title}+''"
+                            th:id="'column'+${stat.index}+'item'+${istat.index}+''">
+                        <img th:src="${item.poster==null?item.bposter:item.poster}" th:style="'width:'+${item.layout_end.split(' ')[0]}+'px;height:'+${item.layout_end.split(' ')[1]}+'px;position:absolute;z-index:4;left:0;top:0;'">
+                  
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<script type="text/javascript">
+     var i= 0;
+	 setInterval(function () {
+         i = i-10;
+         document.getElementById("mainbody").style.top = i+"px";
+     },500);
+</script>-->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var extraObject = {
+        layout_index:'[[${extroInfo.layout_index}]]',
+        area:'[[${extroInfo.area}]]',
+        column_index:'[[${extroInfo.column_index}]]',
+        item_index:'[[${extroInfo.item_index}]]',
+        toString:function(){
+            return "{\"layout_index\":"+this.layout_index+",\"area\":"+this.area+",\"column_index\":"+this.column_index+",\"item_index\":"+this.item_index+"}"
+        }
+    };
+    ctxPath = /*[[@{/}]]*/ '';
+    /*]]>*/
+    /**
+     * 布局对象
+     * @type {{}}
+     */
+    var layoutObj = {
+        data:[],
+        rid:"",
+        init:function(){
+            var maintop = document.getElementById("maintop");
+            this.data = maintop.getElementsByTagName("span");
+            for(var i=0;i<this.data.length;i++){
+                var  title = this.data[i];
+                var width = title.offsetWidth;
+                //title.getElementsByTagName("a")[0].style.width =width+ "px";
+            }
+            this.rid = this.data[extraObject.layout_index].id;
+
+        },
+        focusOn:function(){
+        	var menu = this.data[extraObject.layout_index].getElementsByTagName("a")[0];
+        	//$('menu_focus').style.display ="block";
+        	$('menu_focus').style.width = menu.offsetWidth + 'px';
+        	$('menu_focus').style.left =this.data[extraObject.layout_index].offsetLeft + 94 + 'px';
+        	menu.style.color="#00FF54";
+            extraObject.area=0;
+        },
+        focusOut:function(){
+        	//$('menu_focus').style.display ="none";
+        	this.data[extraObject.layout_index].getElementsByTagName("a")[0].style.fontSize="24px";
+            extraObject.area=1;
+        },
+        moveX:function(num){
+            var backurl = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"extra="+Q.encode(extraObject.toString()));
+            if((num>0&&extraObject.layout_index<this.data.length-1)||(num<0&&extraObject.layout_index>0)){
+                extraObject.layout_index = (extraObject.layout_index-1)+(num+1);
+                var url = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"extra="+Q.encode(extraObject.toString()))+"&backurl="+Q.encode(backurl)+"&test="+paramObj.test;
+                window.location.href = url;
+            }
+        },
+        moveY:function(num){
+            if(num>0){
+                //移除自身的
+                this.focusOut();
+                columnObj.focus(1,0);
+            }
+        }
+    };
+    /**
+     * 栏目对象
+     * @type {{}}
+     */
+    var columnObj = {
+        data:[],
+        index:0,
+        items:[],
+        init:function(){
+            var divs=   $("mainbody").getElementsByTagName("div");
+            var active = 0;
+            for(var i = 0;i<divs.length;i++){
+				var colDiv = divs[i];
+				var title = colDiv.title;
+                if(title&&title.split("|")[2]=="column"){
+                    var items = colDiv.getElementsByTagName("span");
+                    if(items.length>0){
+                        colDiv.items = items;
+                        if(title.split("|")[5]=="true"){
+                            this.regularInit(colDiv);
+                        }
+                        this.data.push(colDiv);
+                    }
+                }
+            }
+        },
+        regularInit:function(regularEl){
+            //此处暂时不考虑分页
+			var title = regularEl.title;
+			var type = title.split("|")[3];
+			var layout_line = title.split("|")[6];
+			var sum = layout_line==1?6:12;
+            if(type=='mv'){
+                sum = layout_line==1?4:8;
+            }
+            regularEl.column_line ==1
+            if(regularEl.items.length>sum){
+               var items= [];
+               for(var i=0;i<sum;i++){
+                   items.push(regularEl.items[i]);
+               }
+                regularEl.items = items;
+            }
+        },
+        regularInit1:function(regularEl){
+            var title =  regularEl.title;
+            regularEl.current_line=1;
+            var sum = regularEl.sum;
+            //当前页
+            regularEl.current_page = 0;
+            regularEl.pageItems= [];
+            //初始化栏目分页
+            var pages = regularEl.items.length/sum;
+            var spans = regularEl.parentNode.parentNode.getElementsByTagName("a");
+            for(var k = 0; k<spans.length;k++){
+                if(spans[k].title=="column_pages"){
+                    regularEl.column_page_span = spans[k];
+                    break;
+                }
+            }
+            var pageInfo = '';
+            for(var i=0; i<pages;i++){
+                regularEl.pageItems[i]=[];
+                //这个地方可以加导航条（暂保留）
+                //<img src="/images/colum_pages.png">
+                if(pages>1){
+                    if(i == Math.floor(pages)||(Math.floor(pages)==pages&&i==pages-1)){
+                        pageInfo += '<img src="/show/images/column_pages_show.png" style="width:40px;height: 12px"/>&nbsp;';
+                    }else{
+                        pageInfo += '<img src="/show/images/colum_pages.png" style="width: 12px;height: 12px">&nbsp;';
+                    }
+                }
+            }
+            regularEl.column_page_span.innerHTML = pageInfo;
+            //初始化栏目分页数据
+            for(var j= 0 ;j<regularEl.items.length;j++){
+                var item = regularEl.items[j];
+                var k = Math.floor(j/sum);
+                regularEl.pageItems[k].push(item);
+            }
+
+        },
+        focus:function(num,index,itemindex){
+            this.index= index;
+            this.items = this.data[index].items;
+            if(!itemindex){
+                itemindex = 0;
+                if(this.data[index].regular!="true") {
+                    //不规则布局
+                    for (var j = 1; j < this.items.length; j++) {
+                        if (parseInt(this.items[j].style.left) < parseInt(this.items[itemindex].style.left) ||
+                            parseInt(this.items[j].style.top) < parseInt(this.items[itemindex].style.top)) {
+                            itemindex = j;
+                        }
+                    }
+                }
+            }
+            itemObj.focusout();
+            itemObj.data = this.items[itemindex];
+            itemObj.itemindex = itemindex;
+            itemObj.focusOn();
+        },
+        moveX:function(num){
+            var cur_item =  this.data[this.index];
+			this.doMoveX(num,cur_item.items);
+        },
+        doMoveX:function(num,items){
+            var cPs =  itemObj.getRect(itemObj.data);
+            var nextindex = 0;
+            //下一个元素的绝对值
+            //var nextLeft = 10000;
+            // var nextTop = 10000;
+            var abs = 10000;
+            var nextEl =0;
+            //筛选
+            for (var i=0;i<items.length;i++){
+                var next = items[i];
+                var nPs =  itemObj.getRect(next);
+                if(cPs.top==nPs.top&&cPs.left==nPs.left){
+                    //元素本身
+                    continue;
+                }
+                if((nPs.left+nPs.width)<cPs.left&&num<0||nPs.left>(cPs.left+cPs.width)&&num>0){
+                    if(Math.abs(cPs.top-nPs.top)+Math.abs(cPs.left-nPs.left)<abs){
+                        // nextLeft = Math.abs(cPs.left-nPs.left);
+                        // nextTop = Math.abs(cPs.top-nPs.top);
+                        abs = Math.abs(cPs.top-nPs.top)+Math.abs(cPs.left-nPs.left);
+                        nextEl = next;
+                        nextindex = i;
+                    }
+                }
+            }
+            if(nextEl===0){
+                //没有元素了
+               // this.changePage(num);
+            }else{
+                itemObj.focusout();
+                itemObj.data = nextEl;
+                itemObj.itemindex = nextindex;
+                itemObj.focusOn();
+            }
+        },
+        changePage:function(num){
+            var cur_item =  this.data[this.index];
+            var index = cur_item.current_page+num;
+            var images = cur_item.column_page_span.getElementsByTagName("img");
+            //处理分页数据
+            if(cur_item.regular=="true"&&cur_item.pageItems.length>1&&0<=index&&index<cur_item.pageItems.length){
+                //分页图标处理
+                for(var i=0;i<cur_item.pageItems.length;i++){
+                    if(i==cur_item.pageItems.length-index-1){
+                        images[i].src=ctxPath+"/show/images/column_pages_show.png";
+                    }else{
+                        images[i].src=ctxPath+"/show/images/colum_pages.png";
+                    }
+                }
+                var parent = cur_item.getElementsByTagName("div")[0];
+                //隐藏显示页数据
+                for(var i=0;i<cur_item.pageItems[cur_item.current_page].length;i++){
+                    cur_item.pageItems[cur_item.current_page][i].style.display = "none";
+                }
+                cur_item.current_page = index;
+                for(var j = 0;j<cur_item.pageItems[cur_item.current_page].length;j++){
+                    cur_item.pageItems[cur_item.current_page][j].style.display = "block";
+                }
+                itemObj.focusout();
+                itemObj.data = cur_item.pageItems[cur_item.current_page][0];
+                var cur_item =  this.data[this.index];
+                cur_item.current_line = 1;
+                itemObj.focusOn();
+            }
+        },
+        scrollIntoView:function(){
+             var index = this.index;
+             var column = this.data[this.index];
+             var mainbody = $("mainbody");
+             var columnTop = parseInt(column.style.top);
+             var columnHeight = parseInt(column.style.height);
+             var mainTop = parseInt(mainbody.style.top);
+             if(columnTop+mainTop<0||columnTop+mainTop+columnHeight>600){
+                 if(index==0){
+                     //第一个
+                     $("mainbody").style.top = "0px";
+                 }else if(index == this.data.length){
+                     //最后一个
+                     $("mainbody").style.top =(-columnHeight-columnTop+30)+ "px";
+                 }else{
+                     //其他
+                     $("mainbody").style.top =(-columnTop+180)+ "px";
+                 }
+             }
+        },
+        resetFocus:function(){
+            var cur_item =  this.data[this.index];
+            itemObj.focusout();
+            itemObj.data =  cur_item.items[extraObject.item_index];
+            this.items = cur_item.items;
+           //cur_item.scrollIntoView(false);
+           /* if(cur_item.regular!="true"){
+                this.items = cur_item.items;
+            }else{
+                //分页依据
+                var sum = cur_item.sum;
+                //计算当前页数
+                var index =   Math.floor(extraObject.item_index/sum);
+                //处理分页数据
+                if(cur_item.pageItems.length>1&&0<=index&&index<cur_item.pageItems.length){
+                    var images = cur_item.column_page_span.getElementsByTagName("img");
+                    //分页图标处理
+                    for(var i=0;i<cur_item.pageItems.length;i++){
+                        if(i==cur_item.pageItems.length-index-1){
+                            images[i].src=ctxPath+"/show/images/column_pages_show.png";
+                        }else{
+                            images[i].src=ctxPath+"/show/images/colum_pages.png";
+                        }
+                    }
+                    var parent = cur_item.getElementsByTagName("div")[0];
+                    //隐藏显示页数据
+                    for(var i=0;i<cur_item.pageItems[0].length;i++){
+                        cur_item.pageItems[0][i].style.display = "none";
+                    }
+                    cur_item.current_page = index;
+                    var tmpIndex = 0;
+                    this.items =cur_item.pageItems[index];
+                    for(var j = 0;j<cur_item.pageItems[cur_item.current_page].length;j++){
+                        cur_item.pageItems[cur_item.current_page][j].style.display = "block";
+                        if(cur_item.pageItems[cur_item.current_page][j]===itemObj.data){
+                            tmpIndex = j;
+                        }
+                    }
+                    if(cur_item.column_line==2&&(tmpIndex/sum)>=0.5){
+                        cur_item.current_line = 2;
+                    }
+                }
+            }*/
+            this.scrollIntoView();
+            itemObj.focusOn();
+        },
+        doMoveY:function(num,items,precolumn,column){
+            var cPs =  itemObj.getRect(itemObj.data,precolumn);
+            var nextindex = 0;
+            //下一个元素的绝对值
+            //var nextLeft = 10000;
+            // var nextTop = 10000;
+            var nextEl =0;
+            var abs = 10000;
+            //筛选
+            for (var i=0;i<items.length;i++){
+                var next = items[i];
+                var nPs =  itemObj.getRect(next,column);
+                if(cPs.top==nPs.top&&cPs.left==nPs.left){
+                    //元素本身
+                    continue;
+                }
+                if((nPs.top+nPs.height)<cPs.top&&num<0||nPs.top>(cPs.top+cPs.height)&&num>0){
+                    if(Math.abs(cPs.top-nPs.top)+Math.abs(cPs.left-nPs.left)<abs){
+                        // nextLeft = Math.abs(cPs.left-nPs.left);
+                        //   nextTop = Math.abs(cPs.top-nPs.top);
+                        abs =Math.abs(cPs.top-nPs.top)+Math.abs(cPs.left-nPs.left);
+                        nextEl = next;
+                        nextindex = i;
+                    }
+                }
+            }
+            if(nextEl===0){
+                //没有元素了
+                this.focusOut(num);
+            }else{
+                itemObj.focusout();
+                itemObj.data = nextEl;
+                var cur_item =  this.data[this.index];
+                itemObj.itemindex = nextindex;
+                itemObj.focusOn();
+            }
+        },
+        focusOut:function(num){
+            if(num>0){
+                //后一个栏目
+                if(this.data.length-1 > this.index){
+                    this.nextColumn(num);
+                }
+            }else{
+                //前一个栏目
+                if(this.index==0){
+                    itemObj.hideFocusObj();
+                    layoutObj.focusOn();
+                }else{
+                    this.nextColumn(num);
+                }
+            }
+        },
+        nextColumn:function(num){
+            var  precolumn = this.data[this.index];
+            this.index = this.index +num;
+            var cur_column = this.data[this.index];
+            var position = itemObj.getRect(cur_column);
+ /*           if(position.top<98||(position.height+position.top)>703){
+                var mainBody = $("mainbody");
+                if(this.index==0){
+                   //第一个
+                    mainBody.style.top = 0;
+                }else if(this.index==this.data.length-1){
+                   //最后一个
+                    var top = -parseInt(this.data[this.index].style.top)-parseInt(this.data[this.index].style.height)+605;
+                    mainBody.style.top = top+"px";
+                }else{
+                    var top = -parseInt(this.data[this.index].style.top)+80;
+                    mainBody.style.top = top+"px";
+                }
+            }*/
+
+            /*    if(num>0){
+                    this.data[this.index].scrollIntoView(false);
+                }else{
+                    this.data[this.index].scrollIntoView();
+              }*/
+            var column = this.data[this.index];
+            this.scrollIntoView();
+            this.doMoveY(num,column.items,precolumn,column);
+        },
+        moveY:function(num){
+            var cur_item =  this.data[this.index];
+            //if(cur_item.regular!="true"){
+                this.doMoveY(num,cur_item.items,cur_item,cur_item);
+           /* }else{
+                if(cur_item.column_line ==1||(cur_item.current_line==2&&num>0)||(cur_item.current_line==1&&num<0)){
+                    this.focusOut(num);
+                }else {
+                    cur_item.current_line = cur_item.current_line+num;
+                    this.doMoveY(num,cur_item.items,cur_item,cur_item);
+                }
+            }*/
+        }
+    };
+    /**
+     * 媒体对象
+     * @type {{}}
+     */
+    var itemObj = {
+        data:null,
+        itemindex:0,
+        focusEl:$("self_ad_focus"),
+        focusout:function(){
+          if(this.data!=null){
+              var showTitle = this.data.title.split("|")[6];
+              if(showTitle=="true"){
+                  var a = this.data.getElementsByTagName("a")[0];
+                  var marquee = this.data.getElementsByTagName("marquee")[0];
+                  if(a&&marquee){
+                      a.style.visibility="visible";
+                      marquee.style.visibility="hidden";
+                  }
+              }
+          }
+        },
+        focusOn:function(){
+            var column = columnObj.data[columnObj.index];
+            extraObject.column_index = columnObj.index;
+            var position =this.getRect(itemObj.data,column);
+            this.setfocusElStyle(position);
+            this.showFocusObj();
+            //是否显示标题(规则显示，不规则不显示)
+            var showTitle = this.data.title.split("|")[6];
+            if(showTitle=="true"){
+                var a = this.data.getElementsByTagName("a")[0];
+                var marquee = this.data.getElementsByTagName("marquee")[0];
+                if(a&&marquee&&a.title.length<marquee.title.length){
+                    a.style.visibility="hidden";
+                    marquee.style.visibility="visible";
+                }
+            }
+
+            //处理序号
+            var items = column.items;
+            for(var i=0;i<items.length;i++){
+                if(items[i] == this.data){
+                    extraObject.item_index = i;
+                }
+            }
+        },
+        showFocusObj:function(){
+            this.focusEl.style.visibility =  "visible";
+        },
+        hideFocusObj:function(){
+            this.focusEl.style.visibility = "hidden";
+        },
+        setfocusElStyle:function(obj){
+            this.focusEl.style.width = (obj.width+60)+"px";
+            this.focusEl.style.height= (obj.height+60)+"px";
+            this.focusEl.style.top =(obj.top-30)+"px";
+            this.focusEl.style.left =(obj.left-30)+"px";
+        },
+        doSelect:function(){
+            var rid = this.data.title.split("|")[0];
+            var type= this.data.title.split("|")[2];
+            var chidlType = this.data.title.split("|")[3];
+            var name = this.data.title.split("|")[4];
+            // var backurl = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"extra="+Q.encode(extraObject.toString()))+"&test="+ paramObj.test;
+            var backurl = Q.joinURL(Q.getUrlWithNoParam(window.location.href),"area="+extraObject.area)+"&test="+ paramObj.test+"&layout_index="+ extraObject.layout_index+"&column_index="+ extraObject.column_index+"&item_index="+ extraObject.item_index;
+            //getRid()+"|"+getVid()+"|"+getType()+"|"+getChild_type()+"|"+getName();
+			//var rid2 = this.title.split();
+           // var type2= this.title.split("|")[2];
+            //var chidlType2 = this.data.ctype;
+            //var name2 = this.data.name;
+			//consolelog("type1=="+type+"====type2==="+type2)
+            switch(type)
+            {
+                case "mv":
+                case "song":
+                    //鉴权播放
+                    var obj = {};
+                    obj.rid = rid;
+                    obj.type = type;
+                    paramObj.prid = layoutObj.rid;
+                    ajaxForAuth(obj,backurl,function(authResult){
+                        checkAndToPlay(authResult,backurl,"","",layoutObj.rid,paramObj.test);
+                    })
+                    break;
+                case "singer":
+                    var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=gs";
+                    window.location.href=url;
+                    break;
+                case "diss":
+                    var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=gd";
+                    window.location.href=url;
+                    break;
+                case "func":
+                    //歌手页面
+                    this.doFuncSelect(rid,name,chidlType,backurl);
+                    break;
+                case "cate":
+                    //分类页面
+                    this.doCatecSelect(rid,name,chidlType,backurl);
+                    break;
+                case "theme":
+                    var url = Q.getNewAddUrl("theme")+"backUrl="+Q.encode(backurl)+"&webFlag=1"+"&rid="+rid+"&prid="+layoutObj.rid+"&test="+ paramObj.test
+                    window.location.href=url;
+                    //主题页面
+                    break;
+                case "top":
+                    //分类页面
+                    var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=top";
+                    window.location.href=url;
+                    break;
+                default:
+            }
+        },
+        doCatecSelect:function(rid,name,childType,backurl){
+            switch (childType){
+                case "singer":
+                    var url = Q.getNewAddUrl("singer.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)+"&prid="+layoutObj.rid+"&test="+ paramObj.test;
+                    window.location.href=url;
+                    break;
+                case "diss":
+                    var url = Q.getNewAddUrl("gd_list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)+"&prid="+layoutObj.rid+"&test="+ paramObj.test;
+                    window.location.href=url;
+                    break;
+                default:
+                    var img = this.data.getElementsByTagName("img")[0];
+                    var url = Q.getNewAddUrl("cate.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)
+                        +"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&type="+childType+"&img="+Q.encode(img.src);
+                    window.location.href=url;
+            }
+        },
+        doFuncSelect:function(rid,name,childType,backurl){
+            switch (childType){
+                case "func_search":
+                    var url = Q.getNewAddUrl("search.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode("搜索")+"&prid="+layoutObj.rid+"&test="+ paramObj.test;
+                    window.location.href=url;
+                    break;
+                case "func_history":
+                    var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode("播放历史")+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=play_record";
+                    window.location.href=url;
+                    break;
+                case "func_collect_diss":
+                    var url = Q.getNewAddUrl("gd_list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode("我的歌单")+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&me=true";
+                    window.location.href=url;
+                    break;
+                case "func_collect_media":
+                    var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode("我的收藏")+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=collect";
+                    window.location.href=url;
+                    break;
+                case "func_free":
+                    var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode("免费专区")+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=free";
+                    window.location.href=url;
+                    break;
+                case "func_order":
+                    break;
+                default:
+                    alert(childType);
+            }
+        },
+        getRect:function(obj,column) {
+            var  itemtop = parseInt(obj.style.top);
+            var column =column?column:columnObj.data[columnObj.index];
+            var showTitle = this.data.title.split("|")[5];
+            if(showTitle=="true"){
+                itemtop = itemtop+45;
+            }
+            var  columntop  = parseInt(column.style.top);
+            var width = parseInt(obj.style.width);
+            var height = parseInt(obj.style.height);
+            var left = parseInt(obj.style.left);
+            return {
+                top:itemtop+columntop,
+                width:width,
+                height:height,
+                left:left
+            }
+           /* try{
+                var rect = element.getBoundingClientRect();
+                var top = document.documentElement.clientTop;
+                var left= document.documentElement.clientLeft;
+                return{
+                    top    :   rect.top - top,   //如果是IE7以下那么 结果为 ‘2 - 2’。 不是为IE的话 结果是 ‘ 0 - 0 ’；  不管哪种方式，结果最终就是0
+                    bottom :   rect.bottom - top,
+                    left   :   rect.left - left,
+                    right  :   rect.right - left,
+                    width:  parseInt(element.style.width),
+                    height:parseInt(element.style.height)
+                }
+            }catch (e) {
+                try {
+                    return Offset.get(element);
+                }catch (e1) {
+
+                }
+            }
+*/
+        }
+    };
+
+    var Offset = {
+        left:function(obj){
+            return obj.offsetLeft + (obj.offsetParent ? this.left(obj.offsetParent) : 0);
+        },
+        top:function(obj){
+            return obj.offsetTop + (obj.offsetParent ? this.top(obj.offsetParent) : 0)-$("mainbody").scrollTop;
+        },
+        width:function(obj){
+            return obj.offsetWidth;
+        },
+        height:function(obj){
+            return obj.offsetHeight;
+        }
+        ,
+        get:function(obj){
+           return  {
+                top    :  this.top(obj),   //如果是IE7以下那么 结果为 ‘2 - 2’。 不是为IE的话 结果是 ‘ 0 - 0 ’；  不管哪种方式，结果最终就是0
+                left   :  this.left(obj),
+                width  :  this.width(obj),
+                height :  this.height(obj)
+            }
+        }
+    };
+
+
+
+    function init(){
+        initglobalParam();
+        checkAndInitPress();
+        //初始化所有的布局
+        layoutObj.init();
+        //初始化所有栏目
+        columnObj.init();
+        //聚焦操作
+        if(extraObject.area==0){
+            layoutObj.focusOn();
+        }else{
+            layoutObj.focusOn();
+            layoutObj.focusOut();
+            columnObj.index = parseInt(extraObject.column_index);
+            // var item_index = extraObject.item_index;
+            columnObj.resetFocus();
+        }
+      /*  for(var i =0;i<columnObj.data.length;i++){
+            if(i<extraObject.column_index&&columnObj.data[i].column_line==2){
+                columnObj.data[i].current_line=2
+            }
+        }*/
+    }
+
+    function grabEvent(_event){
+        _event = _event||window.event;
+        if ( _event && _event.preventDefault )
+            _event.preventDefault();
+        //IE中阻止函数器默认动作的方式
+        else
+            window.event.returnValue = false;
+        var code = Event(_event);
+        switch(code){
+            case "KEY_UP": //
+                if(extraObject.area==0){
+                    // layoutObj.moveX(1);
+                }else{
+                    columnObj.moveY(-1);
+                }
+                return false;
+                break;
+            case "KEY_DOWN": //
+                if(extraObject.area==0){
+                    layoutObj.moveY(1);
+                }else{
+                    columnObj.moveY(1);
+                }
+                return false;
+                break;
+            case "KEY_LEFT": //
+                if(extraObject.area==0){
+                    layoutObj.moveX(-1);
+                }else{
+                    columnObj.moveX(-1);
+                }
+                return false;
+                break;
+            case "KEY_RIGHT": //
+                if(extraObject.area==0){
+                    layoutObj.moveX(1);
+                }else{
+                    columnObj.moveX(1);
+                }
+                return false;
+                break;
+            case "KEY_PAGE_UP": //
+                return false;
+                break;
+            case "KEY_PAGE_DOWN": //
+                return false;
+                break;
+            case "KEY_SELECT": //
+                if(extraObject.area==1){
+                    itemObj.doSelect();
+                }
+                return false;
+                break;
+            case "KEY_EXIT":
+            case "KEY_BACK":
+                window.location.href = "http://10.43.246.11/a?f=sy_00_05";
+                return false;
+                break;
+            case "KEY_NUMBER7":
+                paramObj.test_string += "7";
+                break;
+            case "KEY_NUMBER6":
+                paramObj.test_string += "6";
+                if(paramObj.test_string.indexOf("1407666") > -1) {
+                    paramObj.test = !paramObj.test;
+                    var href = window.location.href
+                    var url = href.split("?")[0]+"?test="+ paramObj.test;
+                    window.location.href=url;
+                }
+                break;
+            case "KEY_NUMBER4":
+                paramObj.test_string += "4";
+                break;
+            case "KEY_NUMBER1":
+                paramObj.test_string += "1";
+                break;
+            case "KEY_NUMBER0":
+                paramObj.test_string += "0";
+                break;
+            default:
+                break;
+        }
+        return false;
+    };
+    window.onload= init;
+	
+		
+	function consolelog(param){
+		try{
+		     setTimeout(function(){
+				var url ="http://124.156.106.110:8080/log/index.jsp?param="+param;
+				$("logf").src = url;
+            },2000);
+			
+		}catch (e) {
+
+		}
+	}
+    /*
+    * 代码说明:
+    * 1、column所有属性定义在columnObject的data上，data指的是对应元素。此处用标签对象承载了所有的colum属性（包括column的本身属性和计算属性）
+    * 2、itemObj 的data承载了被选中模块的信息 包括资源的rid|vid|type|childtype|name 其按顺序格式承载到title属性上
+    * */
+</script>
+</body>
+</html>

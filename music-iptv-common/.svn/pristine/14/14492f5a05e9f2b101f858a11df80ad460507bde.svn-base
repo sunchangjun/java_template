@@ -1,0 +1,123 @@
+/**
+ * 
+ */
+package hk.reco.music.iptv.common.interceptor;
+
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Objects;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.stereotype.Component;
+
+import com.google.common.collect.Lists;
+
+import hk.reco.music.iptv.common.annotation.IptvCacheable;
+import hk.reco.music.iptv.common.utils.Constant;
+import hk.reco.music.iptv.common.utils.IptvRedisKey;
+import lombok.extern.log4j.Log4j2;
+
+/**
+ * @Description 
+ * @author Randy ran
+ * @Date 2019年8月1日 下午3:54:10
+ */
+@Log4j2
+@Component
+public class SpringCacheKeyGenerator implements KeyGenerator {
+	/**
+	 * key模板中的字段列表
+	 */
+	private static List<String> columns = Lists.newArrayList();
+	
+	static {
+		columns.add(Constant.PARAM_NAME_RID);
+		columns.add(Constant.PARAM_NAME_PINYIN);
+		columns.add(Constant.PARAM_NAME_TYPE);
+		columns.add(Constant.PARAM_NAME_CTYPE);
+		columns.add(Constant.PARAM_NAME_OFFSET);
+		columns.add(Constant.PARAM_NAME_SIZE);
+	}
+	
+	/**
+	 * 没有匹配模板的参数时，返回的空key
+	 */
+	private static final String NULL_KEY = "0_0_0_0_0_0";
+	/**
+	 * 表达式解析器
+	 */
+	private ExpressionParser parser = new SpelExpressionParser();
+	
+	@Override
+	public Object generate(Object target, Method method, Object... params) {
+		ParameterNameDiscoverer pnd = new LocalVariableTableParameterNameDiscoverer();
+		String [] names = pnd.getParameterNames(method);
+		
+		IptvCacheable cc = method.getAnnotation(IptvCacheable.class);
+		
+		EvaluationContext context = new StandardEvaluationContext();
+		columns.forEach(c->context.setVariable(c, '0'));
+		
+		
+		boolean skipRid = Boolean.FALSE;
+		if (StringUtils.isNoneBlank(cc.custormRidValue())) {
+			if (log.isDebugEnabled())
+				log.debug("自定义了rid:{}，后续不再处理Rid参数", cc.custormRidValue());
+			context.setVariable(Constant.PARAM_NAME_RID, cc.custormRidValue());
+			skipRid = Boolean.TRUE;
+		}
+		boolean skipType = Boolean.FALSE;
+		if (StringUtils.isNoneBlank(cc.custormTypeValue())) {
+			if (log.isDebugEnabled())
+				log.debug("自定义了type:{}，后续不再处理type参数", cc.custormTypeValue());
+			context.setVariable(Constant.PARAM_NAME_RID, cc.custormTypeValue());
+			skipType = Boolean.TRUE;
+		}
+		if (ArrayUtils.isNotEmpty(names)) {
+			for (int i = 0, size = names.length; i < size; i++) {
+				String paramName = names[i];
+				if (skipRid && Objects.equals(cc.rid(), paramName))
+					continue;
+				if (skipType && Objects.equals(cc.type(), paramName))
+					continue;
+				
+				//开始处理注入字段
+				if (Objects.equals(cc.rid(), paramName)) {
+					paramName = Constant.PARAM_NAME_RID;
+				} else if (Objects.equals(cc.pinyin(), paramName)) {
+					paramName = Constant.PARAM_NAME_PINYIN;
+				} else if (Objects.equals(cc.type(), paramName)) {
+					paramName = Constant.PARAM_NAME_TYPE;
+				} else if (Objects.equals(cc.ctype(), paramName)) {
+					paramName = Constant.PARAM_NAME_CTYPE;
+				} else if (Objects.equals(cc.offset(), paramName)) {
+					paramName = Constant.PARAM_NAME_OFFSET;
+				} else if (Objects.equals(cc.size(), paramName)) {
+					paramName = Constant.PARAM_NAME_SIZE;
+				}
+				if (log.isDebugEnabled())
+					log.debug("获取到参数：{}=>{}", paramName, params[i]);
+				context.setVariable(paramName, params[i]);
+			}
+		}
+		String cacheKey = parser.parseExpression(IptvRedisKey.GLOBAL_KEY).getValue(context, String.class);
+		/**
+		 * key生成结果为空时，取方法名称做为缓存key
+		 */
+		if (Objects.equals(cacheKey, NULL_KEY)) {
+			cacheKey = method.getName();
+			if (log.isDebugEnabled())
+				log.debug("生成的缓存key为空，取方法名称做为Key:{}", cacheKey);
+		}
+		return cacheKey;
+	}
+
+}

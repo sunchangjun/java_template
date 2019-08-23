@@ -1,0 +1,180 @@
+package hk.reco.music.iptv.common.stats;
+
+import hk.reco.music.iptv.common.dao.IptvStatsDao;
+import hk.reco.music.iptv.common.dao.IptvStatsMuteDao;
+import hk.reco.music.iptv.common.dao.IptvStatsUserDao;
+import hk.reco.music.iptv.common.dao.IptvStatsUserDetailDao;
+import hk.reco.music.iptv.common.dao.IptvUserDao;
+import hk.reco.music.iptv.common.domain.IptvStats;
+import hk.reco.music.iptv.common.domain.IptvStatsMute;
+import hk.reco.music.iptv.common.domain.IptvStatsUser;
+import hk.reco.music.iptv.common.domain.IptvStatsUserDetail;
+import hk.reco.music.iptv.common.stats.chart.msic.IptvEntity;
+import hk.reco.music.iptv.common.utils.DateUtils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+/**
+ * 解析iptv的日志
+ * 注意这个task已经考虑到多台tomcat的情况,同时只有一个在跑
+ * @author zhangsl
+ * @date 2019年7月30日
+ */
+@Component
+public class IptvParseLogTask {
+	private static Logger logger = LoggerFactory.getLogger(IptvParseLogTask.class);
+	
+	@Autowired
+	private IptvUserDao iptvUserDao;
+	@Autowired
+	private IptvStatsMuteDao iptvStatsMuteDao;
+	@Autowired
+	private IptvStatsUserDao iptvStatsUserDao;
+	@Autowired
+	private IptvStatsDao iptvStatsDao;
+	@Autowired
+	private IptvStatsUserDetailDao iptvStatsUserDetailDao;
+	
+	@Value("${logging.path}")
+	private String loggingPath;
+    /*common里移除定时任务,改为子项目调用,加@Profile({""}),以免部署测试服务,影响正式服务   */
+	//@Scheduled(cron = "0 */1 * * * ? ")
+    //@Scheduled(cron = "0 0 3 * * ? ")
+	public void job() throws Exception {
+		logger.info("定时任务开始time={}", LocalDateTime.now().toString());
+		long now = System.currentTimeMillis();
+		//1-解决多台tomcat同时跑的冲突问题,先插入成功的tomcat进行占位,后插入并失败的,结束运行
+		try{
+			IptvStatsMute task = new IptvStatsMute();
+			task.setDate(new java.sql.Date(now));
+			task.setStart_time(new Date(now));
+			this.iptvStatsMuteDao.insert(task);
+		}catch(Exception e){
+			//e.printStackTrace();
+			logger.info(IptvParseLogTask.class.getName()+"任务标志被占用,略过任务!");
+			return;//结束任务运行
+		}
+		
+		/*
+		 * 2-开始解析文件,将同一天的文件归类到list中,同一天超过一个文件,可能来自多个原因
+		 * 可能 是超过大小,也可能是重启server造成
+		 */
+		String str_max_date = this.iptvStatsDao.findMaxDate();
+		System.out.println("已经处理过的最大天数:"+str_max_date);
+		String str_today_ymd = DateUtils.getYmd(now);
+		File log_dir = new File(loggingPath);
+		Map<String,List<File>> day_file_map = new LinkedHashMap<String,List<File>>();
+		for(File file : log_dir.listFiles()){
+			if(file.isFile()){
+				String file_name = file.getName();
+				String file_date = file_name.substring(0, 10);
+				//第一次跑这个任务,有可能数据库还没有任何一天
+				boolean compare_db_max_date = (str_max_date==null)?true:file_date.compareTo(str_max_date)>0;
+				//大于已经已经标记为跑过的日期,并且小于今天的时间,也就是说当天日志不处理
+				if(compare_db_max_date && file_date.compareTo(str_today_ymd)<0){
+					System.out.println("开始处理文件:"+file_name);
+					if(day_file_map.containsKey(file_date)){
+						List<File> day_files = day_file_map.get(file_date);
+						day_files.add(file);
+					}else{
+						List<File> day_files = new ArrayList<File>();
+						day_file_map.put(file_date, day_files);
+						day_files.add(file);
+					}
+				}else{
+					System.out.println("略过文件:"+file_name);
+				}
+			}
+		}
+		
+		/*
+		 * 3-开始解析文件中的数据,同一天的list为一个循环周期
+		 */
+		Iterator<String> it = day_file_map.keySet().iterator();
+		while(it.hasNext()){
+			String date = it.next();
+			List<File> day_files = day_file_map.get(date);
+			Map<String,IptvStatsUserDetail> day_user_detail_map = new HashMap<String,IptvStatsUserDetail>();
+			List<String> play_users = new ArrayList<String>();
+			int user_visit_num = 0;
+			int user_visit_total = 0;
+			int user_new_num = 0;
+			int play_user_num = 0;
+			int play_times_num = 0;
+			int play_duration_total = 0;
+			for(File day_file:day_files){
+				System.out.println("begin to parse file:" + day_file.getName());
+				BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(day_file)));
+		        String line = null;
+				while((line=reader.readLine())!=null){
+					user_visit_total++;
+					IptvEntity o = IptvEntity.parse(line);
+					String userid = o.getUserId();
+					String method = o.getMethod();
+					String action = o.getAction();
+					long ts = o.getTimestamp();
+					if(day_user_detail_map.containsKey(userid)){
+						IptvStatsUserDetail detail = day_user_detail_map.get(userid);
+						int login_times = method.equals("get_layouts_impl")?1:0;
+						int play_times = action.equals("play")?1:0;
+						detail.setLogin_times(detail.getLogin_times()+login_times);
+						detail.setPlay_times(detail.getPlay_times()+play_times);
+					}else{//当天用户没出现,插入行数据
+						IptvStatsUserDetail detail = new IptvStatsUserDetail();
+						detail.setDate(date);
+						detail.setUser_id(userid);
+						detail.setFirst_time(new Date(ts));
+						detail.setLogin_times(method.equals("get_layouts_impl")?1:0);
+						detail.setPlay_times(action.equals("play")?1:0);
+						day_user_detail_map.put(userid, detail);
+					}
+					if(action.equals("play")){//播放用户去重
+						play_times_num++;
+						play_duration_total += o.getDuration();
+						if(!play_users.contains(userid)){
+							play_users.add(userid);
+						}
+					}
+				}
+		        reader.close();
+			}
+			System.out.println("开始批量插入:"+day_user_detail_map.size());
+			this.iptvStatsUserDetailDao.insertBatch(day_user_detail_map.values());
+			user_new_num = this.iptvUserDao.countUserByDate(date);//查出当天新增用户
+			play_user_num = play_users.size();
+			user_visit_num = day_user_detail_map.size();
+			
+			IptvStatsUser stats_user = new IptvStatsUser();
+			stats_user.setDate(date);
+			stats_user.setPlay_duration_total(play_duration_total);
+			stats_user.setPlay_times_num(play_times_num);
+			stats_user.setPlay_user_num(play_user_num);
+			stats_user.setUser_new_num(user_new_num);
+			stats_user.setUser_visit_num(user_visit_num);
+			stats_user.setUser_visit_total(user_visit_total);
+			this.iptvStatsUserDao.insert(stats_user);
+			
+			IptvStats stats = new IptvStats();
+			stats.setDate(date);
+			stats.setDone_time(new Date());
+			this.iptvStatsDao.insert(stats);
+		}
+	}
+	
+}

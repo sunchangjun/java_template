@@ -1,0 +1,954 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="page-view-size" content="1280*720">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <style>
+        ul, li {
+            margin: 0;
+            padding: 0
+        }
+        .test{
+            top:20px;
+            color:red;
+            background: transparent;
+            font-size: 24px;
+            font-weight: 700;
+            z-index: 50;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            right: 30px;
+            display: none;
+            position:absolute;
+        }
+
+        .log{
+            width: 1280px;
+            top:20px;
+            color:white;
+            background: black;
+            z-index: 25;
+            display: none;
+            height: 300px;
+            position:absolute;
+        }
+    </style>
+</head>
+<body>
+<div style="position:absolute; left:0px; top:0px; width:1280px; height:720px;background-image: url(images/bg.jpg); background-repeat:no-repeat; overflow:hidden;">
+    <p id="test" class="test">测试版</p>
+    <p id="log" class="log"></p>
+    <div id="title" style="position: absolute; left: 62px; top: 30px; width: 522px; height: 50px; line-height: 50px; font-size: 30px; color: #fff;">我的收藏</div>
+    <!--顶部菜单-->
+    <ul id="menu" style="position: absolute;list-style: none;left: 65px;width: 1150px;height: 50px;top: 100px">
+        <li style="display: block;float: left;margin-right: 50px;position: relative;">
+            <a style="font-size: 24px;color: white;">MV</a>
+            <div style="background-color: #00ff54;height: 3px;display: none;margin-top: 5px;position: relative"></div>
+        </li>
+        <li style="display: block;float: left;margin-right: 50px;position: relative;">
+            <a style="font-size: 24px;color: white;">歌曲</a>
+            <div style="background-color: #00ff54;height: 3px;display: none;margin-top: 5px;position: relative"></div>
+        </li>
+        <li style="display: block;float: left;margin-right: 50px;position: relative;">
+            <a style="font-size: 24px;color: white;">歌单</a>
+            <div style="background-color: #00ff54;height: 3px;display: none;margin-top: 5px;position: relative"></div>
+        </li>
+    </ul>
+    <!--清空列表按钮-->
+    <!--<div id="top_btn2" style="position: absolute;left: 630px; top: 102px; width: 570px; height: 36px;">
+        <div id="top_btn20" style="position: absolute; left: 473px; top: 0px; width: 120px; height: 36px; background-image: url(images/064.png);"></div>
+        <img src="images/150.png" width="97" height="21" style="position: absolute; left: 484px; top: 8px;" />
+        <div id="top_btn20_icon" style="position: absolute; left: 445px; top: -30px; width: 176px; height: 96px; background-image: url(images/085.png); visibility: hidden;"></div>
+    </div>-->
+    <!--内容-->
+    <div id="list" style="position: absolute; left: 62px; top: 170px; width: 1175px; height: 435px; line-height: 60px; color: #fff; font-size: 23px;">
+        <!--MV-->
+        <div id="mv_list" style="position: absolute; left: 0px; top: 0px; width: 1175px; height: 435px; line-height: 60px; color: #fff; font-size: 23px;display: none;">
+            <span id="mv_list0" style="position:absolute;z-index:4;width:280px;height:159px;top:7px;left:0px; visibility: hidden;" title="">
+                <img id="mv_list0_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list0_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                    &nbsp;
+                </div>
+            </span>
+            <span id="mv_list1" style="position:absolute;z-index:4;width:280px;height:159px;top:190px;left:0px; visibility: hidden;" title="">
+                <img id="mv_list1_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list1_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                    &nbsp;
+                </div>
+            </span>
+            <span id="mv_list2" style="position:absolute;z-index:4;width:280px;height:159px;top:7px;left:298px; visibility: hidden;" title="">
+                <img id="mv_list2_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list2_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                     &nbsp;
+                </div>
+            </span>
+            <span id="mv_list3" style="position:absolute;z-index:4;width:280px;height:159px;top:190px;left:298px; visibility: hidden;" title="">
+                <img id="mv_list3_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list3_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                     &nbsp;
+                </div>
+            </span>
+            <span id="mv_list4" style="position:absolute;z-index:4;width:280px;height:159px;top:7px;left:596px; visibility: hidden;" title="">
+                <img id="mv_list4_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list4_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                     &nbsp;
+                </div>
+            </span>
+            <span id="mv_list5" style="position:absolute;z-index:4;width:280px;height:159px;top:190px;left:596px; visibility: hidden;" title="">
+                <img id="mv_list5_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list5_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                     &nbsp;
+                </div>
+            </span>
+            <span id="mv_list6" style="position:absolute;z-index:4;width:280px;height:159px;top:7px;left:894px; visibility: hidden;" title="">
+                <img id="mv_list6_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list6_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                     &nbsp;
+                </div>
+            </span>
+            <span id="mv_list7" style="position:absolute;z-index:4;width:280px;height:159px;top:190px;left:894px; visibility: hidden;" title="">
+                <img id="mv_list7_img" src="" style="width:280px;height:159px;z-index: 5;top:0;left:0;">
+                <img src="/280.png" style="width:280px;position: absolute;left: 0;top:109px;height:50px;z-index: 6;">
+                <div id="mv_list7_title" style="height: 25px;width:274px;line-height:25px;font-size:15px;position: absolute;color:white;left: 3px;top: 132px;z-index: 7;white-space: nowrap; overflow: hidden;">
+                     &nbsp;
+                </div>
+            </span>
+        </div>
+        <!--歌曲-->
+        <div id="music_list" style="position: absolute; left: 0px; top: 0px; width: 1175px; height: 435px; line-height: 60px; color: #fff; font-size: 23px;display: none">
+            <div id="music_list0" style="position: absolute; left: 0px; top: 0px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list0_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list0_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list0_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list0_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list1" style="position: absolute; left: 0px; top: 75px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list1_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list1_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list1_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list1_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list2" style="position: absolute; left: 0px; top: 150px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list2_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list2_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list2_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list2_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list3" style="position: absolute; left: 0px; top: 225px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list3_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list3_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list3_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list3_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list4" style="position: absolute; left: 0px; top: 300px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list4_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list4_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list4_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list4_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list5" style="position: absolute; left: 612px; top: 0px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list5_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list5_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list5_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list5_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list6" style="position: absolute; left: 612px; top: 75px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list6_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list6_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list6_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list6_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list7" style="position: absolute; left: 612px; top: 150px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list7_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list7_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list7_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list7_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list8" style="position: absolute; left: 612px; top: 225px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list8_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list8_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list8_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list8_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+            <div id="music_list9" style="position: absolute; left: 612px; top: 300px; width: 543px; height: 60px; visibility: hidden;">
+                <div id="music_list9_num" style="position: absolute; left: 5px; top: 0px; width: 50px; height: 60px; text-align: right; font-size:25px; font-weight:bold; overflow:hidden;">1</div>
+                <div id="music_list9_img" style="position: absolute; left: 30px; top: 19px; width: 20px; height: 22px; background-image: url(images/042.png); visibility:hidden;"></div>
+                <div id="music_list9_title" style="position: absolute; left: 65px; top: 0px; width: 330px; height: 60px; overflow:hidden;">&nbsp;</div>
+                <div id="music_list9_name" style="position: absolute; left: 405px; top: 0px; width: 130px; height: 60px; overflow:hidden;">&nbsp;</div>
+            </div>
+        </div>
+        <!--歌单-->
+        <div id="gd_list" style="position: absolute; left: 0px; top: 0px; width: 1175px; height: 435px; line-height: 60px; color: #fff; font-size: 23px;display: none;">
+            <div id="gd_list0" style="position: absolute; left: 0px; top: 0px; width: 536px; height: 130px; visibility: hidden; background-image: url(&quot;images/086.png&quot;);">
+                <img id="gd_list0_img" src="http://192.168.3.10:8888/t/d/8e93c02f8e584c5992a221f2e8b1bed3.jpg" width="110" height="110" style="position: absolute; left: 11px; top: 10px;">
+                <div id="gd_list0_title" style="position: absolute; left: 140px; top: 14px; width: 380px; height: 60px;line-height: 30px; overflow:hidden;">&nbsp;</div>
+                <div style="position: absolute; left: 140px; top: 78px; width: 380px; height: 30px;line-height: 30px; overflow:hidden;">单曲：<span id="gd_list0_num">&nbsp;</span></div>
+            </div>
+            <div id="gd_list1" style="position: absolute; left: 0px; top: 145px; width: 536px; height: 130px; visibility: hidden; background-image: url(&quot;images/086.png&quot;);">
+                <img id="gd_list1_img" src="http://192.168.3.10:8888/t/d/8e93c02f8e584c5992a221f2e8b1bed3.jpg" width="110" height="110" style="position: absolute; left: 11px; top: 10px;">
+                <div id="gd_list1_title" style="position: absolute; left: 140px; top: 14px; width: 380px; height: 60px;line-height: 30px; overflow:hidden;">&nbsp;</div>
+                <div style="position: absolute; left: 140px; top: 78px; width: 380px; height: 30px;line-height: 30px; overflow:hidden;">单曲：<span id="gd_list1_num">&nbsp;</span></div>
+            </div>
+            <div id="gd_list2" style="position: absolute; left: 0px; top: 290px; width: 536px; height: 130px; visibility: hidden; background-image: url(&quot;images/086.png&quot;);">
+                <img id="gd_list2_img" src="http://192.168.3.10:8888/t/d/8e93c02f8e584c5992a221f2e8b1bed3.jpg" width="110" height="110" style="position: absolute; left: 11px; top: 10px;">
+                <div id="gd_list2_title" style="position: absolute; left: 140px; top: 14px; width: 380px; height: 60px;line-height: 30px; overflow:hidden;">&nbsp;</div>
+                <div style="position: absolute; left: 140px; top: 78px; width: 380px; height: 30px;line-height: 30px; overflow:hidden;">单曲：<span id="gd_list2_num">&nbsp;</span></div>
+            </div>
+            <div id="gd_list3" style="position: absolute; left: 555px; top: 0px; width: 536px; height: 130px; visibility: hidden; background-image: url(&quot;images/086.png&quot;);">
+                <img id="gd_list3_img" src="http://192.168.3.10:8888/t/d/8e93c02f8e584c5992a221f2e8b1bed3.jpg" width="110" height="110" style="position: absolute; left: 11px; top: 10px;">
+                <div id="gd_list3_title" style="position: absolute; left: 140px; top: 14px; width: 380px; height: 60px;line-height: 30px; overflow:hidden;">&nbsp;</div>
+                <div style="position: absolute; left: 140px; top: 78px; width: 380px; height: 30px;line-height: 30px; overflow:hidden;">单曲：<span id="gd_list3_num">&nbsp;</span></div>
+            </div>
+            <div id="gd_list4" style="position: absolute; left: 555px; top: 145px; width: 536px; height: 130px; visibility: hidden; background-image: url(&quot;images/086.png&quot;);">
+                <img id="gd_list4_img" src="http://192.168.3.10:8888/t/d/8e93c02f8e584c5992a221f2e8b1bed3.jpg" width="110" height="110" style="position: absolute; left: 11px; top: 10px;">
+                <div id="gd_list4_title" style="position: absolute; left: 140px; top: 14px; width: 380px; height: 60px;line-height: 30px; overflow:hidden;">&nbsp;</div>
+                <div style="position: absolute; left: 140px; top: 78px; width: 380px; height: 30px;line-height: 30px; overflow:hidden;">单曲：<span id="gd_list4_num">&nbsp;</span></div>
+            </div>
+            <div id="gd_list5" style="position: absolute; left: 555px; top: 290px; width: 536px; height: 130px; visibility: hidden; background-image: url(&quot;images/086.png&quot;);">
+                <img id="gd_list5_img" src="http://192.168.3.10:8888/t/d/8e93c02f8e584c5992a221f2e8b1bed3.jpg" width="110" height="110" style="position: absolute; left: 11px; top: 10px;">
+                <div id="gd_list5_title" style="position: absolute; left: 140px; top: 14px; width: 380px; height: 60px;line-height: 30px; overflow:hidden;">&nbsp;</div>
+                <div style="position: absolute; left: 140px; top: 78px; width: 380px; height: 30px;line-height: 30px; overflow:hidden;">单曲：<span id="gd_list5_num">&nbsp;</span></div>
+            </div>
+        </div>
+
+        <div style="position: absolute; left: 513px; top: 470px; width: 139px; height: 18px; line-height: 18px; font-size: 18px; text-align:center;">
+            <div style=" position:absolute; left:0px; top:0px; width:10px; height:18px; background-image:url(images/083.png);"></div>
+            <div id="page_num" style="position:absolute; left:20px; top:0px; width:88px; height:18px;">1/1</div>
+            <div style="position: absolute; left: 118px; top: 0px; width: 10px; height: 18px; background-image: url(images/081.png);"></div>
+        </div>
+    </div>
+</div>
+
+<!--自适应焦点 begin-->
+<div id="self_ad_focus" style="position: absolute; left: 42px; top: 103px; width: 603px; height: 120px; visibility: hidden; z-index: 5;">
+    <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="50" height="50" style="background:url(images/focus/focus_lt.png); background-repeat:no-repeat;"></td>
+            <td style="background:url(images/focus/focus_t.png);background-repeat:repeat-x;">&nbsp;</td>
+            <td width="50" style="background:url(images/focus/focus_rt.png);background-repeat:no-repeat;"></td>
+        </tr>
+        <tr>
+            <td style="background:url(images/focus/focus_l.png);background-repeat:repeat-y;"></td>
+            <td>&nbsp;</td>
+            <td style="background:url(images/focus/focus_r.png);background-repeat:repeat-y;"></td>
+        </tr>
+        <tr>
+            <td width="50" height="50" style="background:url(images/focus/focus_lb.png);background-repeat:no-repeat;"></td>
+            <td style="background:url(images/focus/focus_b.png);background-repeat:repeat-x;">&nbsp;</td>
+            <td width="50" style="background:url(images/focus/focus_rb.png);background-repeat:no-repeat;"></td>
+        </tr>
+    </table>
+</div>
+<!--自适应焦点 end-->
+<div id="pop_up" style="position:absolute; left:0px; top:0px; width:1280px; height:720px; background-image:url(images/037.png); background-repeat:no-repeat; overflow:hidden; display:none; z-index:999;">
+    <div id="pop_up_bg" style="position: absolute; left: 441px; top: 195px; width: 391px; height: 200px; background-image: url(images/038.png); color: #FFF; font-size: 23px; text-align: center; line-height: 30px; background-repeat: no-repeat;">
+        <table style="position: absolute; left: 15px; top: 8px; width: 361px; height: 120px;" cellpadding="0" cellspacing="0">
+            <tr>
+                <td id="pop_up_text" width="100%" height="100%" align="center">&nbsp;</td>
+            </tr>
+        </table>
+        <div id="pop_up_btn0" style="position: absolute; left: 0px; top: 142px; width: 196px; height: 58px; line-height: 58px; font-size: 25px; background-image: url(images/tm.gif);"></div>
+        <div id="pop_up_btn1" style="position: absolute; left: 195px; top: 142px; width: 196px; height: 58px; line-height: 58px; font-size: 25px; background-image: url(images/tm.gif);"></div>
+        <div id="pop_up_btn2" style="position: absolute; left: 118px; top: 133px; width: 156px; height: 46px; line-height: 46px; font-size: 25px; background-image: url(images/040.png);"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/function.js"></script>
+<script type="text/javascript">
+    /*页面功能控制*/
+    var oparateObj = {
+        area : 1,//行，=10时处于弹窗状态
+        rid : "",
+        code : "",
+        backUrl : "",
+        btn_num:"",
+        gd_status:"",
+        type:"media",
+        collect : false,
+        init : function() {
+            this.getParameter();
+            topBtnObj.init();
+            tabObj.init();
+            if(1 != this.area) {
+                this.focusOn();
+            }
+            dcHTMLToReciveServlet(this.backUrl.split("?")[0], window.location.href.split("?")[0], "qq_music_list");
+        },
+        getParameter : function() {
+            var area = Q.getDecoded("area");
+            if(null !== area && "null" !== area) {
+                this.area = parseInt(area);
+            }
+            var collect = Q.getDecoded("collect");
+            if(null != collect && "null" != collect) {
+                this.collect = (collect=="true") ? true : false;
+            }
+            var l_pos = Q.getDecoded("l_pos");
+            if(null != l_pos && "null" != l_pos && parseInt(area) === 2) {
+                listObj.pos = parseInt(l_pos);
+            }
+            var l_p_pos = Q.getDecoded("l_p_pos");
+            if(null != l_p_pos && "null" != l_p_pos && parseInt(area) === 2) {
+                listObj.page_pos = parseInt(l_p_pos);
+            }
+            var t_pos = Q.getDecoded("t_pos");
+            if(null != t_pos && "null" != t_pos) {
+                topBtnObj.pos = parseInt(t_pos);
+            }
+            var rid = Q.getDecoded("rid");
+            if(null != rid && "null" != rid) {
+                this.rid = rid;
+            }
+            var tabIndex = Q.getDecoded("tab_index");
+            if(null != tabIndex && "null" != tabIndex) {
+                tabObj.index = parseInt(tabIndex);
+            }
+            var backUrl = Q.getDecoded("backUrl");
+            backUrl =  backUrl.replace("wthx1234","?");
+            while(backUrl.indexOf("wthx5678")!=-1){
+                backUrl =  backUrl.replace("wthx5678","&");
+            }
+            if(null != backUrl && "null" != backUrl) {
+                this.backUrl = backUrl;
+            }
+        },
+        focusOn : function() {
+            if(this.area === 10){
+                popUpObj.focusOn();
+            }
+        },
+        focusOut : function() {
+            if(this.area === 10){
+                popUpObj.focusOut();
+            }
+        },
+        moveX : function(_num) {
+            console.log(_num);
+            switch(this.area) {
+                case 0 :
+                    break;
+                case 1 :// 移动 tab
+                    tabObj.moveX(_num);
+                    break;
+                case 2 ://移动内容
+                    listObj.moveX(_num);
+                    break;
+                case 10 ://移动弹窗
+                    popUpObj.focusMove(_num);
+                    break;
+            }
+        },
+        moveY : function(_num) {
+            console.log(_num);
+            switch(this.area) {
+                case 1 :
+                    //还需要判断下 list 是否有数据
+                    if(_num === 1 && listObj.data[tabObj.index].length !== 0){
+                        tabObj.moveY(_num);
+                        this.area = 2;
+                        listObj.focusMove(0);
+                    }
+                    break;
+                case 2 :
+                    if(_num > 0) {
+                        listObj.moveY(_num);
+                    } else {
+                        if(tabObj.index === 0 && ~[0,2,4,6].indexOf(listObj.pos) || tabObj.index === 1 && ~[0,5].indexOf(listObj.pos) || tabObj.index === 2 && ~[0,3].indexOf(listObj.pos)) {// 列表顶部，向上，tab聚焦
+                            this.area = 1;
+                            listObj.pos = 0;
+                            tabObj.moveY(_num);
+                            listObj.focusOut();
+                        } else {
+                            listObj.moveY(_num);
+                        }
+                    }
+                    break;
+                default :
+                    break;
+            }
+        },
+        doSelect : function() {
+            switch(this.area) {
+                case 0 :
+                    break;
+                case 1 :
+                    //tabObj.doSelect();
+                    break;
+                case 2 :
+                    listObj.doSelect();
+                    break;
+                case 10 :
+                    popUpObj.doSelect();
+                    break;
+            }
+        },
+        doBack : function() {
+            if(10 == this.area) {
+                popUpObj.hidden();
+            } else {
+                location.href = oparateObj.backUrl;
+            }
+            location.href = oparateObj.backUrl;
+        }
+    };
+    /*右上角按钮（清空列表）*/
+    var topBtnObj = {
+        pos : 0,
+        size : 1,
+        init : function() {
+        },
+        initCollectMS : function(_collect) {
+            if(_collect) {
+                $("top_btn"+oparateObj.btn_num +"0").style.backgroundImage = "url(images/089.png)";
+                $("top_btn"+oparateObj.btn_num +"0_icon").style.backgroundImage = "url(images/090.png)";
+            } else {
+                $("top_btn"+oparateObj.btn_num +"0").style.backgroundImage = "url(images/087.png)";
+                $("top_btn"+oparateObj.btn_num +"0_icon").style.backgroundImage = "url(images/088.png)";
+            }
+        },
+        focusOn : function() {
+            $("top_btn"+oparateObj.btn_num + this.pos + "_icon").style.visibility = "visible";
+            $("top_btn"+oparateObj.btn_num + this.pos).style.visibility = "hidden";
+        },
+        focusOut : function() {
+            $("top_btn"+oparateObj.btn_num + this.pos + "_icon").style.visibility = "hidden";
+            $("top_btn"+oparateObj.btn_num + this.pos).style.visibility = "visible";
+        },
+        focusMove : function(_num) {
+            var num = _num || 0;
+            var pos = this.pos + num;
+            if(pos >= 0 && pos < this.size) {
+                this.focusOut(1);
+                this.pos = pos;
+                this.focusOn(1);
+            }
+        },
+        doSelect : function() {
+            if(0 == this.pos) {
+                if("gd"== oparateObj.code){
+                    oparateGdCollect();
+                }else if("play_record"==oparateObj.code){
+// 				console.log("清空播放记录");
+                    ajaxForRemovePlayListAll();
+                }else if("collect"==oparateObj.code){
+// 				console.log("清空我喜欢");
+                    ajaxForRemoveAllCollect();
+                }else{
+                    popUpObj.init("参数错误");
+                }
+            }
+        }
+    };
+    /*tab*/
+    var tabObj = {
+        tab: [],
+        tabContent:[],
+        index: 0,
+        init:function(){
+            var menu = $("menu");
+            this.tab = menu.getElementsByTagName("li");
+            this.tabContent = [$("mv_list"),$("music_list"),$("gd_list")];
+            for (var i = 0, length = this.tab.length; i < length; i++) {
+                var title = this.tab[i];
+                var width = title.getElementsByTagName("a")[0].offsetWidth;
+                title.getElementsByTagName("div")[0].style.width = width + "px";
+            }
+            this.focusOn();
+            listObj.init();
+        },
+        focusOn: function () {
+            this.tab[this.index].getElementsByTagName("a")[0].style.color = "#00FF54";
+            if(oparateObj.area === 1){
+                this.tab[this.index].getElementsByTagName("div")[0].style.display = "block";
+            }
+            this.tabContent[this.index].style.display = "block";
+        },
+        focusOut: function () {
+            this.tab[this.index].getElementsByTagName("div")[0].style.display = "none";
+            /*if($("top_btn20_icon").style.visibility === "visible"){
+                $("top_btn20_icon").style.visibility = "hidden";
+            }*/
+        },
+        changeTab: function (newIndex){
+            /* 注释掉清空收藏列表按钮
+            if(newIndex === this.tab.length){
+                this.focusOut();
+                $("top_btn20_icon").style.visibility = "visible";
+                return;
+            }
+            if($("top_btn20_icon").style.visibility === "visible"){
+                $("top_btn20_icon").style.visibility = "hidden";
+                this.tab[this.index].getElementsByTagName("div")[0].style.display = "block";
+                return;
+            }*/
+            this.tab[this.index].getElementsByTagName("a")[0].style.color = "#fff";
+            this.tab[this.index].getElementsByTagName("div")[0].style.display = "none";
+            this.tabContent[this.index].style.display = "none";
+            this.tabContent[newIndex].style.display = "block";
+            this.index = newIndex;
+            listObj.page_pos = 0;
+            listObj.init();
+            this.focusOn();
+        },
+        moveX: function (num) {
+            var newIndex = this.index + num;
+            if(newIndex < 0 || newIndex > this.tab.length - 1) {
+                return;
+            }
+            this.changeTab(newIndex);
+        },
+        moveY: function (num) {
+            if (num > 0) {
+                this.focusOut();
+            } else {
+                this.focusOn();
+            }
+        }
+    }
+    /*列表*/
+    var listObj = {
+        pos : 0,//坐标
+        max_size : 10,
+        cur_size : 0,//页面数据量，最大为max_size，最小为0，此时应该显示无内容
+        size_line : 2,//mv2,music5,gd3
+        page_pos : 0,
+        page_size : 1,
+        focusObj : $("self_ad_focus"),
+        data:[],// 二维数据：0mv列表；1歌曲列表；2歌单列表
+        type:"",
+        init : function() {
+            switch (tabObj.index) {
+                case 0:
+                    this.type = "mv_list"
+                    this.max_size = 8;
+                    this.size_line = 2;
+                    this.focusObj.style.width = '340px';
+                    this.focusObj.style.height = '219px';
+                    break;
+                case 1:
+                    this.type = "music_list"
+                    this.max_size = 10;
+                    this.size_line = 5;
+                    this.focusObj.style.width = '603px';
+                    this.focusObj.style.height = '120px';
+                    break;
+                case 2:
+                    this.type = "gd_list"
+                    this.max_size = 6;
+                    this.size_line = 3;
+                    this.focusObj.style.width = '596px';
+                    this.focusObj.style.height = '190px';
+                    break;
+                default:
+                    break;
+            }
+            if(this.data.length === 0){
+                ajaxForLoadGdCollect(function(){
+                    if(tabObj.index === 2){
+                        listObj.setPageSize();
+                    }
+                });
+                ajaxForLoadCollect(function(){
+                    if(tabObj.index !== 2){
+                        listObj.setPageSize();
+                    }
+                });
+            } else {
+                this.setPageSize();
+            }
+        },
+        setPageSize:function(){
+            this.page_size = this.data[tabObj.index] ? Math.ceil(this.data[tabObj.index].length / this.max_size) : 1;
+            if(this.page_pos >= this.page_size - 1){
+                this.page_pos = this.page_size - 1;
+            }
+            this.len = this.data[tabObj.index] ? this.data[tabObj.index].length : 0;
+            this.show();
+            if(oparateObj.area === 2){
+                listObj.focusMove();
+            }
+        },
+        show : function() {
+            var itemData = this.data[tabObj.index];
+            if(itemData.length === 0){
+                // 当无数据是重置位置
+                oparateObj.area = 1;
+                listObj.pos = 0;
+                tabObj.focusOn();
+                var errMsg = tabObj.index === 0 ? "请收藏MV后再来查看！" : tabObj.index === 1 ? "请收藏歌曲后再来查看！" : "请收藏歌单后再来查看！";
+                setTimeout(function(){// 使用异步方式，否则会造成，无数据的时候，tab聚焦失败
+                    popUpObj.init(errMsg);
+                },0);
+            }
+            if(this.page_pos === this.page_size - 1) {
+                if(this.len !== 0 && this.len % this.max_size === 0) {
+                    this.cur_size = this.max_size;
+                } else {
+                    this.cur_size = this.len % this.max_size;
+                }
+            } else {
+                this.cur_size = this.max_size;
+            }
+            var num = this.page_pos * this.max_size;
+            for(var i = 0; i < this.max_size; i++) {
+                if(i < this.cur_size) {
+                    var obj = itemData[num + i];
+                    if(!obj){
+                        continue;
+                    }
+                    switch (tabObj.index) {
+                        case 0:
+                            $(this.type + i + "_title").innerHTML = "<a style=\"white-space: nowrap;\">"+ obj.name +"</a>";
+                            $(this.type + i + "_img").src = obj.sposter;
+                            break;
+                        case 1:
+                            $(this.type + i + "_title").innerHTML = obj.name;
+                            $(this.type + i + "_name").innerHTML = obj.singer_name;
+                            $(this.type + i + "_num").innerHTML = num + i + 1;
+                            break;
+                        case 2:
+                            $(this.type + i + "_title").innerHTML = obj.name;
+                            $(this.type + i + "_num").innerHTML = obj.child_num;
+                            $(this.type + i + "_img").src = obj.sposter;
+                            break;
+                    }
+                    $(this.type + i).style.visibility = "visible";
+                } else {
+                    $(this.type + i).style.visibility = "hidden";
+                }
+            }
+            $("page_num").innerHTML = (this.page_pos + 1) + "&nbsp;/&nbsp;" + this.page_size;
+        },
+        focusOn : function(_flag) {
+            var num = this.page_pos * this.max_size + this.pos;
+            var obj = this.data[tabObj.index][num];
+            if(obj){
+                if(tabObj.index === 1){
+                    this.time_out = showTitleForMarquee(obj.name, $(this.type + this.pos + "_title"), 25);
+                    this.actor_time_out = showTitleForMarquee(obj.singer_name, $(this.type + this.pos + "_name"), 14);
+                }else if(tabObj.index === 0){
+                    var foucsItem = $(this.type + this.pos + "_title");
+                    var title = foucsItem.getElementsByTagName("a")[0];
+                    if(title && title.offsetWidth > 274){
+                        foucsItem.innerHTML = "<marquee id=\"marquee_view\">" + obj.name + "</marquee>";
+                    }
+                }
+            }
+            if(this.focusObj.style.visibility === 'hidden') {
+                this.focusObj.style.visibility = "visible";
+                if(checkSTBType()) {
+                    this.focusObj.style.webkitTransitionDuration = "350ms";
+                }
+            }
+        },
+        focusOut : function(_flag) {
+            clearTimeout(this.time_out);
+            clearTimeout(this.actor_time_out);
+            var num = this.page_pos * this.max_size + this.pos;
+            var obj = this.data[tabObj.index][num];
+            if(obj && tabObj.index === 1) {
+                $("music_list" + this.pos + "_title").innerHTML = obj.name;
+                $("music_list" + this.pos + "_name").innerHTML = obj.singer_name;
+            }
+            if(obj){
+                if(tabObj.index === 1){
+                    $("music_list" + this.pos + "_title").innerHTML = obj.name;
+                    $("music_list" + this.pos + "_name").innerHTML = obj.singer_name;
+                }else if(tabObj.index === 0){
+                    if($("marquee_view")){
+                        $(this.type + this.pos + "_title").innerHTML = "<a style=\"white-space: nowrap;\">"+ obj.name + obj.name + obj.name +"</a>";
+                    }
+                }
+            }
+            if(!_flag) {
+                this.focusObj.style.visibility = "hidden";
+                if(checkSTBType()) {
+                    this.focusObj.style.webkitTransitionDuration = "0ms";
+                }
+            }
+        },
+        focusMove : function(_num) {
+            var num = _num || 0;
+            var pos = this.pos + num;
+            if(pos < 0) {
+                this.changePage(-1);
+            } else if(pos >= this.cur_size) {
+                this.changePage(1);
+            } else {
+                this.focusOut(1);
+                this.pos = pos;
+                var currentItem = $(this.type + this.pos);
+                var top = parseInt(currentItem.style.top), left = parseInt(currentItem.style.left);
+                this.focusObj.style.left = 32 + left + "px";
+                this.focusObj.style.top = 140 + top + "px";
+                this.focusOn();
+            }
+        },
+        moveY:function(_num){
+            console.log("在list里面移动");
+            this.focusMove(_num);
+        },
+        moveX:function(_num){
+            console.log("在list里面移动");
+            this.focusMove(this.size_line * _num);
+        },
+        changePage : function(_num) {
+            var num = _num || 0;
+            var pos = this.page_pos + num;
+            if(pos >= 0 && pos < this.page_size) {
+                this.pos = 0;
+                this.page_pos = pos;
+                this.show();
+                this.focusMove();
+            }
+        },
+        doSelect : function() {
+            var num = this.page_pos * this.max_size + this.pos;
+            var obj = this.data[tabObj.index][num];
+            if(tabObj.index === 2){
+                var backUrl = window.location.href.split("?")[0] + "?area=" + oparateObj.area + "&l_p_pos="
+                    + this.page_pos + "&l_pos=" + this.pos + "&test=" + paramObj.test + "&tab_index="+ tabObj.index + "&prid=" + paramObj.prid
+                    +"&rid="+oparateObj.rid+"&name="+Q.encode(oparateObj.name) + "&backUrl="
+                    + Q.encode(oparateObj.backUrl) + "&me=" + oparateObj.me
+                location.href = Q.getNewAddUrl("list.htm") + "rid=" + obj.rid + "&code=gd&name="
+                    + Q.encode(obj.name) + "&backUrl=" + Q.encode(backUrl)
+                    +"&test="+paramObj.test+"&prid="+paramObj.prid+"&collect="+oparateObj.collect;
+                return;
+            }
+            var backUrl = window.location.href.split("?")[0] + "?area=" + oparateObj.area + "&l_p_pos=" + this.page_pos +"&tab_index="+ tabObj.index
+                + "&l_pos=" + this.pos + "&rid=" + oparateObj.rid + "&name=" + Q.encode(oparateObj.title)
+                + "&code=" + oparateObj.code + "&backUrl=" + Q.encode(oparateObj.backUrl)+"&collect="+oparateObj.collect
+                +"&prid="+paramObj.prid+"&test="+paramObj.test;
+            ajaxForAuth(obj,backUrl,function (authResult) {
+                checkAndToPlay(authResult,backUrl,oparateObj.type,oparateObj.rid,paramObj.prid,paramObj.test);
+            },function () {
+                console.log("报错");
+            });
+        }
+    };
+
+    function init() {// js 入口
+        initglobalParam();
+        checkAndInitPress(oparateObj.init);
+        checkUserInfo(initPageInfo);
+    }
+
+    function initPageInfo(){
+        oparateObj.init();
+    }
+
+    window.onload = init;
+    // 获得 music mv
+    function ajaxForLoadCollect(callback) {
+        ajax({
+            url: paramObj.serverUrl+"/stb/user_collect_list?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId=" + getCAcardNum()+"&test="+paramObj.test,// 请求的URL,可传参数
+            type: "POST", //HTTP 请求类型,GET或POST
+            onSuccess: function(html){ //请求成功后执行[可选]
+                var json = eval('('+html+')');
+                if(json.code === 0) {
+                    if(json.data.length > 0) {
+                        var music = [], mv = [];
+                        for (var i = 0, length = json.data.length; i < length; i++) {
+                            var item = json.data[i];
+                            if (item.type === "song") {
+                                music.push(item);
+                            } else if(item.type === "mv") {
+                                mv.push(item);
+                            }
+                        }
+                        listObj.data[0] = mv;
+                        listObj.data[1] = mv;
+                        callback && callback();
+                    }
+                } else {
+                    popUpObj.init(json.backmsg);
+                }
+            },
+            onError:function(){ //请求失败后执行[可选]
+                popUpObj.init("获取数据失败！");
+            }
+        });
+    }
+
+    function ajaxForLoadGdCollect(callback) {//获得收藏歌单
+        var url = paramObj.serverUrl+"/user_collect_list?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId=" + getCAcardNum()+"&test="+paramObj.test;
+        ajax({
+            url: url,// 请求的URL,可传参数
+            type: "POST", //HTTP 请求类型,GET或POST
+            dataType: "html", //请求的文件类型html/xml
+            onSuccess: function(html){ //请求成功后执行[可选]
+                var json = eval('('+html+')');
+                if(json.code === 0) {
+                    var gd = [];
+                    for (var i = 0, length = json.data.length; i < length; i++) {
+                        var item = json.data[i];
+                        if (item.type === "diss") {
+                            gd.push(item);
+                        }
+                    }
+                    listObj.data[2] = gd;
+                    callback && callback();
+                } else {
+                    popUpObj.init(json.backmsg);
+                }
+            },
+            onError:function(){ //请求失败后执行[可选]
+                popUpObj.init("获取数据失败！");
+            },
+            onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+                // alert("onComplete");
+            },
+            post:"",
+            timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+        });
+    }
+
+    function ajaxForPalyList() {
+        ajax({
+            url: paramObj.serverUrl + "/stb/user_play_history_list?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId="
+                + getCAcardNum()+"&test="+paramObj.test,// 请求的URL,可传参数
+            type: "POST", //HTTP 请求类型,GET或POST
+            onSuccess: function(html){ //请求成功后执行[可选]
+                var json = eval('('+html+')');
+                if("0" == json.code) {
+                    if(json.data.length > 0) {
+                        listObj.init(json.data);
+                        oparateObj.focusOn();
+                    } else {
+                        popUpObj.doBack = oparateObj.doBack;
+                        popUpObj.doFuc = oparateObj.doBack;
+                        popUpObj.init("无播放记录！");
+                    }
+                } else {
+
+                }
+            },
+            onError:function(){ //请求失败后执行[可选]
+                popUpObj.init("获取数据失败！");
+            },
+            onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+                // alert("onComplete");
+            },
+            post:"",
+            timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+        });
+    }
+    //清空播放列表
+    function ajaxForRemovePlayListAll() {
+        ajax({
+            url: paramObj.serverUrl + "removePlayListAll.do?userId=" + getCAcardNum(),// 请求的URL,可传参数
+            type: "GET", //HTTP 请求类型,GET或POST
+            dataType: "html", //请求的文件类型html/xml
+            onSuccess: function(html){ //请求成功后执行[可选]
+// 			ajaxForPalyList();
+                popUpObj.doBack = oparateObj.doBack;
+                popUpObj.doFuc = oparateObj.doBack;
+                popUpObj.init("清空播放列表成功！");
+            },
+            onError:function(){ //请求失败后执行[可选]
+
+            },
+            onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+                // alert("onComplete");
+            },
+            post:"",
+            timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+        });
+    }
+    //清空收藏列表
+    function ajaxForRemoveAllCollect() {
+        ajax({
+            url: paramObj.serverUrl + "removeAllCollect.do?userId=" + getCAcardNum(),// 请求的URL,可传参数
+            type: "GET", //HTTP 请求类型,GET或POST
+            dataType: "html", //请求的文件类型html/xml
+            onSuccess: function(html){ //请求成功后执行[可选]
+// 			ajaxForLoadCollect();
+                popUpObj.doBack = oparateObj.doBack;
+                popUpObj.doFuc = oparateObj.doBack;
+                popUpObj.init("清空收藏列表成功，请重新收藏歌曲！");
+            },
+            onError:function(){ //请求失败后执行[可选]
+
+            },
+            onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+                // alert("onComplete");
+            },
+            post:"",
+            timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+        });
+    }
+
+    function oparateGdCollect() {
+        if(oparateObj.collect) {
+            ajaxForRemoveGdCollect(oparateObj.rid);
+        } else {
+            ajaxForAddGdCollect(oparateObj.rid);
+        }
+    }
+
+    function ajaxForAddGdCollect(_id) {
+        ajax({
+            url: paramObj.serverUrl + "/stb/user_collect_add?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId="
+                + getCAcardNum()+"&test="+paramObj.test,// 请求的URL,可传参数
+            type: "POST", //HTTP 请求类型,GET或POST
+            dataType: "html", //请求的文件类型html/xml
+            onSuccess: function(html){ //请求成功后执行[可选]
+                var json = eval('('+html+')');
+                if("0" == json.code) {
+                    oparateObj.collect = true;
+                    topBtnObj.initCollectMS(oparateObj.collect);
+                    popUpObj.init("收藏成功！");
+                } else {
+                    popUpObj.init(json.msg);
+                }
+            },
+            onError:function(){ //请求失败后执行[可选]
+                popUpObj.init("收藏失败！");
+            },
+            onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+                // alert("onComplete");
+            },
+            post:"",
+            timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+        });
+    }
+
+    function ajaxForRemoveGdCollect(_id) {
+        ajax({
+            url: paramObj.serverUrl + "/stb/user_collect_del?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId="
+                + getCAcardNum()+"&test="+paramObj.test,// 请求的URL,可传参数
+            type: "POST", //HTTP 请求类型,GET或POST
+            dataType: "html", //请求的文件类型html/xml
+            onSuccess: function(html){ //请求成功后执行[可选]
+                var json = eval('('+html+')');
+                if("0" == json.code) {
+                    oparateObj.collect = false;
+                    topBtnObj.initCollectMS(oparateObj.collect);
+                    popUpObj.init("取消收藏成功！");
+                } else {
+                    popUpObj.init(json.msg);
+                }
+            },
+            onError:function(){ //请求失败后执行[可选]
+                popUpObj.init("取消收藏失败！");
+            },
+            onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+                // alert("onComplete");
+            },
+            post:"",
+            timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+        });
+    }
+</script>
+</body>
+</html>
+

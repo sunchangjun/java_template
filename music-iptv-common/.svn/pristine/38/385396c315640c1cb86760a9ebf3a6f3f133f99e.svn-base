@@ -1,0 +1,138 @@
+/**
+ * 
+ */
+package hk.reco.music.iptv.common.interceptor;
+
+import java.lang.reflect.Method;
+import java.util.Objects;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.stereotype.Component;
+
+import hk.reco.music.iptv.common.annotation.IptvCacheEvict;
+import hk.reco.music.iptv.common.service.IptvCacheService;
+import hk.reco.music.iptv.common.utils.Constant;
+import hk.reco.music.iptv.common.utils.IptvRedisKey;
+import hk.reco.music.iptv.common.utils.SpringContextsUtil;
+import lombok.extern.log4j.Log4j2;
+
+/**
+ * 
+ * @Description 用于缓存清除处理
+ * @author Randy ran
+ * @Date 2019年8月1日 下午3:13:59
+ */
+@Aspect
+@Component
+@Log4j2
+public class IptvCacheEvictAspect {
+	
+	@Autowired
+	private IptvCacheService iptvCacheService;
+	/**
+	 * 表达式解析器
+	 */
+	private ExpressionParser parser = new SpelExpressionParser();
+	
+	@Pointcut("@annotation(hk.reco.music.iptv.common.annotation.IptvCacheEvict)")
+	public void iptvCacheEvictPointCut() {
+	}
+	
+	@Around("iptvCacheEvictPointCut()")
+	public Object around(ProceedingJoinPoint joinPoint) {
+		Object ret = null;
+		try {
+			MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+			Method method = signature.getMethod();
+			Object [] params = joinPoint.getArgs();
+			String [] names = signature.getParameterNames();
+			
+			
+			IptvCacheEvict cc = method.getAnnotation(IptvCacheEvict.class);
+			
+			ret = joinPoint.proceed();
+			
+			if (StringUtils.isNoneBlank(cc.keyEvictor())) {
+				KeyEvictor ke = SpringContextsUtil.getBean(cc.keyEvictor(), KeyEvictor.class);
+				ke.clean(ret, names, params);
+			} else {
+				Object type = null;
+				Object rid = null;
+				/**
+				 * 判断是否根据返回值来决定是否清理缓存
+				 */
+				if (StringUtils.isBlank(cc.returnVaule()) || 
+						(StringUtils.isNoneBlank(cc.returnVaule()) && Objects.equals(cc.returnVaule(), ret != null ? ret.toString() : ret))) {
+					/**
+					 * 不需要通过返回值来决定缓存 且 返回值符合预期值时开始清理缓存，处理清理规则中的相关参数
+					 */
+					EvaluationContext context = new StandardEvaluationContext();
+					boolean skipRid = Boolean.FALSE;
+					if (StringUtils.isNoneBlank(cc.custormRidValue())) {
+						if (log.isDebugEnabled())
+							log.debug("自定义了rid:{}，后续不再处理rid参数", cc.custormRidValue());
+						context.setVariable(Constant.PARAM_NAME_RID, cc.custormRidValue());
+						skipRid = Boolean.TRUE;
+					}
+					boolean skipType = Boolean.FALSE;
+					if (StringUtils.isNoneBlank(cc.custormTypeValue())) {
+						if (log.isDebugEnabled())
+							log.debug("自定义了type:{}，后续不再处理type参数", cc.custormTypeValue());
+						context.setVariable(Constant.PARAM_NAME_RID, cc.custormTypeValue());
+						skipType = Boolean.TRUE;
+					}
+					
+					if (ArrayUtils.isNotEmpty(names)) {
+						for (int i = 0, size = names.length; i < size; i++) {
+							String paramName = names[i];
+							if (skipRid && Objects.equals(cc.rid(), paramName))
+								continue;
+							if (skipType && Objects.equals(cc.type(), paramName))
+								continue;
+							
+							//开始处理注入字段
+							if (Objects.equals(cc.rid(), paramName)) {
+								paramName = Constant.PARAM_NAME_RID;
+								rid = params[i];
+							} else if (Objects.equals(cc.pinyin(), paramName)) {
+								paramName = Constant.PARAM_NAME_PINYIN;
+							} else if (Objects.equals(cc.type(), paramName)) {
+								type = params[i];
+								paramName = Constant.PARAM_NAME_TYPE;
+							} else if (Objects.equals(cc.ctype(), paramName)) {
+								paramName = Constant.PARAM_NAME_CTYPE;
+							}
+							if (log.isDebugEnabled())
+								log.debug("获取到参数：{}=>{}", paramName, params[i]);
+							context.setVariable(paramName, params[i]);
+						}
+					}
+					String pattern = (rid!=null && type!=null) ? parser.parseExpression(IptvRedisKey.GLOBAL_EVICT_CHILDS_KEY_PATTERN).getValue(context, String.class) :
+						parser.parseExpression(IptvRedisKey.GLOBAL_EVICT_KEY_PATTERN).getValue(context, String.class);
+					log.info("生成清除缓存key:{}", pattern);
+					iptvCacheService.delByKeysByPattern(pattern);
+				} else {
+					if (log.isDebugEnabled())
+						log.debug("返回值：{}，不满足预定的值：{}，跳过清理缓存步骤。", ret, cc.returnVaule());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
+}

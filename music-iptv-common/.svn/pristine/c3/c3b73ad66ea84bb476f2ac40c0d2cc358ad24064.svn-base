@@ -1,0 +1,31 @@
+/**
+ * 
+ */
+package hk.reco.music.iptv.common.domain;
+
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.stats.IptvStatsAction;
+import lombok.Data;
+
+/**
+ * @Description 操作日志模型
+ * @author Randy ran
+ * @Date 2019年7月30日 下午3:10:38
+ */
+@Data
+public class OperationLog {
+	private IptvStatsAction action;
+	private String ip;
+	private String mac;
+	private String userId;
+	private Long prid;
+	private Long rid;
+	private Long extrid;
+	private String pinyin;
+	private IptvObjectEnum type;
+	private Integer duration;
+	private String method;
+	private String platform;
+	private boolean test;
+	private Long createTime = System.currentTimeMillis();
+}

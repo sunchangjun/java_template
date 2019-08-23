@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="68c6010e-d529-4d4d-b089-c8d6453ba3fa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/cronjob/LogTask.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/task/MyCommandRunner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sun_utils/src/main/java/com/utils/CsvUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sun_utils/src/test/java/com/file/excel/CsvExcelTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/sun_utils_war_exploded.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/sun_utils_war_exploded.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sun_web" beforeDir="false" afterPath="$PROJECT_DIR$/sun_web" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/SunWebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/SunWebApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sun_web/src/test/java/com/sun/web/Base/OkhttpTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/sun_web/src/test/java/com/sun/web/Base/OkhttpTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sun_utils" beforeDir="false" afterPath="$PROJECT_DIR$/sun_utils" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sun_utils/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sun_utils/pom.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/sun_web/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -22,45 +22,46 @@
     <session id="-1300147382">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="10" />
-          <entry key="project.open.time.1" value="5" />
-          <entry key="project.open.time.2" value="2" />
+          <entry key="project.closed" value="15" />
+          <entry key="project.open.time.1" value="6" />
+          <entry key="project.open.time.2" value="3" />
+          <entry key="project.open.time.3" value="2" />
           <entry key="project.open.time.35" value="1" />
-          <entry key="project.open.time.4" value="1" />
+          <entry key="project.open.time.4" value="2" />
           <entry key="project.open.time.5" value="2" />
-          <entry key="project.opened" value="11" />
+          <entry key="project.opened" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="1" value="2" />
-          <entry key="class" value="6" />
+          <entry key="class" value="8" />
           <entry key="css" value="1" />
           <entry key="html" value="3" />
-          <entry key="java" value="83" />
+          <entry key="java" value="97" />
           <entry key="js" value="1" />
           <entry key="jsp" value="1" />
           <entry key="properties" value="8" />
           <entry key="text" value="1" />
-          <entry key="xml" value="21" />
+          <entry key="xml" value="22" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="6" />
+          <entry key="CLASS" value="8" />
           <entry key="CSS" value="1" />
           <entry key="HTML" value="3" />
-          <entry key="JAVA" value="83" />
+          <entry key="JAVA" value="97" />
           <entry key="JSP" value="1" />
           <entry key="JavaScript" value="1" />
           <entry key="PLAIN_TEXT" value="3" />
           <entry key="Properties" value="8" />
-          <entry key="XML" value="21" />
+          <entry key="XML" value="22" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="2278" />
+          <entry key="java" value="3049" />
           <entry key="properties" value="353" />
           <entry key="text" value="26" />
           <entry key="xml" value="50" />
@@ -68,7 +69,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="2278" />
+          <entry key="JAVA" value="3049" />
           <entry key="PLAIN_TEXT" value="26" />
           <entry key="Properties" value="353" />
           <entry key="XML" value="50" />
@@ -79,10 +80,22 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/cronjob/LogTask.java">
+        <entry file="file://$PROJECT_DIR$/sun_utils/src/main/java/com/utils/CsvUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+            <state relative-caret-position="-1025">
+              <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sun_utils/src/test/java/com/file/excel/CsvExcelTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="561">
+              <caret line="47" column="44" lean-forward="true" selection-start-line="47" selection-start-column="44" selection-end-line="47" selection-end-column="44" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -102,7 +115,7 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/sun_web" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/sun_utils" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -146,6 +159,9 @@
         <option value="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/task/LogTask.java" />
         <option value="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/cronjob/LogTask.java" />
         <option value="$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/task/MyCommandRunner.java" />
+        <option value="$PROJECT_DIR$/sun_utils/src/main/java/com/utils/EcxelCsvUtils.java" />
+        <option value="$PROJECT_DIR$/sun_utils/src/main/java/com/utils/CsvUtils.java" />
+        <option value="$PROJECT_DIR$/sun_utils/src/test/java/com/file/excel/CsvExcelTest.java" />
       </list>
     </option>
   </component>
@@ -208,6 +224,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -219,44 +237,87 @@
             <path>
               <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
               <item name="java_template" type="462c0819:PsiDirectoryNode" />
-              <item name="sun_web" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
               <item name="java_template" type="462c0819:PsiDirectoryNode" />
-              <item name="sun_web" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
               <item name="java_template" type="462c0819:PsiDirectoryNode" />
-              <item name="sun_web" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
-              <item name="java_template" type="462c0819:PsiDirectoryNode" />
-              <item name="sun_web" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_template" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_template" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_template" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_template" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
               <item name="java_template" type="462c0819:PsiDirectoryNode" />
-              <item name="sun_web" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="web" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_template" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="file" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="java_template" type="b2602c69:ProjectViewProjectNode" />
+              <item name="java_template" type="462c0819:PsiDirectoryNode" />
+              <item name="sun_utils" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="file" type="462c0819:PsiDirectoryNode" />
+              <item name="excel" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -266,28 +327,28 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1564373819864" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1566531185000" />
     <property name="last_opened_file_path" value="D:/music/alipay.trade.page.pay-JAVA-UTF-8" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="File.Encoding" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="F:\代码模板\java_template\sun_web\src\main\resources\templates\login" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.sun.web.task" />
-      <recent name="com.utils" />
-      <recent name="com.sun.web.dao" />
-      <recent name="com.sun.web.config" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="F:\代码模板\java_template\sun_web\src\main\resources" />
       <recent name="F:\代码模板\java_template\sun_web\src\main\resources\templates\pay" />
       <recent name="F:\代码模板\java_template\sun_web\src\main\resources\static\js" />
       <recent name="F:\代码模板\java_template\sun_web\src\main\resources\static\css" />
       <recent name="F:\代码模板\java_template\sun_web\src\main\resources\templatesa\login" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.utils" />
+      <recent name="com.sun.web.task" />
+      <recent name="com.sun.web.dao" />
+      <recent name="com.sun.web.config" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\代码模板\java_template\sun_web\src\main\resources\templates\login" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -302,20 +363,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.SunWebApplication">
-    <configuration name="OtherTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.sun.web.Test.OtherTest" />
-      <module name="sun_web" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.sun.web.Test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.CsvExcelTest.test4">
     <configuration name="ProxyMode" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.sun.web.design_patterns.ProxyMode" />
       <module name="sun_web" />
@@ -329,49 +377,65 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BuildTest.testObserverMode" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="sun_web" />
+    <configuration name="CsvExcelTest.test1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="sun_utils" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.sun.web.Test.*" />
+          <option name="PATTERN" value="com.file.excel.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.sun.web.Test" />
-      <option name="MAIN_CLASS_NAME" value="com.sun.web.Test.BuildTest" />
-      <option name="METHOD_NAME" value="testObserverMode" />
+      <option name="PACKAGE_NAME" value="com.file.excel" />
+      <option name="MAIN_CLASS_NAME" value="com.file.excel.CsvExcelTest" />
+      <option name="METHOD_NAME" value="test1" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BuildTest.testStrategyPattern" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="sun_web" />
+    <configuration name="CsvExcelTest.test2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="sun_utils" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.sun.web.Test.*" />
+          <option name="PATTERN" value="com.file.excel.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.sun.web.Test" />
-      <option name="MAIN_CLASS_NAME" value="com.sun.web.Test.BuildTest" />
-      <option name="METHOD_NAME" value="testStrategyPattern" />
+      <option name="PACKAGE_NAME" value="com.file.excel" />
+      <option name="MAIN_CLASS_NAME" value="com.file.excel.CsvExcelTest" />
+      <option name="METHOD_NAME" value="test2" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="RedisTest.testSetRedis" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="sun_web" />
+    <configuration name="CsvExcelTest.test3" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="sun_utils" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.sun.web.dao.*" />
+          <option name="PATTERN" value="com.file.excel.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.sun.web.dao" />
-      <option name="MAIN_CLASS_NAME" value="com.sun.web.dao.RedisTest" />
-      <option name="METHOD_NAME" value="testSetRedis" />
+      <option name="PACKAGE_NAME" value="com.file.excel" />
+      <option name="MAIN_CLASS_NAME" value="com.file.excel.CsvExcelTest" />
+      <option name="METHOD_NAME" value="test3" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CsvExcelTest.test4" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="sun_utils" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.file.excel.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.file.excel" />
+      <option name="MAIN_CLASS_NAME" value="com.file.excel.CsvExcelTest" />
+      <option name="METHOD_NAME" value="test4" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -394,19 +458,19 @@
     <list>
       <item itemvalue="Spring Boot.SunUtilsApplication" />
       <item itemvalue="Spring Boot.SunWebApplication" />
-      <item itemvalue="JUnit.BuildTest.testStrategyPattern" />
-      <item itemvalue="Application.OtherTest" />
-      <item itemvalue="JUnit.BuildTest.testObserverMode" />
-      <item itemvalue="JUnit.RedisTest.testSetRedis" />
       <item itemvalue="Application.ProxyMode" />
+      <item itemvalue="JUnit.CsvExcelTest.test1" />
+      <item itemvalue="JUnit.CsvExcelTest.test2" />
+      <item itemvalue="JUnit.CsvExcelTest.test3" />
+      <item itemvalue="JUnit.CsvExcelTest.test4" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CsvExcelTest.test4" />
+        <item itemvalue="JUnit.CsvExcelTest.test2" />
+        <item itemvalue="JUnit.CsvExcelTest.test3" />
+        <item itemvalue="JUnit.CsvExcelTest.test1" />
         <item itemvalue="Application.ProxyMode" />
-        <item itemvalue="JUnit.RedisTest.testSetRedis" />
-        <item itemvalue="JUnit.BuildTest.testObserverMode" />
-        <item itemvalue="Application.OtherTest" />
-        <item itemvalue="JUnit.BuildTest.testStrategyPattern" />
       </list>
     </recent_temporary>
   </component>
@@ -431,43 +495,48 @@
       <workItem from="1564133976010" duration="2299000" />
       <workItem from="1564366503116" duration="3449000" />
       <workItem from="1564379788068" duration="1794000" />
+      <workItem from="1564709842874" duration="1246000" />
+      <workItem from="1565163542290" duration="150000" />
+      <workItem from="1566368276792" duration="2576000" />
+      <workItem from="1566454302984" duration="1285000" />
+      <workItem from="1566462895914" duration="7847000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="BuildTest_testCombinationMode - 2019.07.23 at 10h 46m 53s.xml">
-      <configuration name="BuildTest.testCombinationMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test3 - 2019.08.22 at 18h 12m 49s.xml">
+      <configuration name="CsvExcelTest.test3" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testCombinationMode - 2019.07.23 at 10h 54m 20s.xml">
-      <configuration name="BuildTest.testCombinationMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test2 - 2019.08.22 at 18h 15m 45s.xml">
+      <configuration name="CsvExcelTest.test2" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testCombinationMode - 2019.07.23 at 10h 55m 47s.xml">
-      <configuration name="BuildTest.testCombinationMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test3 - 2019.08.22 at 18h 15m 50s.xml">
+      <configuration name="CsvExcelTest.test3" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testCombinationMode - 2019.07.23 at 10h 57m 04s.xml">
-      <configuration name="BuildTest.testCombinationMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test2 - 2019.08.22 at 18h 18m 36s.xml">
+      <configuration name="CsvExcelTest.test2" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testCombinationMode - 2019.07.23 at 10h 58m 20s.xml">
-      <configuration name="BuildTest.testCombinationMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test2 - 2019.08.22 at 18h 18m 49s.xml">
+      <configuration name="CsvExcelTest.test2" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testCombinationMode - 2019.07.23 at 10h 58m 51s.xml">
-      <configuration name="BuildTest.testCombinationMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test3 - 2019.08.22 at 18h 18m 54s.xml">
+      <configuration name="CsvExcelTest.test3" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testStrategyPattern - 2019.07.23 at 14h 34m 16s.xml">
-      <configuration name="BuildTest.testStrategyPattern" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test4 - 2019.08.22 at 18h 37m 34s.xml">
+      <configuration name="CsvExcelTest.test4" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BuildTest_testObserverMode - 2019.07.23 at 17h 56m 51s.xml">
-      <configuration name="BuildTest.testObserverMode" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test2 - 2019.08.22 at 18h 38m 21s.xml">
+      <configuration name="CsvExcelTest.test2" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="RedisTest_testSetRedis - 2019.07.24 at 10h 01m 47s.xml">
-      <configuration name="RedisTest.testSetRedis" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test2 - 2019.08.22 at 18h 38m 27s.xml">
+      <configuration name="CsvExcelTest.test2" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="RedisTest_testSetRedis - 2019.07.24 at 10h 10m 25s.xml">
-      <configuration name="RedisTest.testSetRedis" configurationId="JUnit" />
+    <history-entry file="CsvExcelTest_test4 - 2019.08.22 at 18h 38m 33s.xml">
+      <configuration name="CsvExcelTest.test4" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="65883000" />
+    <option name="totallyTimeSpent" value="78987000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -482,7 +551,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2457356" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22921109" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -492,7 +561,7 @@
       <window_info id="Web" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.41583055" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.46042365" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.12374582" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.483835" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -537,54 +606,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/resources/static/save_file/key.text">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="50">
-          <caret line="2" column="1631" selection-start-line="2" selection-start-column="1631" selection-end-line="2" selection-end-column="1631" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/resources/templates/1">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/resources/static/css/bootstrap.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/resources/static/js/bootstrap.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/resources/templates/alipay/success.jsp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/resources/templates/login/login.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/alipay/sdk/alipay-sdk-java/3.4.27.ALL/alipay-sdk-java-3.4.27.ALL.jar!/com/alipay/api/AlipayClient.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/controller/LoginController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="32" column="45" selection-start-line="32" selection-start-column="45" selection-end-line="32" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/alipay/OrderController.java" />
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/config/WebConfigurer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="15" column="5" lean-forward="true" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/alipay/sdk/alipay-sdk-java/3.4.27.ALL/alipay-sdk-java-3.4.27.ALL.jar!/com/alipay/api/internal/util/AlipaySignature.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="199">
@@ -684,12 +705,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="22" selection-start-line="22" selection-end-line="22" />
         </state>
       </provider>
-      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
     </entry>
     <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/dao/RedisService.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -725,14 +746,6 @@
           <caret line="5" column="34" selection-start-line="5" selection-start-column="34" selection-end-line="5" selection-end-column="34" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="93" column="8" selection-start-line="93" selection-start-column="8" selection-end-line="93" selection-end-column="8" />
-        </state>
-      </provider>
-      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/lang/reflect/Proxy.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -804,14 +817,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sun_utils/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="321">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/poi/poi/4.0.0/poi-4.0.0-sources.jar!/org/apache/poi/ss/usermodel/Cell.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="191">
@@ -844,13 +849,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/sun_utils/src/main/java/com/task/LogTask.java" />
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/SunWebApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="8" column="17" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sun_utils/src/main/java/com/SunUtilsApplication.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
@@ -862,16 +860,103 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="6" column="7" selection-start-line="6" selection-start-column="7" selection-end-line="6" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_web/pom.xml">
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="975">
+          <caret line="39" column="21" lean-forward="true" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/config/Swagger2Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="22" column="25" lean-forward="true" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_utils/pom.xml">
+      <provider editor-type-id="MavenHelperPluginDependencyAnalyzer" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="88" lean-forward="true" selection-start-line="88" selection-end-line="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/cronjob/LogTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/SunWebApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="8" selection-start-line="8" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_utils/src/main/java/com/utils/EcxelCsvUtils.java" />
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/util/Set.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="224" column="12" selection-start-line="224" selection-start-column="12" selection-end-line="224" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_utils/src/main/java/com/utils/CollationUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/io/Writer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="266" column="18" selection-start-line="266" selection-start-column="18" selection-end-line="266" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/net/sourceforge/javacsv/javacsv/2.0/javacsv-2.0.jar!/com/csvreader/CsvReader.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="268" column="20" selection-start-line="268" selection-start-column="20" selection-end-line="268" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_101/src.zip!/java/io/BufferedWriter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1050">
+          <caret line="65" column="13" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/net/sourceforge/javacsv/javacsv/2.0/javacsv-2.0.jar!/com/csvreader/CsvWriter.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="130" column="47" selection-start-line="130" selection-start-column="43" selection-end-line="130" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun_utils/src/test/java/com/file/excel/CsvExcelTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="47" column="44" lean-forward="true" selection-start-line="47" selection-start-column="44" selection-end-line="47" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sun_web/src/main/java/com/sun/web/cronjob/LogTask.java">
+    <entry file="file://$PROJECT_DIR$/sun_utils/src/main/java/com/utils/CsvUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="22" lean-forward="true" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+        <state relative-caret-position="-1025">
+          <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="31" />
         </state>
       </provider>
     </entry>

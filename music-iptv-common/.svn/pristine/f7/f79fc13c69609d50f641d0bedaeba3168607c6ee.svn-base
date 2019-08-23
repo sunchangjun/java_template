@@ -1,0 +1,40 @@
+package hk.reco.music.iptv.common.utils;
+
+public class Constant {
+	
+	/**
+	 * aspect中用到的常量start
+	 */
+	public final static String PARAM_NAME_DURATION = "duration";
+	public final static String PARAM_NAME_EXTRID = "extrid";
+	public final static String PARAM_NAME_IP = "ip";
+	public final static String PARAM_NAME_MAC = "mac";
+	public final static String PARAM_NAME_PINYIN = "pinyin";
+	public final static String PARAM_NAME_PLATFORM = "platform";
+	public final static String PARAM_NAME_PRID = "prid";
+	public final static String PARAM_NAME_RID = "rid";
+	public final static String PARAM_NAME_TEST = "test";
+	public final static String PARAM_NAME_USER_ID = "userId";
+	public final static String PARAM_NAME_TYPE = "type";
+	public final static String PARAM_NAME_CTYPE = "ctype";
+	public final static String PARAM_NAME_OFFSET = "offset";
+	public final static String PARAM_NAME_SIZE = "size";
+	//===============================end
+	/**
+	 * session中的用户
+	 */
+	final public static String USER_IN_SESSION = "user_in_session";
+	/**
+	 * session中的用户
+	 */
+	final public static String CONSOLE_USER_IN_SESSION = "console_user_in_session";
+	/**
+	 * session中的验证码
+	 */
+	final public static String VALIDATECODE_IN_SESSION = "validatecode_in_session";
+	/**
+	 * 系统环境
+	 */
+	final public static String SYSTEM_ENV = "sysenv";
+
+}
