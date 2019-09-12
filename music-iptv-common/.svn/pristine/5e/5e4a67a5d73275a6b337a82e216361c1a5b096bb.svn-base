@@ -1,0 +1,198 @@
+package hk.reco.music.iptv.common.service;
+
+import hk.reco.music.iptv.common.annotation.RedisServicelock;
+import hk.reco.music.iptv.common.dao.IptvActivtityDao;
+import hk.reco.music.iptv.common.domain.*;
+import hk.reco.music.iptv.common.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+/**
+ * 〈iptv抽奖活动相关的服务〉
+ *
+ * @author comelk
+ * @create 2019/8/28
+ */
+@Service
+public class IptvActivityService {
+    @Autowired
+    private IptvActivtityDao iptvActivtityDao;
+    //活动类型为每天
+    final private static Integer ACTIVITY_TYPE_DAY=2;
+    //默认抽中奖品 简称谢谢参与
+    private  static IptvActivityAward defaultAward ;
+    static{
+        defaultAward = new IptvActivityAward();
+        defaultAward.setName("谢谢参与");
+        defaultAward.setId(-10000);
+    }
+
+    /**
+     * 获取当前正在进行活动
+     * @return
+     */
+    public IptvActivity findActiveActivtity(){
+        //同一时间仅允许存在一个活动
+        List<IptvActivity> acts = iptvActivtityDao.findActiveActivtity();
+        if(acts!=null&&acts.size()==1){
+           return  acts.get(0);
+        }else{
+           return null;
+        }
+    }
+
+    /**
+     * 根据用户id查询用户参与过的活动信息
+     * @param userId 用户id
+     * @return 活动列表
+     */
+    public List<IptvActivity> findActivityListByUserId(String userId) {
+        return iptvActivtityDao.findActivityListByUserId(userId);
+    }
+
+    /**
+     * 根据用户id和活动id查询用户抽奖记录
+     * @param userId 用户id
+     * @param activityId 活动id
+     * @return 指定用户参与指定活动的抽奖记录
+     */
+    public List<IptvAcctivityRecord> findUserActivityRecord(String userId, Integer activityId) {
+        return iptvActivtityDao.findUserActivityRecord(userId,activityId);
+    }
+
+    /**
+     * 根据活动id查询活动下的奖品信息
+     * @param activityId 活动id
+     * @return 奖品列表
+     */
+    public List<IptvActivityAward> findActivityAwardById(Integer activityId) {
+        return iptvActivtityDao.findActivityAwardById(activityId);
+    }
+
+    /**
+     * 根据活动id查询活动的详细信息
+     * @param activityId 活动id
+     * @return 活动详情
+     */
+    public IptvActivity findActivityById(Integer activityId) {
+        IptvActivity activity= iptvActivtityDao.findActivityById(activityId);
+        List<IptvActivityAward> awards = this.findActivityAwardById(activityId);
+        awards.add(defaultAward);
+        activity.setAwards(awards);
+        return activity;
+    }
+
+    /**
+     * 查询指定用户对指定活动的参与次数
+     * @param activityId 活动id
+     * @param userId 用户id
+     * @return 参加次数
+     */
+    public int findUserActivityTimes(Integer activityId, String userId) {
+        //1、查询活动信息
+        IptvActivity activity= iptvActivtityDao.findActivityById(activityId);
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Integer anum = activity.getNum();
+        Integer type = activity.getType();
+        String start_time = fmt.format(activity.getStart_time());
+        String end_time = fmt.format(activity.getEnd_time());
+        if(ACTIVITY_TYPE_DAY.equals(type)){
+             Date now = new Date();
+             start_time = DateUtils.getYmd(now);
+             Date end = DateUtils.getDate(now,1);
+             end_time = DateUtils.getYmd(end);
+        }
+        //2、查询用户在时间段内参与活动的次数
+        int used = iptvActivtityDao.findActivityTimesInDuration(userId,activityId,null,start_time,end_time);
+        //3、todo 考虑用户购买等增加次数
+        return anum-used;
+    }
+
+
+    /**
+     * 计算抽奖结果
+     * @param activityId 活动id
+     * @param userId 用户id
+     * @return 返回抽中奖品
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    @RedisServicelock
+    public IptvActivityAward caculateActivityResult(Integer activityId, String userId) {
+          //查询所有的奖品列表
+         List<IptvActivityAward> awards = this.findActivityAwardById(activityId);
+          //过滤可中奖的奖品
+         List<IptvActivityAward> collect = awards.stream().filter(award -> {
+            int count =  iptvActivtityDao.findActivityTimesInDuration(null,null,award.getId(),null,null);
+             Date now = new Date();
+             String start_time = DateUtils.getYmd(now);
+             Date end = DateUtils.getDate(now,1);
+             String end_time = DateUtils.getYmd(end);
+            int daliyCount =  iptvActivtityDao.findActivityTimesInDuration(null,null,award.getId(),start_time,end_time);
+            return daliyCount<award.getDay_max_num()&&count<award.getNum();
+         }).collect(Collectors.toList());
+          int sum = 10000;
+          //产生万分中奖区间
+          for (IptvActivityAward award : collect) {
+              award.setEnd_num(sum);
+              sum = sum - award.getProbability();
+              award.setStart_num(sum);
+          }
+        //产生一个10000以内的数
+        int re = new Random().nextInt(10000)+1;
+        List<IptvActivityAward> result = collect.stream().filter(award->award.getStart_num()<re&&re<=award.getEnd_num()).collect(Collectors.toList());
+        IptvActivityAward award = defaultAward;
+        //处理结果
+        if(result!=null&&result.size()>0){
+            award = result.get(0);
+        }
+        //入库结果
+        IptvAcctivityRecord record = new IptvAcctivityRecord(userId,award.getId(),activityId);
+        iptvActivtityDao.insertNewRecord(record);
+        //：todo 考虑用户购买等增加次数
+        return award;
+    }
+
+    /**
+     * 查询活动列表
+     * @return 返回活动列表
+     */
+    public List<IptvActivity> consolefindActivityList() {
+         return iptvActivtityDao.consolefindActivityList();
+    }
+
+    /**
+     * 分页查询活动的抽奖记录
+     * @param activityId 活动id
+     * @param userId 用户id
+     * @param phone 电话好嘛
+     * @param record 是否中奖
+     * @param query 分页对象
+     * @return
+     */
+    public EasyUiListResult<IptvAcctivityRecord> consolefindActivityRecordList(Integer activityId, String userId, String phone, Boolean record, EasyUiBaseQuery query) {
+        EasyUiListResult<IptvAcctivityRecord> re = new EasyUiListResult();
+        int count = iptvActivtityDao.consolefindActivityRecordListCount(activityId,userId,phone,record);
+        re.setTotal(count);
+        if(count>0){
+            List<IptvAcctivityRecord> list = iptvActivtityDao.consolefindActivityRecordList(activityId,userId,phone,record,query);
+            re.setRows(list);
+        }
+        return re;
+    }
+
+    /**
+     * 用于管理平台，新增活动
+     * @param activity 活动实体
+     */
+    public void consoleInsertNewActivity(IptvActivity activity) {
+        iptvActivtityDao.consoleInsertNewActivity(activity);
+    }
+}

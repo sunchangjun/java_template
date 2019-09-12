@@ -1,0 +1,205 @@
+package hk.reco.music.iptv.common.utils;
+
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
+import java.util.List;
+
+/**
+ * @author wangpq
+ * @version 1.0
+ * @className FileUtils
+ * @description TODO
+ * @date 2019/8/2 20:23
+ */
+public class FileUtils {
+
+    /**
+     * 功能描述:
+     * 〈获取指定路径下的文件〉
+     *
+     * @param path 文件路径 D:\test
+     * @return : java.util.List<java.nio.file.Path>
+     * @author : wangpq
+     * @date : 2019/8/2 20:23
+     */
+    public static List<Path> getPaths(String path) {
+        return getPaths(path, null);
+    }
+
+    /**
+     * 功能描述:
+     * 〈获取指定路径下文件 并过滤指定格式〉
+     *
+     * @param path   文件路径 D:\test
+     * @param format *.xls
+     * @return : java.util.List<java.nio.file.Path>
+     * @author : wangpq
+     * @date : 2019/8/2 20:24
+     */
+    public static List<Path> getPaths(String path, String format) {
+        List<Path> list = Lists.newArrayList();
+        if (org.apache.commons.lang3.StringUtils.isBlank(path)) {
+            return list;
+        }
+        Path p = Paths.get(path);
+        if (Files.exists(p)) {
+            try {
+                DirectoryStream<Path> paths = StringUtils.isBlank(format) ? Files.newDirectoryStream(p) : Files.newDirectoryStream(p, format);
+                paths.forEach(list::add);
+                paths.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        return list;
+    }
+
+    /**
+     * 功能描述:
+     * 〈文件重命名〉
+     *
+     * @param fileName    文件名 D:\test\123.txt
+     * @param newFileName 新文件名 D:\test\456.txt
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/8/2 20:25
+     */
+    public static void rename(String fileName, String newFileName) {
+        rename(fileName, newFileName, false);
+    }
+
+    /**
+     * 功能描述:
+     * 〈文件重命名〉
+     *
+     * @param fileName      文件名 D:\test\123.txt
+     * @param newFileName   新文件名 D:\test\456.txt
+     * @param deleteOldFile 是否删除
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/8/2 20:25
+     */
+    public static void rename(String fileName, String newFileName, boolean deleteOldFile) {
+        File file = Paths.get(fileName).toFile();
+        File oldFile = Paths.get(newFileName).toFile();
+        file.renameTo(oldFile);
+        if (deleteOldFile) {
+            delete(fileName);
+        }
+    }
+
+    /**
+     * 功能描述:
+     * 〈删除文件〉
+     *
+     * @param fileName 文件名 D:\test\123.txt
+     * @return : boolean
+     * @author : wangpq
+     * @date : 2019/8/2 20:27
+     */
+    public static boolean delete(String fileName) {
+        try {
+            return Files.deleteIfExists(Paths.get(fileName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 功能描述:
+     * 〈NIO 普通拷贝文件〉
+     *
+     * @param sharePath 文件地址 D:\test\123.txt
+     * @param localPath 存储地址 E:\test\
+     * @param fileName  文件名称 456.txt
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/7/31 19:15
+     */
+    public static void copyFile(String sharePath, String localPath, String fileName) throws Exception {
+        checkFilePathAndSize(sharePath, localPath);
+        Path share = Paths.get(sharePath);
+        long size = Files.size(share);
+        Path copy = Files.copy(share, Paths.get(localPath + fileName), StandardCopyOption.REPLACE_EXISTING);
+        if (size != Files.size(copy)) {
+            throw new Exception("源文件与拷贝后的文件大小不一致");
+        }
+    }
+
+    /**
+     * 功能描述:
+     * 〈NIO 内存映射拷贝文件(适用于大文件)〉
+     *
+     * @param sharePath 文件地址 D:\test\123.txt
+     * @param localPath 存储地址 E:\test\
+     * @param fileName  文件名称 456.txt
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/8/30 14:17
+     */
+    public static void copyFile2(String sharePath, String localPath, String fileName) throws Exception {
+        checkFilePathAndSize(sharePath, localPath);
+        FileChannel sourceCh = new FileInputStream(Paths.get(sharePath).toFile()).getChannel();
+        FileChannel destCh = new FileOutputStream(Paths.get(localPath + fileName).toFile()).getChannel();
+        MappedByteBuffer mbb = sourceCh.map(FileChannel.MapMode.READ_ONLY, 0, sourceCh.size());
+        destCh.write(mbb);
+        sourceCh.close();
+        destCh.close();
+    }
+
+    /**
+     * 功能描述:
+     * 〈NIO 文件通道拷贝文件〉
+     *
+     * @param sharePath 文件地址 D:\test\123.txt
+     * @param localPath 存储地址 E:\test\
+     * @param fileName  文件名称 456.txt
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/8/30 14:25
+     */
+    private static void copyFile3(String sharePath, String localPath, String fileName) throws Exception {
+        checkFilePathAndSize(sharePath, localPath);
+        FileChannel sourceCh = new FileInputStream(Paths.get(sharePath).toFile()).getChannel();
+        FileChannel destCh = new FileOutputStream(Paths.get(localPath + fileName).toFile()).getChannel();
+        destCh.transferFrom(sourceCh, 0, sourceCh.size());
+        sourceCh.close();
+        destCh.close();
+    }
+
+    /**
+     * 功能描述:
+     * 〈效验文件路径与大小〉
+     *
+     * @param sharePath 文件地址
+     * @param localPath 存储地址
+     * @return : void
+     * @author : wangpq
+     * @date : 2019/8/30 14:26
+     */
+    private static void checkFilePathAndSize(String sharePath, String localPath) throws Exception {
+        Path path = Paths.get(localPath);
+        if (!Files.exists(path)) {
+            Files.createDirectories(path);
+        }
+        if (Files.size(Paths.get(sharePath)) <= 0) {
+            throw new Exception("文件大小0KB");
+        }
+    }
+
+    public static void main(String[] args) throws Exception{
+        long startTime = System.currentTimeMillis();
+        copyFile("\\\\192.168.3.100\\qqmusic\\songs\\h\\j\\997a1b31ffc14c9aa821caf319d792b1.m4a","F:\\import_res\\fff\\","test.m4a");
+        System.out.println(System.currentTimeMillis() - startTime);
+    }
+
+}

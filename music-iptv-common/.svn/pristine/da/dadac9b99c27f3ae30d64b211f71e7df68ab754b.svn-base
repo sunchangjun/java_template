@@ -1,0 +1,59 @@
+package hk.reco.music.iptv.common.ctrl;
+
+import hk.reco.music.iptv.common.domain.EasyUiBaseQuery;
+import hk.reco.music.iptv.common.domain.EasyUiListResult;
+import hk.reco.music.iptv.common.domain.IptvAcctivityRecord;
+import hk.reco.music.iptv.common.domain.IptvActivity;
+import hk.reco.music.iptv.common.service.IptvActivityService;
+import hk.reco.music.iptv.common.utils.JsonResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
+/**
+ * 〈抽奖活动后台控制器〉
+ *
+ * @author comelk
+ * @create 2019/8/29
+ */
+@Controller
+@RequestMapping("console")
+public class IptvConsoleActivityController {
+
+    @Autowired
+    private IptvActivityService iptvActivityService;
+
+    @RequestMapping("activityList")
+    public String list(){
+       return "activity/list";
+    }
+
+
+    @RequestMapping("activityListData")
+    @ResponseBody
+    public Object activityListData(){
+        List<IptvActivity> iptvActivities = iptvActivityService.consolefindActivityList();
+        EasyUiListResult<IptvActivity> object = new EasyUiListResult<>();
+        object.setRows(iptvActivities);
+        object.setTotal(iptvActivities.size());
+        return object;
+    }
+
+    @RequestMapping("getRecordList")
+    @ResponseBody
+    public Object getRecordList(Integer activityId,String userId,String phone,Boolean record,EasyUiBaseQuery query){
+        EasyUiListResult<IptvAcctivityRecord> iptvActivities = iptvActivityService.consolefindActivityRecordList(activityId,userId,phone,record,query);
+        return iptvActivities;
+    }
+
+    @RequestMapping("addActivity")
+    @ResponseBody
+    public Object addActivity(IptvActivity activity){
+        iptvActivityService.consoleInsertNewActivity(activity);
+        return new JsonResult();
+    }
+
+}
