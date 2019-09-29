@@ -163,12 +163,15 @@
     <img style="width: 299px; height:296px" src="" id="bigImg"/>
 </div>
 <!--更改属性-->
-<div id="changePosterPannel" class="easyui-dialog" data-options="title:'属性修改',closed: true,left:50,top:50" style="width:225px;height:430px;">
+<div id="changePosterPannel" class="easyui-dialog" data-options="title:'属性修改',closed: true,left:50,top:50" style="width:325px;height:460px;">
     <div class="easyui-layout" style="width: 100%;height: 100%;">
         <div data-options="region:'east'" style="width: 100%;height: 100%;">
             <div class="easyui-tabs" style="width:100%;height:240px;" data-options="tools:'#tab-tools'">
                 <div title="焦点图片" style="text-align: center;">
                     <img id="bposter" th:src="@{'/default.jpg'}" style="width: 203px;height: 200px;">
+                </div>
+                <div title="静态图片" style="text-align: center;">
+                    <img id="fposter" th:src="@{'/default.jpg'}" style="width: 203px;height: 200px;">
                 </div>
             </div>
             <form id="changePoster" method="post" enctype="multipart/form-data">
@@ -176,7 +179,11 @@
                     <input  type="text" name="rid" hidden></input>
                     <tr>
                         <td>焦点:</td>
-                        <td><input  type="file" name="iptvBigPoster" style="width: 120px;" onchange="filechange(event,'bposter')"></input></td>
+                        <td><input  type="file"  name="iptvBigPoster" style="width: 120px;" onchange="filechange(event,'bposter')"></input></td>
+                    </tr>
+                    <tr>
+                        <td>静图:</td>
+                        <td><input  type="file" name="iptvFoster" style="width: 120px;" onchange="filechange(event,'fposter')"></input></td>
                     </tr>
                     <tr>
                         <td>排序:</td>
@@ -617,6 +624,9 @@
                                    modeData[i].size = res.data.xsize+" "+res.data.ysize;
                                    if(res.data.bposter){
                                        modeData[i].bposter = res.data.bposter
+                                   }
+                                   if(res.data.fposter){
+                                       modeData[i].fposter = res.data.fposter
                                    }
                                    break;
                                }

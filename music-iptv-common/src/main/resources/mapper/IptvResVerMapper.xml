@@ -279,12 +279,16 @@
 	<select id="findResListPageable" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
 		<choose>
 			<when test="test">
-				SELECT  r1.test_vid link_test_vid,r1.prod_vid link_prod_vid,
+				SELECT  r1.test_vid link_test_vid,r1.prod_vid link_prod_vid,v1.fposter,
 						v1.vid link_vid,v1.rid link_rid,v1.bposter poster,v1.sort,v1.version_disable,v1.layout_big,v1.layout_end,v1.layout_line,v1.layout_regular,v1.layout_show_child_title,v1.layout_big,v1.layout_show_title,v1.layout_start,
 						r2.type,r2.child_type,r2.iptv_code1,r2.iptv_code2,r2.free,r2.global_disable,r2.media_definition,r2.media_lyric,r2.test_vid,r2.prod_vid,r2.play_time,r2.res_id,
 						v2.*,
 						r4.rid mv_rid,
 						GROUP_CONCAT(v3.name) singer_name
+						,(SELECT COUNT(*) FROM iptv_res_ver v5,iptv_res r5,iptv_res r6,iptv_res_ver v6
+							WHERE v5.link_prid=r2.rid AND v5.link_crid=r6.rid AND r6.type='song' AND r6.media_ok=1 AND r6.global_disable=0 AND r6.test_vid=v6.vid AND v6.version_disable=0
+								AND v5.rid=r5.rid AND r5.test_vid=v5.vid AND r5.type='link' AND r5.global_disable=0 AND v5.version_disable=0
+						) song_num
 				FROM iptv_res r0
 				INNER JOIN iptv_res_ver v1 ON (v1.link_prid=r0.rid AND v1.version_disable=0) # find all link
 				INNER JOIN iptv_res r1 ON (v1.rid=r1.rid AND r1.test_vid=v1.vid)  # find test link
@@ -305,17 +309,21 @@
 					AND v2.keyword like concat(#{keyword},'%')
 				</if>
 				GROUP BY r2.rid
-				HAVING (TYPE!='song' AND TYPE!='mv') OR (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL)
+				HAVING (TYPE!='song' AND TYPE!='mv' AND TYPE!='singer') OR (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL) OR (TYPE='singer' AND song_num!=0)
 				ORDER BY v1.sort ASC,v2.sort
 				LIMIT #{offset},#{size}
 			</when>
 			<otherwise>
-				SELECT  r1.test_vid link_test_vid,r1.prod_vid link_prod_vid,
+				SELECT  r1.test_vid link_test_vid,r1.prod_vid link_prod_vid,v1.fposter,
 					v1.vid link_vid,v1.rid link_rid,v1.bposter poster,v1.sort,v1.version_disable,v1.layout_big,v1.layout_end,v1.layout_line,v1.layout_regular,v1.layout_show_child_title,v1.layout_big,v1.layout_show_title,v1.layout_start,
 					r2.type,r2.child_type,r2.iptv_code1,r2.iptv_code2,r2.free,r2.global_disable,r2.media_definition,r2.media_lyric,r2.test_vid,r2.prod_vid,r2.play_time,r2.res_id,
 					v2.*,
 					r4.rid mv_rid,
 					GROUP_CONCAT(v3.name) singer_name
+					,(SELECT COUNT(*) FROM iptv_res_ver v5,iptv_res r5,iptv_res r6,iptv_res_ver v6
+						WHERE v5.link_prid=r2.rid AND v5.link_crid=r6.rid AND r6.type='song' AND r6.media_ok=1 AND r6.global_disable=0 AND r6.prod_vid=v6.vid AND v6.version_disable=0
+							AND v5.rid=r5.rid AND r5.prod_vid=v5.vid AND r5.type='link' AND r5.global_disable=0 AND v5.version_disable=0
+					) song_num
 				FROM iptv_res r0
 				INNER JOIN iptv_res_ver v1 ON (v1.link_prid=r0.rid AND v1.version_disable=0) # find all sub-link
 				INNER JOIN iptv_res r1 ON (v1.rid=r1.rid AND r1.prod_vid=v1.vid)  # find product link
@@ -337,7 +345,7 @@
 					AND v2.keyword like concat(#{keyword},'%')
 				</if>
 				GROUP BY r2.rid
-				HAVING (TYPE!='song' AND TYPE!='mv') OR (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL)
+				HAVING (TYPE!='song' AND TYPE!='mv' AND TYPE!='singer') OR (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL) OR (TYPE='singer' AND song_num!=0)
 				ORDER BY v1.sort ASC,v2.sort
 				LIMIT #{offset},#{size}
 			</otherwise>
@@ -348,7 +356,12 @@
 		<choose>
 			<when test="test">
 				SELECT count(1) FROM (
-				SELECT  r2.type,r3.rid FROM iptv_res r0
+				SELECT  r2.type,r3.rid 
+				,(SELECT COUNT(*) FROM iptv_res_ver v5,iptv_res r5,iptv_res r6,iptv_res_ver v6
+					WHERE v5.link_prid=r2.rid AND v5.link_crid=r6.rid AND r6.type='song' AND r6.media_ok=1 AND r6.global_disable=0 AND r6.test_vid=v6.vid AND v6.version_disable=0
+					AND v5.rid=r5.rid AND r5.test_vid=v5.vid AND r5.type='link' AND r5.global_disable=0 AND v5.version_disable=0
+				) song_num
+				FROM iptv_res r0
 				INNER JOIN iptv_res_ver v1 ON (v1.link_prid=r0.rid AND v1.version_disable=0) # find all sub-link
 				INNER JOIN iptv_res r1 ON (v1.rid=r1.rid AND r1.test_vid=v1.vid)  # find product link
 				INNER JOIN iptv_res_ver v2 ON (v2.rid=v1.link_crid AND v2.version_disable=0) # find all ver
@@ -366,12 +379,17 @@
 					AND v2.keyword like concat(#{keyword},'%')
 				</if>
 				GROUP BY r2.rid
-				HAVING (r2.type!='song' AND r2.type!='mv') OR (r2.type='song' AND r3.rid IS NOT NULL) OR (r2.type='mv' AND r3.rid IS NOT NULL)
+				HAVING (r2.type!='song' AND r2.type!='mv' AND TYPE!='singer') OR (r2.type='song' AND r3.rid IS NOT NULL) OR (r2.type='mv' AND r3.rid IS NOT NULL) OR (TYPE='singer' AND song_num!=0)
 				)t
 			</when>
 			<otherwise>
 				SELECT count(1) FROM (
-				SELECT  r2.type,r3.rid FROM iptv_res r0
+				SELECT  r2.type,r3.rid 
+				,(SELECT COUNT(*) FROM iptv_res_ver v5,iptv_res r5,iptv_res r6,iptv_res_ver v6
+					WHERE v5.link_prid=r2.rid AND v5.link_crid=r6.rid AND r6.type='song' AND r6.media_ok=1 AND r6.global_disable=0 AND r6.prod_vid=v6.vid AND v6.version_disable=0
+					AND v5.rid=r5.rid AND r5.prod_vid=v5.vid AND r5.type='link' AND r5.global_disable=0 AND v5.version_disable=0
+				) song_num
+				FROM iptv_res r0
 				INNER JOIN iptv_res_ver v1 ON (v1.link_prid=r0.rid AND v1.version_disable=0) # find all sub-link
 				INNER JOIN iptv_res r1 ON (v1.rid=r1.rid AND r1.prod_vid=v1.vid)  # find product link
 				INNER JOIN iptv_res_ver v2 ON (v2.rid=v1.link_crid AND v2.version_disable=0) # find all ver
@@ -389,7 +407,7 @@
 					AND v2.keyword like concat(#{keyword},'%')
 				</if>
 				GROUP BY r2.rid
-				HAVING (r2.type!='song' AND r2.type!='mv') OR (r2.type='song' AND r3.rid IS NOT NULL) OR (r2.type='mv' AND r3.rid IS NOT NULL)
+				HAVING (r2.type!='song' AND r2.type!='mv' AND TYPE!='singer') OR (r2.type='song' AND r3.rid IS NOT NULL) OR (r2.type='mv' AND r3.rid IS NOT NULL) OR (TYPE='singer' AND song_num!=0)
 				) t
 			</otherwise>
 		</choose>
@@ -548,6 +566,10 @@
 		<choose>
 			<when test="test">
 				SELECT r1.rid,r1.type,r1.iptv_code1,r1.iptv_code2,r1.media_lyric,r1.free,r1.play_time,r1.res_id,v1.name,v1.bposter,v1.sposter,v1.country,GROUP_CONCAT(v2.name) singer_name,r3.rid mv_rid 
+				,(SELECT COUNT(*) FROM iptv_res_ver v4,iptv_res r4,iptv_res r5,iptv_res_ver v5
+					WHERE v4.link_prid=r1.rid AND v4.link_crid=r5.rid AND r5.type='song' AND r5.media_ok=1 AND r5.global_disable=0 AND r5.test_vid=v5.vid AND v5.version_disable=0
+						AND v4.rid=r4.rid AND r4.test_vid=v4.vid AND r4.type='link' AND r4.global_disable=0 AND v4.version_disable=0
+				) song_num
 				FROM iptv_res r1   # res
 				INNER JOIN iptv_res_ver v1 ON (r1.rid=v1.rid AND r1.test_vid=v1.vid AND v1.version_disable=0)  ### res ver
 				LEFT JOIN iptv_multi_singer s1 ON (s1.child_rid=r1.rid) 
@@ -559,14 +581,15 @@
 					AND r1.type=#{type}
 				</if>
 				GROUP BY r1.rid
-				HAVING (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL) OR (TYPE='singer')
-                ORDER BY v1.sort
-				<if test="offset!=null">
-					LIMIT #{offset},#{size}
-				</if>
+				HAVING (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL) OR (TYPE='singer' AND song_num!=0)
 			</when>
 			<otherwise>
-				SELECT r1.rid,r1.type,r1.iptv_code1,r1.iptv_code2,r1.media_lyric,r1.free,r1.play_time,r1.res_id,v1.name,v1.bposter,v1.sposter,v1.country,GROUP_CONCAT(v2.name) singer_name,r3.rid mv_rid FROM iptv_res r1
+				SELECT r1.rid,r1.type,r1.iptv_code1,r1.iptv_code2,r1.media_lyric,r1.free,r1.play_time,r1.res_id,v1.name,v1.bposter,v1.sposter,v1.country,GROUP_CONCAT(v2.name) singer_name,r3.rid mv_rid
+				,(SELECT COUNT(*) FROM iptv_res_ver v4,iptv_res r4,iptv_res r5,iptv_res_ver v5
+					WHERE v4.link_prid=r1.rid AND v4.link_crid=r5.rid AND r5.type='song' AND r5.media_ok=1 AND r5.global_disable=0 AND r5.prod_vid=v5.vid AND v5.version_disable=0
+						AND v4.rid=r4.rid AND r4.prod_vid=v4.vid AND r4.type='link' AND r4.global_disable=0 AND v4.version_disable=0
+				) song_num
+				FROM iptv_res r1
 				INNER JOIN iptv_res_ver v1 ON (r1.rid=v1.rid AND r1.prod_vid=v1.vid AND v1.version_disable=0)
 				LEFT JOIN iptv_multi_singer s1 ON (s1.child_rid=r1.rid)
 				LEFT JOIN iptv_res r2 ON (r2.rid=s1.singer_rid AND r2.global_disable=0)
@@ -578,32 +601,7 @@
 					AND r1.type=#{type}
 				</if>
 				GROUP BY r1.rid
-				HAVING (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL) OR (TYPE='singer')
-                ORDER BY v1.sort
-				<if test="offset!=null">
-					LIMIT #{offset},#{size}
-				</if>
-			</otherwise>
-		</choose>
-	</select>
-	
-	<select id="searchResByKeywordCount" resultType="int">
-		<choose>
-			<when test="test">
-				SELECT count(1) FROM iptv_res r1
-				INNER JOIN iptv_res_ver v1 ON (r1.rid=v1.rid AND r1.test_vid=v1.vid AND v1.version_disable=0)
-				WHERE r1.global_disable=0 AND r1.media_ok=1 AND v1.keyword LIKE concat(#{pinyin},'%')
-				<if test="type!=null">
-					AND r1.type=#{type}
-				</if>
-			</when>
-			<otherwise>
-				SELECT count(1) FROM iptv_res r1
-				INNER JOIN iptv_res_ver v1 ON (r1.rid=v1.rid AND r1.prod_vid=v1.vid AND v1.version_disable=0)
-				WHERE r1.global_disable=0 AND r1.media_ok=1 AND v1.keyword LIKE concat(#{pinyin},'%')
-				<if test="type!=null">
-					AND r1.type=#{type}
-				</if>
+				HAVING (TYPE='song' AND singer_name IS NOT NULL) OR (TYPE='mv' AND singer_name IS NOT NULL) OR (TYPE='singer' AND song_num!=0)
 			</otherwise>
 		</choose>
 	</select>
@@ -611,24 +609,40 @@
 	<select id="randomVid" resultType="long">
 		<choose>
 			<when test="test">
-				SELECT v1.vid FROM iptv_res r1
+				SELECT vid FROM(
+				SELECT r1.type,v1.vid
+				,(SELECT COUNT(*) FROM iptv_res_ver v4,iptv_res r4,iptv_res r5,iptv_res_ver v5
+					WHERE v4.link_prid=r1.rid AND v4.link_crid=r5.rid AND r5.type='song' AND r5.media_ok=1 AND r5.global_disable=0 AND r5.test_vid=v5.vid AND v5.version_disable=0
+					AND v4.rid=r4.rid AND r4.test_vid=v4.vid AND r4.type='link' AND r4.global_disable=0 AND v4.version_disable=0
+					) song_num
+				FROM iptv_res r1
 				INNER JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND r1.test_vid=v1.vid AND v1.version_disable=0)
 				WHERE r1.global_disable=0 AND r1.media_ok=1 AND r1.type=#{type}
 				<if test="notVids.size!=0">
 		            and v1.vid not in <foreach item="item" index="index" collection="notVids" open="(" separator="," close=")">#{item}</foreach>
 		        </if>
+		        HAVING (TYPE!='singer') OR (TYPE='singer' AND song_num!=0)
 				ORDER BY RAND()
 				LIMIT #{size}
+				) result
 			</when>
 			<otherwise>
-				SELECT v1.vid FROM iptv_res r1
+				SELECT vid FROM(
+				SELECT r1.type,v1.vid 
+				,(SELECT COUNT(*) FROM iptv_res_ver v4,iptv_res r4,iptv_res r5,iptv_res_ver v5
+					WHERE v4.link_prid=r1.rid AND v4.link_crid=r5.rid AND r5.type='song' AND r5.media_ok=1 AND r5.global_disable=0 AND r5.prod_vid=v5.vid AND v5.version_disable=0
+					AND v4.rid=r4.rid AND r4.prod_vid=v4.vid AND r4.type='link' AND r4.global_disable=0 AND v4.version_disable=0
+					) song_num
+				FROM iptv_res r1
 				INNER JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND r1.prod_vid=v1.vid AND v1.version_disable=0)
 				WHERE r1.global_disable=0 AND r1.media_ok=1 AND r1.type=#{type}
 				<if test="notVids.size!=0">
 		            and v1.vid not in <foreach item="item" index="index" collection="notVids" open="(" separator="," close=")">#{item}</foreach>
 		        </if>
+		        HAVING (TYPE!='singer') OR (TYPE='singer' AND song_num!=0)
 				ORDER BY RAND()
 				LIMIT #{size}
+				) result
 			</otherwise>
 		</choose>
 	</select>

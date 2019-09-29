@@ -36,4 +36,8 @@ public interface IptvConfigDao {
      * @Date 2019/5/10 11:21
      */
     List<IptvConfig> findByKeys(@Param("keys") List<String> keys);
+
+    List<IptvConfig>  findAll();
+
+
 }

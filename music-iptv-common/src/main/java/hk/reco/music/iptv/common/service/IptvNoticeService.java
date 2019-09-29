@@ -29,5 +29,16 @@ public interface IptvNoticeService {
 	 * @return hk.reco.music.iptv.common.ctrl.stb.RestResponse
 	 */
 	RestResponse newTVResUpOrDown(long rid,int operation);
+
+	/**
+	 * 功能描述:
+	 * 〈媒资上下线通知〉
+	 *
+	 * @param rid rid
+	 * @return : void
+	 * @author : wangpq
+	 * @date : 2019/9/27 15:17
+	 */
+	void setGlobalDisable(long rid);
 	
 }

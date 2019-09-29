@@ -22,6 +22,8 @@ public class IptvResService{
 	private IptvResDao iptvResDao;
     @Autowired
     private IptvCacheService iptvCacheService;
+	@Autowired(required = false)
+	private IptvNoticeService noticeService;
 	
     public void updateRes(Long rid, IptvObjectEnum child_type, Long test_vid){//未知用途,,暂不处理 TODO
     	IptvRes res = new IptvRes();
@@ -61,6 +63,9 @@ public class IptvResService{
         	res.setGlobal_disable(global_disable);
         	this.iptvResDao.updateRes(res);
     	}
+		if (noticeService != null) {
+			noticeService.setGlobalDisable(rid);
+		}
     	//清除缓存
     	IptvRes ver = this.iptvResDao.findByRid(rid);
     	this.deleteResCache(ver);

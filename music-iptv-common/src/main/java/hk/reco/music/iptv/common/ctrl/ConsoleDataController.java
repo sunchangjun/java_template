@@ -686,7 +686,7 @@ public class ConsoleDataController {
     @RequestMapping("updateThemeLinkinfo")
     @ResponseBody
     public Object updateSubLinkinfo(Integer rid, String xstart, String ystart, String xsize, String ysize, MultipartFile iptvBigPoster,
-                                    Integer sort,HttpServletRequest request) throws IptvBusinessException {
+                                    Integer sort,HttpServletRequest request,MultipartFile iptvFoster) throws IptvBusinessException {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("rid", rid);
         resultMap.put("xstart", xstart);
@@ -697,6 +697,10 @@ public class ConsoleDataController {
         if (iptvBigPoster != null && iptvBigPoster.getSize() > 0) {
             String path = IptvFileUtils.saveFile(iptvBigPoster, request, ip, user, pwd);
             resultMap.put("bposter", IptvFileUtils.http(path));
+        }
+        if (iptvFoster != null && iptvFoster.getSize() > 0) {
+            String path = IptvFileUtils.saveFile(iptvFoster, request, ip, user, pwd);
+            resultMap.put("fposter", IptvFileUtils.http(path));
         }
         return new JsonResult(true, resultMap);
     }

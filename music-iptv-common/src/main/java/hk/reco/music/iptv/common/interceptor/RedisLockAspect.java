@@ -50,7 +50,7 @@ public class RedisLockAspect {
         Method method = signature.getMethod();
         String seckillId = method.getName();
         try {
-            res = RedissLockUtil.tryLock(seckillId, TimeUnit.SECONDS, 3, 20);
+            res = RedissLockUtil.tryLock(seckillId, TimeUnit.SECONDS, 30, 35);
             if(res){
                 obj = joinPoint.proceed();
             }

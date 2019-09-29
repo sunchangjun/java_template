@@ -16,6 +16,15 @@ public class QmResourceService {
     @Qualifier("wthxJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
 
+    public QmRes findByResid(long res_id) {
+        String sql = "SELECT r.res_id,r.res_type,r.res_name,GROUP_CONCAT(t.tag_name) AS tags FROM qm_res r LEFT JOIN qm_tags AS t ON FIND_IN_SET(CONCAT('t', t.tag_id),r.tags) WHERE r.res_id=?";
+        try {
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{res_id}, new BeanPropertyRowMapper<>(QmRes.class));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
     public QmSong findSongByid(long song_id) {
         String sql = "select *  from qm_song where song_id=?";
         try {
@@ -103,6 +112,20 @@ public class QmResourceService {
             return this.jdbcTemplate.queryForObject(sql, new Object[]{res_id}, new BeanPropertyRowMapper<>(QmMv.class));
         } catch (Exception e) {
             return null;
+        }
+    }
+    
+    public QmMv findMvByTitleAndSinger(String title,String singer) {
+        String sql = "SELECT m.mv_id,m.res_id,m.pic_url FROM qm_mv m WHERE m.mv_title=? AND m.singer_name=?";
+        try {
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{title,singer}, new BeanPropertyRowMapper<>(QmMv.class));
+        } catch (Exception e) {
+        	List<QmMv> mvs = this.jdbcTemplate.query(sql, new Object[]{title,singer}, new BeanPropertyRowMapper<>(QmMv.class));
+        	if(mvs.size()!=0){
+        		return mvs.get(0);
+        	}else{
+        		return null;
+        	}
         }
     }
 

@@ -79,9 +79,7 @@ public interface IptvResVerDao {
 			@Param("offset")int offset, @Param("size")int size, @Param("test")boolean test);
 	
 	//搜索接口
-	public List<IptvResVer> searchResByKeyword(@Param("type")IptvObjectEnum type, @Param("pinyin")String pinyin, 
-			@Param("offset")Integer offset, @Param("size")Integer size, @Param("test")boolean test);
-	public int searchResByKeywordCount(@Param("type")IptvObjectEnum type, @Param("pinyin")String pinyin, @Param("test")boolean test);
+	public List<IptvResVer> searchResByKeyword(@Param("type")IptvObjectEnum type, @Param("pinyin")String pinyin, @Param("test")boolean test);
 	
 	public List<Long> randomVid(@Param("type")IptvObjectEnum type, @Param("notVids")List<Long> notVids, @Param("size")int size, @Param("test")boolean test);
 	

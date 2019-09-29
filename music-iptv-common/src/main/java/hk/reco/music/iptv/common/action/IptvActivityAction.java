@@ -1,8 +1,10 @@
 package hk.reco.music.iptv.common.action;
 
 import hk.reco.music.iptv.common.ctrl.stb.RestResponse;
+import hk.reco.music.iptv.common.dao.IptvUserDao;
 import hk.reco.music.iptv.common.domain.IptvAcctivityRecord;
 import hk.reco.music.iptv.common.domain.IptvActivity;
+import hk.reco.music.iptv.common.domain.IptvActivityAward;
 import hk.reco.music.iptv.common.domain.IptvUser;
 import hk.reco.music.iptv.common.exception.IptvError;
 import hk.reco.music.iptv.common.service.IptvActivityService;
@@ -10,6 +12,7 @@ import hk.reco.music.iptv.common.service.IptvUserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +32,15 @@ public abstract class IptvActivityAction {
     private IptvActivityService iptvActivityService;
     @Autowired
     private IptvUserService iptvUserService;
+    @Autowired
+    private IptvUserDao iptvUserDao;
 
     /**
      * 因为下发的是url，id下发需要终端拼接麻烦，此处拼接好后下发减少终端更改
      */
     final private static String ACTIVITY_PARAM="?activityId=";
 
-    final public static String ACTIVITYLIST_PATH = "show/activityList.htm";
+    final public static String ACTIVITYLIST_PATH = "show/activity/list.html";
 
     @RequestMapping(value = "activity/getActivityUrl",method = RequestMethod.POST)
     @ApiOperation(value = "获取活动的url", notes = "获取到活动页面的url(activityUrl活动页路径会包含activityId参数，" +
@@ -50,8 +55,12 @@ public abstract class IptvActivityAction {
             //当前存在活动，返回活动的url
             if(activity!=null){
                 Integer activityId = activity.getId();
-                map.put("activityUrl", activity.getUrl()+ACTIVITY_PARAM+activityId);
-                map.put("times",iptvActivityService.findUserActivityTimes(activityId,userId));
+                int times = iptvActivityService.findUserActivityTimes(activityId,userId);
+                if(times>0){
+                    //次数没有活动不弹窗
+                    map.put("activityUrl", activity.getUrl()+ACTIVITY_PARAM+activityId);
+                    map.put("times",iptvActivityService.findUserActivityTimes(activityId,userId));
+                }
             }
             //返回的是用户参与过的活动的url
             map.put("recordUrl", ACTIVITYLIST_PATH);
@@ -160,7 +169,13 @@ public abstract class IptvActivityAction {
                                           @RequestParam(required = true) String userId,
                                           @RequestParam(required = false)Integer times) {
         try {
+            IptvActivity activity = iptvActivityService.findActiveActivtity();
             RestResponse response = new RestResponse();
+            if(activity==null||!activity.getId().equals(activityId)){
+                response.setCode(999);
+                response.setMsg("活动已结束");
+                return response;
+            }
             Map<String,Object> map = new HashMap<>();
             if(times==null){
                 times =  iptvActivityService.findUserActivityTimes(activityId,userId);
@@ -199,7 +214,7 @@ public abstract class IptvActivityAction {
 
 
     @RequestMapping(value = "activity/getActivityRecord",method = RequestMethod.POST)
-    @ApiOperation(value = "获取活动的中奖记录", notes = "获取活动的中奖记录（默认取20条数据）", response = RestResponse.class)
+    @ApiOperation(value = "获取指定活动的中奖记录", notes = "获取指定活动的中奖记录（默认取20条数据）", response = RestResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
     @ResponseBody
     @CrossOrigin
@@ -214,6 +229,69 @@ public abstract class IptvActivityAction {
             return new RestResponse(IptvError.SYSTEM_ERROR);
         }
     }
+
+
+
+    @RequestMapping(value = "activity/getActivityAwards",method = RequestMethod.POST)
+    @ApiOperation(value = "获取指定活动的奖品详情", notes = "获取指定活动的活动的奖品详情", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    @ResponseBody
+    @CrossOrigin
+    public RestResponse getActivityAwards(@RequestParam(required = true)Integer activityId) {
+        try {
+            RestResponse response = new RestResponse();
+            List<IptvActivityAward> awards = iptvActivityService.findActivityAwardById(activityId);
+            response.setData(awards);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+
+
+
+    @RequestMapping(value = "activity/checkPhoneNum",method = RequestMethod.POST)
+    @ApiOperation(value = "判断用户目前是否已经填写过电话号码", notes = "判断用户目前是否已经填写过电话号码", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    @ResponseBody
+    @CrossOrigin
+    public RestResponse checkPhoneNum(@RequestParam(required = true)String userId) {
+        try {
+            RestResponse response = new RestResponse();
+            IptvUser user = iptvUserDao.findByUserId(userId,0);
+            Map<String,Object> resultMap = new HashMap<>();
+            resultMap.put("phone",user.getPhone_num());
+            resultMap.put("result",StringUtils.isNotBlank(user.getPhone_num()));
+            response.setData(resultMap);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+
+
+
+    @RequestMapping(value = "activity/checkPhoneNumForAward",method = RequestMethod.POST)
+    @ApiOperation(value = "判断用户目前是否有(有效)中奖记录并没有填写过电话号码", notes = "判断用户目前是否有(有效)中奖记录并没有填写过电话号码", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    @ResponseBody
+    @CrossOrigin
+    public RestResponse checkPhoneNumForAward(@RequestParam(required = true)String userId) {
+        try {
+            RestResponse response = new RestResponse();
+            IptvUser user = iptvUserDao.findByUserId(userId,0);
+            //查询用户参与过的活动 并有中奖纪录的
+            boolean hasEffectiveAward =  iptvActivityService.checkEffectiveAward(userId);
+            response.setData(hasEffectiveAward&&StringUtils.isNotBlank(user.getPhone_num()));
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+
 
 
 }

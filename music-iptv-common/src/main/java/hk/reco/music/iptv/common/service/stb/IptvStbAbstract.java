@@ -295,16 +295,16 @@ public abstract class IptvStbAbstract {
 	
 	protected IptvPageResult findSearchListImpl(IptvObjectEnum type, String pinyin, Integer offset, Integer size){
 		IptvPageResult result = new IptvPageResult();
-		int total = this.iptvResVerDao.searchResByKeywordCount(type, pinyin, test);
-		if(total>0){
-			List<IptvResVer> vers = this.iptvResVerDao.searchResByKeyword(type, pinyin, offset, size, test);
-			IptvFileUtils.toHttp(vers);
-			result.setVers(vers);
-			result.setTotal(total);
-		}else{
-			result.setVers(new ArrayList<IptvResVer>());
-			result.setTotal(0);
-		}
+		//int total = this.iptvResVerDao.searchResByKeywordCount(type, pinyin, test);
+//		if(total>0){
+//			List<IptvResVer> vers = this.iptvResVerDao.searchResByKeyword(type, pinyin, offset, size, test);
+//			IptvFileUtils.toHttp(vers);
+//			result.setVers(vers);
+//			result.setTotal(total);
+//		}else{
+//			result.setVers(new ArrayList<IptvResVer>());
+//			result.setTotal(0);
+//		}
 		return result;
 	}
 	

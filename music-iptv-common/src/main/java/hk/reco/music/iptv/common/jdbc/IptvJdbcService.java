@@ -37,4 +37,14 @@ public class IptvJdbcService {
 		this.jdbcTemplate.update(sql, new Object[]{playtime,rid});
 	}
 	
+	public void findVer() {
+		String sql = "SELECT VERSION() AS ver";
+		try {
+			String ver = this.jdbcTemplate.queryForObject(sql, String.class);
+			System.out.println(ver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

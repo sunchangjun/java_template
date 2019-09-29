@@ -57,7 +57,7 @@ public class IptvConsoleUserController {
 	}
 
 	public static void main(String[] args) {
-
+        System.out.println(Md5Utils.encode("wthx123456.."));
 	}
 
 }

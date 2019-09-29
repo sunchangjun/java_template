@@ -56,7 +56,15 @@ public class IptvActivityService {
      * @return 活动列表
      */
     public List<IptvActivity> findActivityListByUserId(String userId) {
-        return iptvActivtityDao.findActivityListByUserId(userId);
+        List<IptvActivity> activitys =  iptvActivtityDao.findActivityListByUserId(userId);
+        activitys.forEach(item->{
+            if(item.getEnd_time().getTime()>new Date().getTime()&&item.getActive()==1){
+                item.setActive(1);
+            }else{
+                item.setActive(0);
+            }
+        });
+        return activitys;
     }
 
     /**
@@ -76,7 +84,7 @@ public class IptvActivityService {
      */
     public List<IptvActivityAward> findActivityAwardById(Integer activityId) {
         List<IptvActivityAward> awards= iptvActivtityDao.findActivityAwardById(activityId);
-        awards.stream().forEach(item->{
+        awards.forEach(item->{
             item.setPoster(IptvFileUtils.http(item.getPoster()));
         });
         return awards;
@@ -254,5 +262,25 @@ public class IptvActivityService {
      */
     public void consoleUpdateAward(IptvActivityAward award) {
         iptvActivtityDao.consoleUpdateAward(award);
+    }
+
+    /**
+     * 检查用户是否拥有有效的中奖记录
+     * @param userId 用户id
+     * @return
+     */
+    public boolean checkEffectiveAward(String userId) {
+        List<IptvActivity> acts = iptvActivtityDao.findActiveActivtity();
+        if(acts!=null&&acts.size()==1){
+            IptvActivity activity = acts.get(0);
+            Integer activityId = activity.getId();
+            List<IptvAcctivityRecord> list = iptvActivtityDao.consolefindActivityRecordList(activityId,userId,null,true,null);
+            if(list!=null&&list.size()>0){
+               return true;
+            }
+        }else{
+            return false;
+        }
+        return false;
     }
 }

@@ -2,31 +2,40 @@ package hk.reco.music.iptv.common.action;
 
 import hk.reco.music.iptv.common.ctrl.stb.RestResponse;
 import hk.reco.music.iptv.common.dao.IptvResVerDao;
-import hk.reco.music.iptv.common.domain.*;
+import hk.reco.music.iptv.common.domain.ExtraInfo;
+import hk.reco.music.iptv.common.domain.IptvPage;
+import hk.reco.music.iptv.common.domain.IptvPageResult;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.domain.IptvResVerForPage;
+import hk.reco.music.iptv.common.domain.IptvWebAuthResult;
+import hk.reco.music.iptv.common.domain.WebSessionUser;
 import hk.reco.music.iptv.common.enums.IptvObjectEnum;
 import hk.reco.music.iptv.common.enums.IptvPlatform;
 import hk.reco.music.iptv.common.layout.CatesCoverter;
 import hk.reco.music.iptv.common.layout.Layout;
 import hk.reco.music.iptv.common.layout.LayoutFactory;
 import hk.reco.music.iptv.common.service.IptvStbService;
-import hk.reco.music.iptv.common.service.stb.IptvStbCommonService;
-import hk.reco.music.iptv.common.utils.*;
+import hk.reco.music.iptv.common.utils.Constant;
+import hk.reco.music.iptv.common.utils.IptvMsicUtils;
+import hk.reco.music.iptv.common.utils.JsonUtil;
+import hk.reco.music.iptv.common.utils.JsonUtils;
+import hk.reco.music.iptv.common.utils.NetworkUtils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 〈用于前端页面的跳转〉
@@ -50,6 +59,9 @@ public abstract class AppDataAction  {
 	protected IptvStbService stbService;
     @Autowired
     protected IptvResVerDao iptvResVerDao;
+    @Autowired
+    @Qualifier("iptvJdbcTemplate")
+    protected JdbcTemplate jdbcTemplate;
 
 
     @RequestMapping("show/index.htm")
@@ -62,12 +74,6 @@ public abstract class AppDataAction  {
         if(o==null){
             user = dealWithUserInfo(request);
             request.getSession().setAttribute(Constant.USER_IN_SESSION,user);
-            //cookie处理用于session过期
-            Cookie cookie = new Cookie("token", URLEncoder.encode(SymmetricEncoder.AESEncode(JsonUtils.toJson(user)), "UTF-8"));
-            //5年相当于不过期
-            cookie.setMaxAge(5*365*24*60*60);
-            cookie.setPath("/");
-            response.addCookie(cookie);
         }else{
             user = (WebSessionUser)o;
         }
@@ -444,7 +450,15 @@ public abstract class AppDataAction  {
         model.addAttribute("theme",theme);
         model.addAttribute("jsonString",JsonUtils.toJson(items));
         model.addAttribute("items",items);
-        return "show/theme";
+        String result = "show/theme";
+        if(IptvObjectEnum.theme_list.equals(theme.getChild_type())){
+            //跳转到列表模板
+            result = "show/theme_list";
+        }else if(IptvObjectEnum.theme_fjyd.equals(theme.getChild_type())){
+            //跳转到福建移动专属专题
+            result = "show/theme_fjyd";
+        }
+        return result;
     }
 
 

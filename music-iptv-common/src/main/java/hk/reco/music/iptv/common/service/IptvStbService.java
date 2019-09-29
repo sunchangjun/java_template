@@ -254,7 +254,7 @@ public class IptvStbService {
 	
 	////////////////////////////////////////以下方法不走缓存////////////////////////
 	
-	//拼音首字母搜索,无缓存
+	//拼音首字母搜索,无缓存,搜索的结果有限,所以不用count,全查出来取子集即可
 	@LogDetail(method = "get_search_list_impl", extrid = IptvSpecialRid.search_by_pinyin + "")
 	public IptvPageResult get_search_list_impl(String platform, String ip, String mac, String userId, Long prid, Long rid, String pinyin, String type, int offset, int size, boolean test, String path)
 			throws Exception {
@@ -263,15 +263,16 @@ public class IptvStbService {
 		if(v!=null && (v==IptvObjectEnum.song || v==IptvObjectEnum.mv || v==IptvObjectEnum.singer)){
 			this.log(platform, ip, mac, userId, prid, rid, IptvSpecialRid.search_by_pinyin, pinyin, v, null, "get_search_list_impl", now, test, path);
 			IptvPageResult result = new IptvPageResult();
-			int total = this.iptvResVerDao.searchResByKeywordCount(v, pinyin, test);
-			if(total>0){
-				List<IptvResVer> vers = this.iptvResVerDao.searchResByKeyword(v, pinyin, offset, size, test);
-				IptvFileUtils.toHttp(vers);
-				result.setVers(vers);
-				result.setTotal(total);
+			
+			List<IptvResVer> vers = this.iptvResVerDao.searchResByKeyword(v, pinyin, test);
+			if(offset>=vers.size()){//取不到数据的空集合
+				result.setVers(new ArrayList<>());
+				result.setTotal(vers.size());
 			}else{
-				result.setVers(new ArrayList<IptvResVer>());
-				result.setTotal(0);
+				IptvFileUtils.toHttp(vers);
+				int max_index = ((offset+size)>vers.size())?vers.size():(offset+size);
+				result.setVers(vers.subList(offset, max_index));
+				result.setTotal(vers.size());
 			}
 			return result;
 		}else{

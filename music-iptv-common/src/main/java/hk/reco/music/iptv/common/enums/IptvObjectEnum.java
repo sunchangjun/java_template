@@ -30,8 +30,11 @@ public enum IptvObjectEnum {
 	func_collect_media, // 媒体收藏 包含mv和song
 	func_collect_diss, // 歌单收藏
 	func_play_all_theme, // 播放全部的主题（专题）媒体
-	func_return_from_theme;// 从主题（专题）页返回
-
+	func_return_from_theme,// 从主题（专题）页返回
+	//主题子类型（列表模板主题）
+	theme_list,
+	//(福建移动活动主题)
+	theme_fjyd;
 	public static IptvObjectEnum getType(String name) {
 		if (name == null)
 			return null;
