@@ -7,14 +7,21 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="java_template" />
+        <module name="music-iptv-common" />
         <module name="sun_utils" />
         <module name="sun_web" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="java_template" target="1.8" />
+      <module name="music-iptv-common" target="1.8" />
       <module name="sun_utils" target="1.8" />
       <module name="sun_web" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="music-iptv-common" options="-XDignore.symbol.file" />
+    </option>
   </component>
 </project>

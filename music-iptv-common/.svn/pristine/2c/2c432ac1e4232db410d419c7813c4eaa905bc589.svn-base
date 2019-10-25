@@ -1,0 +1,44 @@
+package hk.reco.music.iptv.common.service;
+
+import hk.reco.music.iptv.common.ctrl.stb.RestResponse;
+
+/**
+ * 资源定价服务,待项目实现
+ * @author zhangsl
+ * @date 2019年7月10日
+ */
+public interface IptvNoticeService {
+	
+	/**
+	 * 设置资源的免费状态
+	 * @param rid
+	 * @param isfree true收费,false免费
+	 * @return true成功,false失败
+	 */
+	void setFree(long rid, boolean isfree) throws Exception;
+
+	/**
+	 *
+	 *   未来资源下线通知
+	 *
+	 *
+	 * @Author wangpq
+	 * @Param rid
+	 * @Param operation
+	 * @Date 2019/7/22 14:14
+	 * @return hk.reco.music.iptv.common.ctrl.stb.RestResponse
+	 */
+	RestResponse newTVResUpOrDown(long rid,int operation);
+
+	/**
+	 * 功能描述:
+	 * 〈媒资上下线通知〉
+	 *
+	 * @param rid rid
+	 * @return : void
+	 * @author : wangpq
+	 * @date : 2019/9/27 15:17
+	 */
+	void setGlobalDisable(long rid);
+	
+}

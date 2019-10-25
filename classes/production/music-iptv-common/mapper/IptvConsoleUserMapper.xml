@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hk.reco.music.iptv.common.dao.IptvConsoleUserDao">
+    
+    <select id="findUserByUserName" resultType="hk.reco.music.iptv.common.domain.IptvConsoleUser" parameterType="string">
+         SELECT a.*,r.name as roleName FROM iptv_console_admin a
+         LEFT JOIN iptv_console_role r ON a.roleId = r.id
+         WHERE a.username = #{userName}
+    </select>
+    
+    <select id="findUserById" resultType="hk.reco.music.iptv.common.domain.IptvConsoleUser" parameterType="int">
+         SELECT a.*,r.name as roleName FROM iptv_console_admin a
+         LEFT JOIN iptv_console_role r ON a.roleId = r.id
+         WHERE a.id = #{userId}
+    </select>
+    
+    <select id="findAllUserForList" resultType="hk.reco.music.iptv.common.domain.IptvConsoleUser">
+         SELECT a.*,r.name as roleName FROM iptv_console_admin a
+         LEFT JOIN iptv_console_role r ON a.roleId = r.id
+         ORDER BY id DESC
+    </select>
+    
+    <select id="findAllUserForList_count" resultType="int">
+         SELECT COUNT(1) FROM iptv_console_admin
+    </select>
+    
+    <insert id="saveUser" parameterType="hk.reco.music.iptv.common.domain.IptvConsoleUser">
+         INSERT INTO iptv_console_admin (username,roleId,password)
+         VALUES (#{username},#{roleId},#{password}) 
+    </insert>
+    
+    <delete id="deleteUser" parameterType="int">
+         DELETE FROM iptv_console_admin WHERE id = #{userId}
+    </delete>
+
+    <update id="updatePwdById">
+         UPDATE iptv_console_admin SET password = #{newPassword} WHERE id = #{userid}
+    </update>
+
+</mapper>

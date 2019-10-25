@@ -1,0 +1,251 @@
+body {
+    background: url("../img/bg.jpg") no-repeat;
+    background-size: cover;
+}
+
+.rotate-left {
+    width: 550px;
+}
+
+.rotate_content {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+}
+
+.rotate-img {
+    width: 467px;
+    height: 467px;
+    border-radius: 50%;
+}
+
+.pointer img {
+    width: 120px;
+    height: 150px;
+}
+
+.turntable-bg {
+    margin-top: 150px;
+    margin-left: 80px;
+    width: 467px;
+    height: 467px;
+    position: relative;
+}
+
+.turntable-bg .pointer {
+    width: 109px;
+    height: 147px;
+    position: absolute;
+    left: 173px;
+    top: 147px;
+    z-index: 8;
+}
+
+.turntable-bg .rotate {
+    width: 467px;
+    height: 467px;
+    position: absolute;
+}
+
+.tip {
+    font-size: 21px;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    width: 467px;
+    margin-left: 80px;
+    text-align: center;
+    margin-top: 28px;
+}
+
+.count {
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.record-btn {
+    margin-top: 37px;
+    width: 158px;
+    height: 57px;
+    margin-right: 40px;
+}
+
+.record-btn-bg {
+    background: url("../img/recordbtn.png") no-repeat;
+    background-size: cover;
+}
+
+.record-btn-bg-full {
+    background: url("../img/recordbtn-full.png") no-repeat;
+    background-size: cover;
+
+}
+
+.rule-title {
+    font-size: 24px;
+    font-family: Source Han Sans CN;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 1);
+    padding-left: 90px;
+}
+
+.rule-title1 {
+    margin-top: 50px;
+}
+
+.rule-title2 {
+    margin-top: 20px;
+}
+
+.info {
+    width: 730px;
+}
+
+.info-tip {
+    line-height: 1.4;
+    font-size: 16px;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    padding-left: 90px;
+    color: rgba(255, 255, 255, 1);
+    margin-top: 10px;
+    width: 450px;
+}
+
+.award-header {
+    margin-left: 90px;
+    margin-top: 50px;
+    width: 533px;
+}
+
+.award-no {
+    font-size: 18px;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    line-height: 24px;
+}
+
+.award-title {
+    font-size: 24px;
+    font-family: Source Han Sans CN;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+
+.modal {
+    display: none;
+}
+
+.header {
+    height: 80px;
+    width: 100%;
+}
+
+.header_left {
+    float: left;
+}
+
+
+.active {
+    border: 1px solid red;
+}
+
+.kgo-scroll-sty {
+    position: relative;
+    width: 533px;
+    height: 185px;
+    margin-left: 90px;
+    margin-top: 20px;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+
+.kgo-scroll-sty li {
+    height: 37px;
+    line-height: 37px;
+    color: white;
+
+}
+/*偶数行样式*/
+li.evenRowStyle {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+li.oddRowStyle {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.phone_num {
+    width: 120px;
+}
+
+.create_time {
+    width: 170px;
+}
+
+.award_name {
+    width: 240px;
+}
+
+
+.remodal-body {
+    width: 524px;
+    height: 433px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.remodal_content {
+    width: 524px;
+    height: 433px;
+}
+
+.remodal_content_img {
+    width: 524px;
+    height: 433px;
+}
+
+.remodal_ok {
+    width: 255px;
+    height: 74px;
+    position: absolute;
+    bottom: 40px;
+    left: 140px;
+}
+
+.remodal_ok_img {
+    width: 255px;
+    height: 74px;
+}
+
+.byModal-body, .byModal_content {
+    position: relative;
+    width: 631px;
+    height: 335px;
+    text-align: center;
+
+}
+
+.byModal_content_img {
+    width: 631px;
+    height: 335px;
+}
+
+.by-btn {
+    position: absolute;
+    width: 175px;
+    height: 71px;
+    bottom: 60px;
+}
+
+.byModal_cancel_img {
+    right: 128px;
+}
+
+.byModal_ok_img {
+    left: 128px;
+}
+

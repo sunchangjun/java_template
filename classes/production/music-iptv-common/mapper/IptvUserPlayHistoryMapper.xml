@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hk.reco.music.iptv.common.dao.IptvUserPlayHistoryDao" >
+
+	<insert id="addPlayHistory">
+		INSERT INTO iptv_user_play_history(user_id,rid,create_time,test)values(#{user_id},#{rid},#{create_time},#{test})
+		ON DUPLICATE KEY UPDATE create_time=#{create_time}
+	</insert>
+	
+	<delete id="delPlayHistory">
+		DELETE FROM iptv_user_play_history WHERE user_id=#{user_id} AND rid=#{rid} AND test=#{test}
+	</delete>
+
+	<delete id="removeAllPlayHistory">
+		DELETE FROM iptv_user_play_history WHERE user_id=#{user_id} AND test=#{test}
+	</delete>
+
+	<select id="findPlayHistoryIds" resultType="long">
+		SELECT c.rid FROM iptv_user_play_history c,iptv_res r WHERE r.rid=c.rid AND c.user_id=#{user_id} AND c.test=#{test} AND r.type=#{type}
+	</select>
+	
+	<!-- 获取最近播放接口 -->
+	<select id="findHistoryByUserid" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
+		<choose>
+			<when test="test">
+				SELECT r1.rid,r1.type,r1.iptv_code1,r1.iptv_code2,r1.media_lyric,r1.free,r1.play_time,r1.res_id,v1.name,v1.bposter,v1.sposter,GROUP_CONCAT(v2.name) singer_name,r3.rid mv_rid FROM iptv_user_play_history c
+				INNER JOIN iptv_res r1 ON (c.rid=r1.rid AND r1.global_disable=0)
+				INNER JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND v1.vid=r1.test_vid AND v1.version_disable=0)
+				LEFT JOIN iptv_multi_singer s1 ON (s1.child_rid=r1.rid)
+				LEFT JOIN iptv_res r2 ON (r2.rid=s1.singer_rid AND r2.global_disable=0) # singer res
+				LEFT JOIN iptv_res_ver v2 ON (v2.vid=r2.test_vid)
+				LEFT JOIN iptv_res r3 ON (r3.music_id=r1.song_mv_id AND r3.type='mv' AND r3.global_disable=0)
+				WHERE c.test=1 AND c.user_id=#{user_id}
+				GROUP BY r1.rid
+				HAVING singer_name IS NOT NULL
+				ORDER BY c.create_time DESC
+			</when>
+			<otherwise>
+				SELECT r1.rid,r1.type,r1.iptv_code1,r1.iptv_code2,r1.media_lyric,r1.free,r1.play_time,r1.res_id,v1.name,v1.bposter,v1.sposter,GROUP_CONCAT(v2.name) singer_name,r3.rid mv_rid FROM iptv_user_play_history c
+				INNER JOIN iptv_res r1 ON (c.rid=r1.rid AND r1.global_disable=0)
+				INNER JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND v1.vid=r1.prod_vid AND v1.version_disable=0)
+				LEFT JOIN iptv_multi_singer s1 ON (s1.child_rid=r1.rid)
+				LEFT JOIN iptv_res r2 ON (r2.rid=s1.singer_rid AND r2.global_disable=0)
+				LEFT JOIN iptv_res_ver v2 ON (v2.vid=r2.prod_vid)
+				LEFT JOIN iptv_res r3 ON (r3.music_id=r1.song_mv_id AND r3.type='mv' AND r3.global_disable=0
+											AND r3.prod_vid != 0) # wpq 去除未提交到正式版本的mv_id 2019年6月3日14:18:54
+				WHERE c.test=0 AND c.user_id=#{user_id}
+				GROUP BY r1.rid
+				HAVING singer_name IS NOT NULL
+				ORDER BY c.create_time DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

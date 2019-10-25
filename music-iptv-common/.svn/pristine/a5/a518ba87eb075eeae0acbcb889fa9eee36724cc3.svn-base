@@ -1,0 +1,167 @@
+body {
+    background: url("../img/awardbg.jpg") no-repeat;
+    background-size: cover;
+}
+
+.v-middle {
+    vertical-align: middle;
+}
+
+.back {
+    margin-left: 40px;
+    margin-top: 40px;
+    width: 200px;
+    padding: 5px;
+    height: 53px;
+    border-radius: 8px;
+    line-height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0);
+}
+
+.content {
+    overflow: hidden;
+    width: 1200px;
+    height: 240px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-left: 40px;
+    margin-top: 20px;
+}
+
+.img-wrap {
+    margin-top: 30px;
+    margin-left: 29px;
+    width: 180px;
+}
+
+.award-img {
+    width: 180px;
+    height: 180px;
+}
+
+.input-btn {
+    width: 187px;
+    height: 65px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 33px;
+    font-size: 32px;
+    text-align: center;
+    font-family: Source Han Sans CN;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 65px;
+    margin-top: 30px;
+    margin-right: 29px;
+    border: 3px solid rgba(255, 255, 255, 0);
+}
+
+.tip-wrap {
+    width: 965px;
+    margin-top: 30px;
+}
+
+.tip1 {
+    font-size: 43px;
+    font-family: Source Han Sans CN;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 1);
+    line-height: 43px;
+    margin-bottom: 25px;
+}
+
+.tip2 {
+    font-size: 24px;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    line-height: 24px;
+    margin-bottom: 15px;
+}
+
+.title {
+    font-size: 28px;
+    font-family: Source Han Sans CN;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 28px;
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.award-record {
+    width: 1200px;
+    height: 227px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-top: 17px;
+    margin-left: 40px;
+    overflow: hidden;
+}
+
+.active {
+    border-color: rgba(254, 234, 186, 1);
+}
+
+.kgo-scroll-sty {
+    position: relative;
+    width: 1133px;
+    height: 141px;
+    margin-left: 33px;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.kgo-scroll-head {
+    position: relative;
+    width: 1133px;
+    height: 47px;
+    line-height: 47px;
+    margin-left: 33px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+/*偶数行样式*/
+li.evenRowStyle {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+li.oddRowStyle {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.scollH {
+    font-size: 20px;
+    font-family: Source Han Sans CN;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    line-height: 24px;
+    display: inline-block;
+    text-align: center;
+}
+
+.kgo-scroll-sty li {
+    height: 47px;
+    line-height: 47px;
+    color: white;
+}
+
+.phone_num, .userH {
+    width: 150px;
+}
+
+.create_time, .timeH {
+    width: 200px;
+}
+
+.award_name, .resultH {
+    width: 440px;
+}
+
+.noAward {
+    display: none;
+    text-align: center;
+    margin-top: 90px;
+}

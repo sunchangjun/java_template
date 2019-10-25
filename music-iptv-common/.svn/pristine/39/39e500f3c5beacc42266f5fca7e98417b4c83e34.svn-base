@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hk.reco.music.iptv.common.dao.IptvActivtityDao" >
+
+    <select id="findActiveActivtity" resultType="hk.reco.music.iptv.common.domain.IptvActivity">
+         SELECT *  FROM iptv_activity WHERE now()>start_time and end_time>now() and active=1
+	</select>
+
+    <select id="findActivityListByUserId" resultType="hk.reco.music.iptv.common.domain.IptvActivity">
+        SELECT * FROM iptv_activity WHERE id IN (SELECT DISTINCT activity_id FROM iptv_activity_record WHERE user_id =#{userId})
+	</select>
+
+
+    <select id="findUserActivityRecord" resultType="hk.reco.music.iptv.common.domain.IptvAcctivityRecord">
+		SELECT record.*, award.name AS award_name FROM iptv_activity_record record
+		LEFT JOIN iptv_activity_award award ON record.award_id = award.id
+		WHERE record.activity_id = #{activityId} and record.user_id = #{userId}
+	</select>
+
+	<select id="findActivityAwardById" resultType="hk.reco.music.iptv.common.domain.IptvActivityAward">
+        SELECT *  FROM iptv_activity_award WHERE actvity_id = #{activityId} and status=1
+	</select>
+
+	<select id="findActivityById" resultType="hk.reco.music.iptv.common.domain.IptvActivity">
+        SELECT *  FROM iptv_activity WHERE id = #{activityId}
+	</select>
+	
+	<select id="findActivityTimesInDuration" resultType="int">
+        SELECT  COUNT(1) FROM iptv_activity_record
+        WHERE 1=1
+		<if test="award_id!=null">
+			and award_id=#{award_id}
+		</if>
+		<if test="userId!=null and userId!=''">
+			and user_id =#{userId}
+		</if>
+		<if test="activityId!=null">
+			and activity_id =#{activityId}
+		</if>
+        <if test="start_time!=null and start_time!=''">
+          and create_time >#{start_time}
+		</if>
+		<if test="end_time!=null and end_time!=''">
+		  and #{end_time} > create_time
+		</if>
+	</select>
+	
+	<insert id="insertNewRecord" parameterType="hk.reco.music.iptv.common.domain.IptvAcctivityRecord">
+       INSERT INTO iptv_activity_record (activity_id,award_id,user_id,create_time) VALUES (#{activity_id},#{award_id},#{user_id},now())
+	</insert>
+
+	<select id="consolefindActivityList" resultType="hk.reco.music.iptv.common.domain.IptvActivity">
+        SELECT * FROM iptv_activity
+	</select>
+
+	<select id="consolefindActivityRecordListCount" resultType="int">
+		SELECT count(1) FROM iptv_activity_record record
+		LEFT JOIN iptv_user user ON record.user_id = user.user_id
+		WHERE record.activity_id=#{activityId} and user.test=0
+		<if test="userId!=null and userId!=''">
+			AND user.user_id = #{userId}
+		</if>
+		<if test="record">
+			AND record.award_id != -10000
+		</if>
+		<if test="phone!=null and phone!=''">
+			AND user.phone_num = #{phone}
+		</if>
+	</select>
+
+
+	<select id="consolefindActivityRecordList" resultType="hk.reco.music.iptv.common.domain.IptvAcctivityRecord">
+		SELECT record.*,award.name as award_name,user.phone_num  FROM iptv_activity_record record
+		LEFT JOIN iptv_user user ON record.user_id = user.user_id
+		LEFT JOIN iptv_activity_award award on record.award_id = award.id
+		WHERE record.activity_id=#{activityId} and user.test=0
+		<if test="userId!=null and userId!=''">
+			AND user.user_id = #{userId}
+		</if>
+		<if test="record">
+			AND record.award_id != -10000
+		</if>
+		<if test="!record and record!=null">
+			AND record.award_id = -10000
+		</if>
+		<if test="phone!=null and phone!=''">
+			AND user.phone_num = #{phone}
+		</if>
+	</select>
+
+	<insert id="consoleInsertNewActivity" parameterType="hk.reco.music.iptv.common.domain.IptvActivity">
+        insert into iptv_activity (name,user_type,type,num,start_time,end_time,create_time,active,url)
+        values(#{name},#{user_type},#{type},#{num},#{start_time},#{end_time},now(),#{active},#{url})
+	</insert>
+
+	<insert id="consoleInsertNewAward" parameterType="hk.reco.music.iptv.common.domain.IptvActivityAward">
+        insert into iptv_activity_award (name,actvity_id,num,poster,price,probability,day_max_num)
+        values(#{name},#{actvity_id},#{num},#{poster},#{price},#{probability},#{day_max_num})
+	</insert>
+	
+	<update id="updateAwardStatus" parameterType="int">
+        update iptv_activity_award set status=0 where id=#{id}
+	</update>
+
+	<update id="consoleDelineAllActivity" >
+        update iptv_activity set active=0
+	</update>
+
+	<update id="consoleOnlineActivity" parameterType="int">
+        update iptv_activity set active=1 where id=#{id}
+	</update>
+
+	<update id="consoleDelineActivity" parameterType="int">
+        update iptv_activity set active=0 where id=#{id}
+	</update>
+
+	<update id="consoleUpdateAward" parameterType="hk.reco.music.iptv.common.domain.IptvActivityAward">
+        update iptv_activity_award set name=#{name},num=#{num},price=#{price},day_max_num=#{day_max_num},probability=#{probability}
+        <if test="poster!=null and poster!=''">
+			,poster=#{poster}
+		</if>
+		where id=#{id}
+	</update>
+</mapper>

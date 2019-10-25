@@ -4,9 +4,10 @@
         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>hk.reco</groupId>
-        <artifactId>music-iptv</artifactId>
-        <version>2.0.0</version>
+        <groupId>com</groupId>
+        <artifactId>java_template</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath/>
     </parent>
     <artifactId>music-iptv-common</artifactId>
     <name>music-iptv-common</name>
@@ -61,7 +62,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.47</version>
+            <version>1.2.61</version>
         </dependency>
         <dependency>
             <groupId>com.github.stuxuhai</groupId>

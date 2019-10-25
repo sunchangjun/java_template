@@ -1,0 +1,94 @@
+body {
+    background: url("../img/awardbg.jpg") no-repeat;
+    background-size: cover;
+}
+
+.content {
+    position: relative;
+    width: 1290px;
+    height: 720px;
+}
+
+.back {
+    position: absolute;
+    top: 50%;
+    left: 40px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    border: 3px solid rgba(255, 255, 255, 0);
+    padding: 5px;
+}
+
+.cal-wrap {
+    margin: 0 auto;
+    width: 387px;
+    height: 720px;
+    overflow: hidden;
+}
+
+.input-wrap {
+    margin-top: 80px;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.5);
+    padding: 19px 0;
+}
+
+.input {
+    width: 379px;
+    background: rgba(255, 255, 255, 0);
+    text-align: center;
+    height: 40px;
+    outline: none;
+    font-size: 37px;
+    font-family: Source Han Sans CN;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0);
+}
+
+input::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.number-wrap {
+    margin-top: 20px;
+}
+
+.margin-5 {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.number {
+    display: inline-block;
+    width: 119px;
+    height: 86px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    font-size: 45px;
+    font-family: DINPro;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 92px;
+    text-align: center;
+    border: 3px solid rgba(255, 255, 255, 0);
+    vertical-align: middle;
+}
+
+.no-item {
+    margin-top: 5px;
+    font-size: 0;
+}
+
+.font-37 {
+    font-size: 37px;
+}
+
+.width-387 {
+    width: 381px;
+}
+
+.active {
+    border-color: rgba(254, 234, 186, 1);
+    border-radius: 8px;
+}

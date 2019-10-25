@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/java_template.iml" filepath="$PROJECT_DIR$/.idea/java_template.iml" />
+      <module fileurl="file://$PROJECT_DIR$/music-iptv-common/music-iptv-common.iml" filepath="$PROJECT_DIR$/music-iptv-common/music-iptv-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/sun_utils/sun_utils.iml" filepath="$PROJECT_DIR$/sun_utils/sun_utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/sun_web/sun_web.iml" filepath="$PROJECT_DIR$/sun_web/sun_web.iml" />
     </modules>
