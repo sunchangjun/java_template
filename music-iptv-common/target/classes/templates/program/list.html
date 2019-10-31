@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head :: cssAndJs(title=~{::title/text()})">
+    <title>QQ音乐后台管理系统</title>
+</head>
+<div th:text="${session.console_user_in_session.button}" id="control" style="visibility: hidden"></div>
+<body th:title="${type}" class="easyui-layout" style="overflow: hidden;" fit="true">
+        <!-- 头部 -->
+        <div data-th-data-options="|region:'north',border:false,title:'媒体列表'|" style="height: 100%;width: 100%;">
+            <div id="wu-toolbar">
+                <div class="wu-toolbar-button">
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-arrow-down"
+                       onclick="globalDeline('#program-table')" plain="true">下线</a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-arrow-up"
+                       onclick="globalOnline('#program-table')" plain="true">上线</a>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-control-fastforward-blue"
+                       onclick="groupSubmit('#program-table')" plain="true">批量提交</a>
+                </div>
+                <div>
+                    资源名称: <input id="sname" class="easyui-textbox" style="width:120px">
+                <!--    歌手名: <input id="singername" class="easyui-textbox" style="width:120px">-->
+                    提交状态:
+                    <select id="ssubmit" class="easyui-combobox" panelHeight="auto" style="width:100px">
+                        <option value="">全部</option>
+                        <option value="0">未提交</option>
+                        <option value="1">已提交</option>
+                    </select>
+                    全局状态:
+                    <select id="sglobal" class="easyui-combobox" panelHeight="auto" style="width:100px">
+                        <option value="">全部</option>
+                        <option value="1">禁用</option>
+                        <option value="0">启用</option>
+                    </select>
+                    资源类型:
+                    <select id="sfreeFlag" class="easyui-combobox" panelHeight="auto" style="width:100px">
+                        <option value="">全部</option>
+                        <option value="1">免费</option>
+                        <option value="0">收费</option>
+                    </select>
+                    <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="searchProgram()">搜索</a>
+                </div>
+            </div>
+
+            <table id="program-table" class="easyui-datagrid" style="height:100%;width:100%;" toolbar="#wu-toolbar">
+            </table>
+        </div>
+        <!--修改-->
+        <div id="dlg"  style="padding:10px">
+            <form id="editorform" method="post" class="detail-form" enctype="multipart/form-data">
+                <div style="text-align: center">
+                    <img id="sourceImg" style=" width:100px;height:100px;border:1px solid black;display: inline-block"/><br/>
+                    <a href="javascript:void(0);"  class="my-btn-hindden  bposter">
+                        点击选择<input  type="file"  onchange="filechange(event,'sourceImg');"  name="iptvBigPoster"/>
+                    </a>
+                </div>
+                <div>
+                    <label for="name">资源名:</label>
+                    <input class="easyui-validatebox"  id="rid" type="text" name="rid" hidden />
+                    <input class="easyui-validatebox"  id="vid" type="text" name="vid" hidden />
+                    <input class="easyui-validatebox"  id="name" type="text" name="name" data-options="required:true" />
+                </div>
+                <div>
+                    <label for="keyword">关键字:</label>
+                    <input class="easyui-validatebox" type="text" id="keyword" name="keyword" data-options="required:true" />
+                    <input class="easyui-validatebox" type="text" hidden name="bposter" />
+                </div>
+                <div>
+                    <label for="sort">排&nbsp;&nbsp;序:</label>
+                    <input class="easyui-validatebox" type="text" id="sort" name="sort" data-options="required:true" />
+                </div>
+            </form>
+        </div>
+<!--图片对话框-->
+<div id="img-dialog" class="easyui-dialog " data-options="closed:true,iconCls:'icon-save'"
+     style="width:313px; height: 340px">
+    <img style="width: 299px; height:296px" src="" id="bigImg"/>
+</div>
+
+
+<script>
+
+    $(function () {
+        var columns = [];
+        var feild = [
+            {field:'ck',checkbox:true},
+            {field: 'rid', title: 'ID', width: 50},
+            {field: 'name', title: '资源名称', width: 150},
+            {field: 'keyword', title: '关键字', width: 150},
+            {field: 'singer_name', title: '歌手', width: 100},
+            {field: 'iptv_code1', title: 'iptvCode1', width: 100, align: 'center'},
+            {field: 'iptv_code2', title: 'iptvCode2', width: 100, align: 'center'},
+            {field: 'bposter', title: '海报', width: 50, align: 'center', formatter: formatImg},
+            {field: 'prod_vid', title: '正式', width: 50, align: 'center'},
+            {field: 'test_vid', title: '测试', width: 50, align: 'center'},
+            {field: 'free', title: '免费', width: 50, align: 'center',formatter: function(val){
+                if(val==1){
+                    return "<span style='color:green'>是</span>"
+                }
+                    return "<span style='color:red'>否</span>"
+                }},
+            {field: 'global_disable', title: '全局状态', width: 100, align: 'center',formatter: formatStatus},
+            {field: 'dd', title: '操作', width: 200, align: 'center',formatter: formatSubmit
+            }
+        ];
+        columns.push(feild);
+        $("#program-table").datagrid({
+            url: 'listData',
+            collapsible: true,
+            singleSelect: true,
+            selectOnCheck:false,
+            loadMsg:false,
+            method: 'get',
+            pagination: true,
+            pageSize: 20,
+            pageList:[20,50,100],
+            onDblClickRow:function(rowIndex, rowData){
+                console.log(rowData.bposter);
+                if(rowData.bposter){
+                    $("#sourceImg").attr("src",rowData.bposter);
+                }else{
+                    $("#sourceImg").attr("src","" );
+                }
+                $("#editorform").form("reset");
+                $("#editorform").form("load",rowData);
+                $("#dlg").dialog("open");
+            },
+            columns: columns,
+            rowStyler: function (index, row) {
+                return "backgroud:red";
+            },
+            queryParams: {
+                type: $("body").attr("title")
+            }
+        });
+
+        /**
+         * 媒资编辑
+         */
+        $('#dlg').dialog({
+            title: '编辑',
+            width: 280,
+            height: 360,
+            closed: true,
+            iconCls: 'icon-save',
+            buttons: [{
+                text:'保存',
+                iconCls:'icon-ok',
+                handler:function(){
+                    $.messager.confirm('确认提交111','提交会产生新的版本，您确认要提交该数据么?',function(r){
+                        if (r){
+                            //表单提交
+                            $('#editorform').form('submit', {
+                                url:"editorProgram",
+                                success:function(data){
+                                    data = eval('(' + data + ')');
+                                    if(data.success){
+                                        $.messager.alert("消息提示","修改成功");
+                                        $("#dlg").dialog("close");
+                                        $("#program-table").datagrid('reload');
+                                    }else{
+                                        $.messager.alert("消息提示",data.msg);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }]
+        });
+    })
+
+
+    function formatSubmit(value,data,index){
+        var op = '';
+        if(data.prod_vid==data.test_vid){
+            op += "<span style='color:mediumblue'><img style='vertical-align: middle' src='"+ctxPath+"static/img/submit.png'/>已提交</span>";
+        }else{
+            var  vid = data.link_vid? data.link_vid:data.vid;
+            op += "<a style='color:red;text-decoration: underline;' href='javascript:void(0);' onclick='submitPro(\""+data.rid+"\",\""+vid+"\")'>" +
+                "<img style='vertical-align: middle' src='"+ctxPath+"static/img/unsubmit.png'/>提交</a>";
+        }
+        var control = $("#control").html();
+        if(control=="true"){
+            if(data.free){
+                op += "&nbsp;&nbsp;&nbsp;&nbsp;<a style='color:mediumblue;text-decoration: underline;cursor: pointer;' onclick='changefreeStatus(\""+data.rid+"\",\""+data.free+"\")'>标记为收费</a>";
+            }else{
+                op += "&nbsp;&nbsp;&nbsp;&nbsp;<a style='color:red;text-decoration: underline;cursor: pointer;' onclick='changefreeStatus(\""+data.rid+"\",\""+data.free+"\")'>标记为免费</a>";
+            }
+        }
+       return op;
+    }
+
+    function changefreeStatus (rid,free){
+        var msg = "您确认要将资源id为<span style='color:red'>"+rid+"</span>的媒资置为";
+        if(free==1){
+           msg += "收费么?";
+        }else{
+            free =0;
+            msg += "免费么";
+        }
+        $.messager.confirm('收费状态修改',msg,function(r){
+            ajaxLoading();
+            if(r){
+                $.ajax({
+                    url:"editorResfreeStatus",
+                    type:"post",
+                    data:{
+                        rid:rid,
+                        free:free
+                    },
+                    success:function(data){
+                        ajaxLoadEnd();
+                        if(data.success){
+                            $.messager.alert("消息提示","操作成功");
+                            $("#program-table").datagrid("reload");
+                        }else{
+                            $.messager.alert("消息提示",data.backmsg);
+                        }
+                    }
+                });
+            }else{
+                ajaxLoadEnd();
+            }
+        });
+    }
+</script>
+</body>
+</html>

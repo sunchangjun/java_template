@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hk.reco.music.iptv.common.dao.IptvStatsUserDetailDao" >
+
+	<insert id="insert" parameterType="hk.reco.music.iptv.common.domain.IptvStatsUserDetail">
+		INSERT IGNORE INTO iptv_stats_user_detail(user_id,date,first_time,login_times,play_times)VALUES(#{user_id},#{date},#{first_time},#{login_times},#{play_times})
+	</insert>
+	
+	<insert id="insertBatch">
+		INSERT IGNORE INTO iptv_stats_user_detail(user_id,date,first_time,login_times,play_times)VALUES
+		<foreach collection="details" item="detail" separator=",">
+      		(#{detail.user_id},#{detail.date},#{detail.first_time},#{detail.login_times},#{detail.play_times})
+      </foreach>
+     </insert>
+	
+	<update id="addLoginAndPlayTimes">
+		UPDATE iptv_stats_user_detail SET login_times=login_times+#{login_times},play_times=play_times+#{play_times} WHERE user_id=#{user_id} AND date=#{date}
+	</update>
+	
+	<select id="findDistinctActiveUser" resultType="int">
+		SELECT COUNT(DISTINCT user_id) FROM iptv_stats_user_detail WHERE date BETWEEN #{from} AND #{to} 
+	</select>
+	
+	<select id="findDistinctPlayUser" resultType="int">
+		SELECT COUNT(DISTINCT user_id) FROM iptv_stats_user_detail WHERE date BETWEEN #{from} AND #{to} AND play_times!=0
+	</select>
+</mapper>
