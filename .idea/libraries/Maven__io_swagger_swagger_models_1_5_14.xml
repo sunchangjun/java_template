@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/io/swagger/swagger-models/1.5.14/swagger-models-1.5.14.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/io/swagger/swagger-models/1.5.14/swagger-models-1.5.14-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/io/swagger/swagger-models/1.5.14/swagger-models-1.5.14-sources.jar!/" />
     </SOURCES>

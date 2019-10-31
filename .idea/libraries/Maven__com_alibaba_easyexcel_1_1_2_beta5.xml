@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/alibaba/easyexcel/1.1.2-beta5/easyexcel-1.1.2-beta5.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/alibaba/easyexcel/1.1.2-beta5/easyexcel-1.1.2-beta5-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/com/alibaba/easyexcel/1.1.2-beta5/easyexcel-1.1.2-beta5-sources.jar!/" />
     </SOURCES>
