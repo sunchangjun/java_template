@@ -1,16 +1,8 @@
 package hk.reco.music.iptv.common.utils;
 
-import java.beans.XMLDecoder;
-import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.io.StringReader;
-import java.io.StringWriter;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,10 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import java.beans.XMLDecoder;
+import java.io.*;
 
 /**
  * XML 工具类
@@ -111,6 +101,17 @@ public class XmlUtils {
         XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(in));
         decoder.close();
         return (T) decoder.readObject();
+    }
+
+    public static String getXmlNodeText(String xml,String nodeName){
+         String startTag = "<"+nodeName+">";
+         String end = "</"+nodeName+">";
+         try {
+             String type = xml.split(startTag)[1];
+             return type.split(end)[0];
+         }catch (Exception e){
+            return null;
+         }
     }
 
 }  

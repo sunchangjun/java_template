@@ -298,7 +298,6 @@ public class IptvStbService {
 			Date to = new Date(ts);
 			Date from = new Date(ts-6*24*60*60*1000);
 			List<Long> hots = this.iptvResDailyPlayDao.findWeekResVid(v, from, to, size, test);//查出最近7天的热度统计,同时考虑到了禁用的情况,需要先联合查出来
-			hots.clear();
 			if(hots.size()<size){//不够则补齐
 				List<Long> others = this.iptvResVerDao.randomVid(v, hots, size-hots.size(), test);
 				hots.addAll(others);

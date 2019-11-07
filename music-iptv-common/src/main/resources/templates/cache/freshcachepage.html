@@ -5,6 +5,8 @@
 </head>
 <body>
  <a href="#" onclick="freshCache()" class="easyui-linkbutton l-btn l-btn-small"  group="" id="" style="margin:auto;">刷新缓存</a>
+ <a href="#" onclick="submitChildLinkByType('singer')" class="easyui-linkbutton l-btn l-btn-small"  group=""  style="margin:auto;">提交所有歌手子资源</a>
+ <a href="#" onclick="submitChildLinkByType('diss')" class="easyui-linkbutton l-btn l-btn-small"  group=""  style="margin:auto;">提交所有歌单子资源</a>
     <script type="text/javascript">
         function freshCache(){
             $.messager.confirm('确认','此操作会增加服务器负担（请谨慎操作），您确认要刷新缓存?',function(r){
@@ -13,6 +15,31 @@
                     $.ajax({
                         url:"freshcache",
                         type:"post",
+                        success:function(data){
+                            ajaxLoadEnd();
+                            if(data.success){
+                                $.messager.alert("消息提示","操作成功");
+                            }else{
+                                $.messager.alert("消息提示",data.backmsg);
+                            }
+                        }
+                    });
+                }else{
+                    ajaxLoadEnd();
+                }
+            });
+        }
+
+        function submitChildLinkByType(type){
+            $.messager.confirm('确认','您确认要提交么?',function(r){
+                ajaxLoading();
+                if(r){
+                    $.ajax({
+                        url:"submitChildLinkByType",
+                        type:"post",
+                        data:{
+                        type:type
+                        },
                         success:function(data){
                             ajaxLoadEnd();
                             if(data.success){

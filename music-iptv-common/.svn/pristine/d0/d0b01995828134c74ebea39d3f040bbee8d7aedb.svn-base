@@ -1,0 +1,643 @@
+package hk.reco.music.iptv.common.service;
+
+import hk.reco.music.iptv.common.ctrl.stb.RestResponse;
+import hk.reco.music.iptv.common.dao.IptvResDao;
+import hk.reco.music.iptv.common.dao.IptvResVerDao;
+import hk.reco.music.iptv.common.domain.EasyUiBaseQuery;
+import hk.reco.music.iptv.common.domain.IptvResVer;
+import hk.reco.music.iptv.common.enums.IptvObjectEnum;
+import hk.reco.music.iptv.common.exception.IptvError;
+import hk.reco.music.iptv.common.utils.IptvFileUtils;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 支撑后台管理平台的服务
+ * @author zhangsl
+ * @date 2019年2月22日
+ */
+@Service
+public class IptvConsoleResService {
+
+    @Autowired(required = false)
+    private IptvNoticeService noticeService;
+    @Autowired
+    private IptvResDao iptvResDao;
+    @Autowired
+    private IptvResVerDao iptvResVerDao;
+    @Autowired
+    private IptvResService iptvResService;
+    @Autowired
+    private IptvResVerService iptvResVerService;
+    @Autowired
+    private IptvCacheService iptvCacheService;
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleCreateResVer(IptvResVer ver) {
+        this.iptvResVerService.createResAndVer(ver, false);
+    }
+
+    /**
+     * 创建好后,返回的是link对象的ver,其中带了res,ver及link的三种属性
+     * @param ver
+     * @param prid
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleAddLayoutNode(IptvResVer ver, Long prid) {
+    	//1-创建对象本身
+        this.iptvResVerService.createResAndVer(ver, false);
+		if(prid != null){//如果不是顶层layout对象,还要创建与layout对象的link
+			long rid = ver.getRid();
+			//2-接下来创建link
+			String name = ver.getName();
+			IptvObjectEnum type = ver.getType();
+			IptvObjectEnum child_type = ver.getChild_type();
+			ver.setLink_prid(prid);
+			ver.setLink_crid(rid);
+			ver.setName(IptvResVer.createLinkName(prid, rid));
+			ver.setType(IptvObjectEnum.link);
+			ver.setChild_type(null);
+			this.iptvResVerService.createResAndVer(ver, false);
+			//3-恢复
+			ver.setName(name);//恢复名字
+			ver.setType(type);//恢复type
+			ver.setChild_type(child_type);//恢复child_type
+		}
+    }
+
+    /**
+     * 创建新link,当这个link存在rid时,不会新建
+     * @param link
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleCreateLinkResVer(IptvResVer link) {
+        if (link.getVersion_disable() == null) {
+            link.setVersion_disable(false);
+        }
+        if (link.getListen_num() == null) {
+            link.setListen_num(0l);
+        }
+        // wpq 资源类型默认收费
+        if (link.getType() == IptvObjectEnum.song || link.getType() == IptvObjectEnum.mv) {
+            link.setFree(0);
+        }
+        //1-先在[iptv_res]创建基本的资源
+        Long rid = this.iptvResVerDao.findExistResLinkRid(link.getLink_prid(), link.getLink_crid());
+        if (rid == null) {
+        	this.iptvResService.insertRes(link);
+            link.setNewCreate(true);
+            rid = link.getRid();
+        } else {
+            link.setRid(rid);
+        }
+        //2-再在[iptv_res_ver]创建
+        this.iptvResVerService.insertVer(link);
+        this.iptvResService.updateResTestVersion(rid, link.getVid());
+    }
+
+    /**
+     * 后台管理端,以test环境查询list
+     * 当资源global_disable和歌手global_disable时不影响显示,只是available属性会为false
+     * @param prid
+     * @return
+     */
+    public List<IptvResVer> consoleIrregularResList(long prid) {
+        return this.iptvResVerService.findListIncludeGlobalDisable(prid, true);
+    }
+
+    /**
+     * 根据类型查找列表数据,如mv,song,singer
+     * 当query.singerAffect为true时,下线歌手的资源不会显示出来
+     * @param query
+     * @param offset
+     * @param size
+     * @return
+     */
+    public List<IptvResVer> consoleResListByType(EasyUiBaseQuery query, int offset, int size) {
+        List<IptvResVer> vers = this.iptvResVerDao.consoleResListByType(query, offset, size);
+        IptvFileUtils.toHttp(vers);//处理地址
+        return vers;
+    }
+
+    /**
+     * 根据类型查找列表数据,如查找mv,查找song,查找歌
+     * 当query.singerAffect为true时,下线歌手的资源不会统计进来
+     * @return
+     */
+    public int consoleResListByTypeCount(EasyUiBaseQuery query) {
+        return this.iptvResVerDao.consoleResListByTypeCount(query);
+    }
+
+    /**
+     * 运营后台在一个版本xxx基础上修改一个资源并保存
+     * 系统的处理是在此版本基础上修改变化的部分与之进行合并
+     * @param src_vid 修改的基础
+     * @param modified_ver 后台接收到前端传来的参数对象,要修改的数据都在里面
+     * @return 返回新版本的vid
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleModifyResVer(Long src_vid, IptvResVer modified_ver) {
+        IptvResVer src_ver = this.iptvResVerDao.findByVid(src_vid);//1-库中获取此原版本
+        //创建新的版本,并且让此资源的测试版指向他(对于修改来说,指向最新修改的资源是合理的,让运营人员可以立刻看到改变)
+        this.iptvResVerService.insertVer(src_ver);//拷贝操作
+        long vid_new = src_ver.getVid();
+        this.iptvResService.updateResTestVersion(src_ver.getRid(), vid_new);//测试立刻指向,生产不变
+        modified_ver.setVid(vid_new);
+        this.iptvResVerDao.updateResVer(modified_ver);
+    }
+
+    /**
+     * 列出资源的所有版本信息
+     * 注意这里取出了vid,rid,prod_vid,test_vid,界面用于比较,如果相同则在使用
+     * @param rid
+     * @return
+     */
+    public List<IptvResVer> consoleAllResBriefVerInfo(Long rid) {
+        List<IptvResVer> vers = this.iptvResVerDao.consoleAllResBriefVerInfo(rid);
+        IptvFileUtils.toHttp(vers);
+        return vers;
+    }
+
+    /**
+     * 因为布局没有版本的概念，只需要更新对应的(此处主要更新的是version的相关属性不更改res相关信息
+     * 此处跟龙凯讨论,只影响顶层对象(顶层对象的test_vid和prod_vid是一样的),可以暂时不更新缓存
+     * @param ver
+     */
+    public void consoleUpdateLayoutInfo(IptvResVer ver) {
+        //更新res信息
+    	this.iptvResService.updateRes(ver.getRid(),ver.getChild_type(),ver.getTest_vid());
+        //更新link信息
+        this.consoleModifyResVer(ver.getVid(), ver);
+    }
+
+    /**
+     * 查询指定资源下的link信息
+     *
+     * @param rid
+     * @return
+     */
+    public List<IptvResVer> consolefindLinkBylinkPrid(Long rid) {
+        return iptvResVerDao.consolefindLinkBylinkPrid(rid);
+    }
+
+    /**
+     * 对应界面上的删除一个item操作
+     * 新产生一个拷贝版本,让version_disable=1,并更新test_vid版本号为这个新版本,这样如果生产环境在使用link_vid老版本,则不会受到影响
+     *
+     * @param link_vid
+     */
+    public void consoleDeleteChildLink(long link_vid) {
+        IptvResVer modified_link = new IptvResVer();
+        modified_link.setVersion_disable(true);
+        this.consoleModifyResVer(link_vid, modified_link);
+    }
+
+    /**
+     * 对应界面上修改一个item的操作
+     * 新产生一个拷贝版本,同时将传入的属性进行修改,如排序,如某个图片为大等
+     *
+     * @param prid       父级的id
+     * @param link_vid   要修改的link
+     * @param layout_big 此图片为大
+     * @param position   要修改的位置,从1开始编号
+     * @return 返回新的link_vid
+     */
+    public long consoleModifyListItem(long prid, long link_vid, Float sort, Boolean layout_big, Integer position, String path) {
+        IptvResVer modified_ver = new IptvResVer();
+        if (position != null) {//表示要修改sort值
+            List<IptvResVer> vers = this.iptvResVerService.findListExcludeGlobalDisable(null, null, prid, true);//查询出目前的排序情况
+            IptvResVer o = new IptvResVer();
+            o.setLink_vid(link_vid);
+            vers.remove(o);
+            float pos = position;
+            if (pos > vers.size()) {
+                pos = vers.get(vers.size() - 1).getSort() + 1;
+            } else {
+                if (pos == 1) {
+                    pos = vers.get(0).getSort() - 1;
+                } else {
+                    pos = (vers.get(position - 2).getSort() + vers.get(position - 1).getSort()) / 2;
+                }
+            }
+            modified_ver.setSort(pos);
+        }
+        if (layout_big != null) {
+            modified_ver.setLayout_big(layout_big);
+            modified_ver.setSort(sort);
+        }
+        if (StringUtils.isNotBlank(path)) {
+            modified_ver.setBposter(path);
+            modified_ver.setSposter(path);
+        }
+        this.consoleModifyResVer(link_vid, modified_ver);
+        return modified_ver.getVid();
+    }
+
+    /**
+     * 此方法适合修改link类型的res
+     *
+     * @param link_vid
+     * @param link_prid
+     * @param sort
+     * @return
+     */
+    public long consoleModifyChildLink(long link_vid, long link_prid, Float sort) {
+        IptvResVer modified_ver = new IptvResVer();
+        modified_ver.setSort(sort);
+        this.consoleModifyResVer(link_vid, modified_ver);
+        return modified_ver.getVid();
+    }
+
+    /**
+     * 栏目下新增item
+     * @param prid
+     * @param crid
+     * @param position
+     * @return link_vid
+     */
+    public long consoleAddListItem(long prid, long crid, int position) {
+        IptvResVer insert_link = IptvResVer.createLink(prid, crid, -1);
+        List<IptvResVer> vers = this.iptvResVerService.findListExcludeGlobalDisable(null, null, prid, true);//查询出目前的排序情况
+        float pos = position;
+        int size = vers.size();
+        //size为0时直接跳过
+        if (size == 0) {
+        } else if (size != 0 && pos == 1) {
+            pos = vers.get(0).getSort() / 2;
+        } else if ((size == 1 && pos == 2) || (pos > size)) {
+
+        } else {
+            pos = (vers.get(position - 2).getSort() + vers.get(position - 1).getSort()) / 2;
+        }
+        insert_link.setSort(pos);
+        this.consoleCreateLinkResVer(insert_link);
+        return insert_link.getVid();
+    }
+
+    /**
+     * 取layout下面的子层级
+     * 禁用但是test与prod不相同的也要显示
+     * @param deep 深入
+     * @return
+     */
+    public List<IptvResVer> consoleFindLayoutTree(int maxdeep, boolean showLeaf) {
+        if (maxdeep > 0) {
+            List<IptvResVer> layouts = this.iptvResVerDao.consoleLayout();
+            for (IptvResVer layout : layouts) {
+                recurisiveLayout(layout, 1, maxdeep, showLeaf);
+            }
+            return layouts;
+        } else {
+            return new ArrayList<IptvResVer>();
+        }
+    }
+
+    public void recurisiveLayout(IptvResVer parent, int nowdeep, int maxdeep, boolean showLeaf) {
+        //System.out.println(node.getName()+" "+node.getRid());
+        //node.setSort(null);
+        parent.setListen_num(null);
+       // parent.setGlobal_disable(null);
+        //node.setVid(null);
+        //node.setSort(null);
+        parent.setNewCreate(null);
+        parent.setVersion_create_time(null);
+        //parent.setVersion_disable(null);
+        IptvFileUtils.toHttp(parent);
+        boolean commit = parent.getTest_vid().longValue() == parent.getProd_vid().longValue();//检测是否生产与测试一致
+        parent.setCommit(commit);
+        if ((nowdeep + 1) <= maxdeep) {
+            //这个方法搜索时,所有的version禁用的都会搜出来,是搜测试数据,同时带出了prod_vid版本信息,用于比较
+            List<IptvResVer> childs = this.iptvResVerDao.consoleLayoutResList(parent.getRid());
+            parent.setList(childs);
+            Iterator<IptvResVer> it = childs.iterator();
+            while (it.hasNext()) {
+                IptvResVer child = it.next();
+                //1-判断link
+                if (child.getLink_version_disable()) {//此时应该在测试环境树上不显示这个资源
+                    if (child.getLink_test_vid().longValue() != child.getLink_prod_vid().longValue()) {
+                        //当link版本不一致时,设置父未提交,应该提交
+                        parent.setCommit(false);//此时父级
+                    }
+                    it.remove();
+                    continue;//既然不显示这个资源,那没必要处理下面的了
+                } else {//测试未禁用
+                    if (child.getLink_test_vid().longValue() != child.getLink_prod_vid().longValue()) {
+                        //当link版本不一致时,判断父未提交,应该提交
+                        parent.setCommit(false);//此时父级
+                    } else {
+                        //生产测试相同,不作操作
+                    }
+                }
+                //2-判断资源本身
+                if (child.getVersion_disable()) {//当资源被删除时,应该在测试树上不显示这个资源
+                    if (child.getTest_vid().longValue() != child.getProd_vid().longValue()) {//版本未提交时
+                        parent.setCommit(false);
+                    }
+                    it.remove();
+                    continue;
+                } else {//测试环境未禁用
+                    recurisiveLayout(child, nowdeep + 1, maxdeep, showLeaf);
+                    if (!child.getCommit()) {//child-commit为false时,才向上传递
+                        parent.setCommit(false);
+                    }
+                }
+            }
+        }
+        if ((nowdeep + 1) == maxdeep && !showLeaf) {
+            parent.setList(null);
+        }
+    }
+
+    /**
+     * 保存非规则的布局
+     * @param prid
+     * @param iptvResVers
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleSaveIrregularLaout(Long prid, List<IptvResVer> iptvResVers) {
+        //先禁用前一个版本的link
+        List<IptvResVer> vers = this.iptvResVerService.findListExcludeGlobalDisable(null, null, prid, true);
+        for (IptvResVer ver : vers) {
+            consoleDeleteChildLink(ver.getLink_vid());
+        }
+        //新建新版本的link
+        if (iptvResVers != null && iptvResVers.size() > 0) {
+            for (IptvResVer ver : iptvResVers) {
+                IptvResVer insert_link = IptvResVer.createLink(prid, ver.getRid(), -1);
+                insert_link.setLayout_start(ver.getLayout_start());
+                if (StringUtils.isNotBlank(ver.getBposter()) && ver.getBposter().startsWith("http")) {
+                    insert_link.setBposter(IptvFileUtils.httpToRelative(ver.getBposter()));
+                    insert_link.setSposter(IptvFileUtils.httpToRelative(ver.getSposter()));
+                } else {
+                    insert_link.setBposter(ver.getBposter());
+                    insert_link.setSposter(ver.getSposter());
+                }
+                if (StringUtils.isNotBlank(ver.getFposter()) && ver.getFposter().startsWith("http")) {
+                    insert_link.setFposter(IptvFileUtils.httpToRelative(ver.getFposter()));
+                } else {
+                    insert_link.setFposter(ver.getFposter());
+                }
+                insert_link.setLayout_end(ver.getLayout_end());
+                insert_link.setSort(ver.getSort());
+                this.consoleCreateLinkResVer(insert_link);
+            }
+        }
+    }
+
+    /**
+     * 删除布局元素,注意此时更新范围为test
+     * 当为顶层对象时是layout的test_vid,当为第二层对象时是link的test_vid
+     *
+     * @param prid
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleDeleteLayout(Long link_vid) {
+        this.consoleDeleteChildLink(link_vid);
+    }
+
+    /**
+     * 提交layout层时,prid=null;提交layout下面的结点时prid就是顶层layout的id
+     * @param prid
+     * @param rid
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleSubmitLayOut(Long prid, Long rid) {
+        IptvResVer ver = this.iptvResVerDao.consoleBaseResVerByRid(rid);
+        this.recurisiveConsoleLayout(ver, "", 1, 0);
+    }
+
+    /**
+     * 递归方式提交整个布局树,一个循环同时处理子link+res
+     * @param ver
+     * @param space
+     * @param level
+     * @param seq
+     * @return
+     */
+    private int recurisiveConsoleLayout(IptvResVer ver, String space, int level, int seq) {
+    	//1-首先处理child-list
+    	long rid = ver.getRid();
+		List<IptvResVer> subs = this.iptvResVerDao.consoleLayoutResList(ver.getRid());//查找直接子资源,包括未提交的
+        int child_change = 0;
+        for (int i = 0; i < subs.size(); i++) {//循环处理link
+            IptvResVer sub = subs.get(i);
+            child_change += this.recurisiveConsoleLayout(sub, space + "\t", level + 1, i);//递归执行
+        }
+        if (child_change > 0) {//如果直接子资源或link有改动,这里要杀list缓存
+        	this.iptvCacheService.kill_res_child_cache(rid, null, ver.getType());
+        }
+        //2-再处理self对象
+    	int change = 0;
+    	if (ver.getTest_vid().longValue() != ver.getProd_vid().longValue()){//资源的test与prod不一致,需要提交
+    	   //	System.out.println(space + level + "-" + seq + "提交:[rid=" + ver.getRid() + ",name=" + ver.getName() + ",type="+ver.getType().name()+"]");
+    		this.consoleCommitNonLinkToProd(ver);
+    		//this.iptvResService.applyProduct(rid, ver.getVid());
+    		//this.iptvCacheService.kill_res_cache(rid);
+    		//this.iptvCacheService.kill_type_cache(ver.getType());
+    		change++;
+    	}
+    	if(ver.getLink_test_vid() != null){//为null时是顶层
+    		if (ver.getLink_prod_vid().longValue() != ver.getLink_test_vid().longValue()){//资源link的test与prod不一致,需要提交
+        		System.out.println(space + level + "-" + seq + "提交res:[rid=" + ver.getLink_rid() + ",name=" + ver.getName() + ",type=link]");
+        		this.consoleCommitLinkToProd(ver.getLink_rid(), ver.getLink_test_vid(), ver.getLink_prod_vid());
+        		change++;
+        	}
+    	}else{//项层layout
+    		this.iptvCacheService.kill_category_cache(IptvObjectEnum.layout, null);
+    	}
+        return change;
+    }
+    
+    /**
+     * 通过类型和子类型查询资源列表
+     * @param type  父类型
+     * @param ctype 子类型
+     * @return
+     */
+    public List<IptvResVer> consoleResListByTypeAndChildType(IptvObjectEnum type, IptvObjectEnum ctype) {
+        List<IptvResVer> vers = this.iptvResVerDao.findResListByTypeAndChildType(type, ctype, 0, 1000000, true);
+        IptvFileUtils.toHttp(vers);
+        return vers;
+    }
+
+    /**
+     * 更新iptv_res_ver信息
+     * @param ver
+     */
+    public void consoleUpdateResVer(IptvResVer ver) {
+        iptvResVerDao.updateResVer(ver);
+    }
+
+    /**
+     * 查询测试环境的res
+     * @param rid res的rid
+     * @return
+     */
+    public IptvResVer consoleResByRid(Long rid) {
+        IptvResVer ver = this.iptvResVerDao.findResByRid(null, rid, true);
+        return ver;
+    }
+
+    /**
+     * 将指定prid下的link发布到生产环境,在此是发布下面的link,不影响link的link_crid连接的对象
+     * 如果下面的子资源没有prod版本,会禁止提交
+     * @param prid
+     * @throws Exception
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleCommitAllChildLinkToProd(Long prid) throws Exception {
+    	List<IptvResVer> subs = this.iptvResVerDao.consoleLayoutResList(prid);
+        int count = 0;
+        for(IptvResVer t : subs){
+            if (t.getProd_vid() == 0) {
+                throw new Exception("资源rid:[" + t.getRid() + "] name:[" + t.getName() + "]目前还没有生产版本,请先提交这个资源后再试!");
+            }
+            count += this.consoleCommitLinkToProd(t.getLink_rid(), t.getLink_test_vid(), t.getLink_prod_vid());
+        }
+        //最后删除res_list
+        if(count>0){
+        	IptvResVer parent = this.consoleResByRid(prid);
+            this.iptvCacheService.kill_res_child_cache(prid, null, parent.getType());
+        }
+    }
+
+    /**
+     * 给指定的父资源id批量添加子资源(link)
+     * @param prid
+     * @param crids
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void consoleAddChildLink(Long prid, String crids) {
+        String[] cids = crids.split(",");
+        for (String cid : cids) {
+            Long id = Long.valueOf(cid);
+            IptvResVer newlink = IptvResVer.createLink(prid, id, -1);
+            newlink.setSort(99f);
+            newlink.setVersion_disable(false);
+            this.consoleCreateLinkResVer(newlink);
+        }
+    }
+
+    /**
+     * 提交link类型的vids到prod环境
+     * @param link_vids 这里的vid一定与资源的test_vid是相同的
+     * @return test_vid与prod_vid不同, 导致提交的数量
+     */
+    public int consoleCommitLinkToProd(List<Long> link_vids) {
+        int count = 0;
+        List<IptvResVer> links = this.iptvResVerDao.findByVids(link_vids);//批量查询vids
+        for (IptvResVer link : links) {
+        	if(link.getType()==IptvObjectEnum.link)
+        	count += this.consoleCommitResVerToProd(link.getRid(), null, null, null, link.getTest_vid(), link.getProd_vid(), true);//不杀缓存
+        }
+        if (count > 0) {
+        	long prid = links.get(0).getLink_prid();
+        	IptvResVer parent = this.consoleResByRid(prid);
+        	this.iptvCacheService.kill_res_child_cache(prid, null, parent.getType());
+        }
+        return count;
+    }
+    
+    public int consoleCommitLinkToProd(Long link_rid, long test_vid, long prod_vid) {
+        return this.consoleCommitResVerToProd(link_rid, null, null, null, test_vid, prod_vid, true);//不杀缓存
+    }
+    
+    //提交非link类型
+    public int consoleCommitNonLinkToProd(Long vid) {
+    	IptvResVer ver = this.iptvResVerDao.findByVid(vid);
+    	return this.consoleCommitNonLinkToProd(ver);
+    }
+    public int consoleCommitNonLinkToProd(IptvResVer ver) {
+    	return this.consoleCommitResVerToProd(ver.getRid(), null, ver.getType(), ver.getChild_type(), ver.getTest_vid(), ver.getProd_vid(), false);//杀缓存
+    }
+    
+    /**
+     * 提交某个版本,使更改应用生产环境
+     * @param vid
+     */
+    private int consoleCommitResVerToProd(Long rid, String pinyin, IptvObjectEnum type, IptvObjectEnum ctype, 
+    		long test_vid, long prod_vid, boolean skip) {
+    	if (test_vid != prod_vid) {//不一致时才提交
+    		//更改对象的test_vid到prod_vid,应用到生产环境
+        	this.iptvResService.applyProduct(rid, pinyin, type, ctype, test_vid, skip);
+            return 1;
+        }
+        return 0;
+    }
+    
+    /**
+     * 更改资源的free状态
+     * 此方法直接应用于生产环境需要清除缓存
+     * @param rid
+     * @throws Exception
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void consoleReschangefreeStatus(Long rid, Integer free) throws Exception {
+        if (noticeService != null) {//回调各地运营商的实现类
+            boolean isfree = (free == null || free == 0) ? false : true;
+            noticeService.setFree(rid, isfree);//运营商侧设置失败,则不会更新数据库的free状态
+        }
+        this.iptvResService.updateResFree(rid, free);
+    }
+
+    /**
+     * 未来电视[newTv]调用上线或下线
+     * @Author wangpq
+     * @Param resId 资源ID
+     * @Param operation 0 上线 1 下线
+     * @Date 2019/7/22 14:13
+     * @return hk.reco.music.iptv.common.ctrl.stb.RestResponse
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public RestResponse newTVResUpOrDown(Long resId,int operation) {
+        if (null == resId) {
+            return RestResponse.e(IptvError.P_MISS);
+        }
+        IptvResVer res = this.iptvResVerService.findByResId(resId);
+        if (null == res) {
+            return RestResponse.e(IptvError.RES_NOT_EXIST);
+        }
+        boolean global_disable = (operation==0)?false:true;
+        this.iptvResService.updateResGlobalDisable(res.getRid(), global_disable);
+        if (noticeService != null) {
+            return noticeService.newTVResUpOrDown(res.getRid(),operation);
+        }
+        return RestResponse.e();
+    }
+    
+    public static void main(String[] args){
+    	List<IptvResVer> aaa = new ArrayList<IptvResVer>();
+    	IptvResVer v1 = new IptvResVer();
+    	v1.setRid(111l);
+    	aaa.add(v1);
+    	IptvResVer v2 = new IptvResVer();
+    	v2.setRid(222l);
+    	aaa.add(v2);
+    	List<IptvResVer> bbb = new ArrayList<IptvResVer>();
+    	IptvResVer v3 = new IptvResVer();
+    	v3.setRid(111l);
+    	bbb.add(v3);
+    	IptvResVer v4 = new IptvResVer();
+    	v4.setRid(444l);
+    	bbb.add(v4);
+    	aaa.removeAll(bbb);
+    	aaa.addAll(bbb);
+    	System.out.println(aaa.size());
+    }
+
+    public void consoleSubmitChildLinkByType(String type) {
+        List<Long> rids = iptvResDao.findChildLinkRidByType(type);
+        if(rids!=null && rids.size()>0){
+            iptvResDao.consoleSubmitChildLinkByRids(rids);
+        }
+    }
+}

@@ -23,6 +23,7 @@ public enum IptvObjectEnum {
 	func_search, // 搜索
 	func_theme, // 专辑
 	func_free, // 免费区定义
+	func_activity,//活动
 	cate, // 分类
 	other, // 可以理解为自建项目
 	sub, // 专题

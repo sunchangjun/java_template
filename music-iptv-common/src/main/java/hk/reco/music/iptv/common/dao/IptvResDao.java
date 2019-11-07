@@ -2,11 +2,10 @@ package hk.reco.music.iptv.common.dao;
 
 import hk.reco.music.iptv.common.domain.IptvRes;
 import hk.reco.music.iptv.common.enums.IptvObjectEnum;
-
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface IptvResDao {
@@ -26,5 +25,8 @@ public interface IptvResDao {
 	public void updateMefiaInfo(@Param("rid")Long rid, @Param("iptv_code1")String iptv_code1,@Param("media_definition")String media_definition,@Param("media_lyric")String media_lyric);
 	public void updateMvid(@Param("rid")long rid, @Param("song_mv_id")long song_mv_id);
 	public List<IptvRes> findByType(@Param("type")IptvObjectEnum type);
-	
+
+    public void consoleSubmitChildLinkByRids(@Param("rids") List<Long> rids);
+
+	public List<Long> findChildLinkRidByType(String type);
 }

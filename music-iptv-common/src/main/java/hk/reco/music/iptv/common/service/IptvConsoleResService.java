@@ -634,4 +634,10 @@ public class IptvConsoleResService {
     	System.out.println(aaa.size());
     }
 
+    public void consoleSubmitChildLinkByType(String type) {
+        List<Long> rids = iptvResDao.findChildLinkRidByType(type);
+        if(rids!=null && rids.size()>0){
+            iptvResDao.consoleSubmitChildLinkByRids(rids);
+        }
+    }
 }
