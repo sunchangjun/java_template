@@ -5,21 +5,23 @@
 	<select id="findWeekResVid" resultType="long">
 		<choose>
 			<when test="test">
-				SELECT v1.vid FROM iptv_res_daily_play p 
-				INNER JOIN iptv_res r1 ON (p.rid=r1.rid AND r1.global_disable=0 AND r1.media_ok=1 AND r1.type=#{type})
-				INNER JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND r1.test_vid=v1.vid AND v1.version_disable=0)
+				SELECT v1.vid FROM iptv_res_daily_play p
+				LEFT JOIN iptv_res r1 ON (p.rid=r1.rid AND r1.global_disable=0 AND r1.media_ok=1 AND r1.type=#{type})
+				LEFT JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND r1.test_vid=v1.vid AND v1.version_disable=0)
 				WHERE p.daily BETWEEN #{from} AND #{to}
 				GROUP BY p.rid
-				ORDER BY SUM(p.play_num) DESC
+				HAVING v1.vid IS NOT NULL
+				ORDER BY p.play_num DESC
 				LIMIT #{size}
 			</when>
 			<otherwise>
-				SELECT v1.vid FROM iptv_res_daily_play p 
-				INNER JOIN iptv_res r1 ON (p.rid=r1.rid AND r1.global_disable=0 AND r1.media_ok=1 AND r1.type=#{type})
-				INNER JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND r1.prod_vid=v1.vid AND v1.version_disable=0)
+				SELECT v1.vid FROM iptv_res_daily_play p
+				LEFT JOIN iptv_res r1 ON (p.rid=r1.rid AND r1.global_disable=0 AND r1.media_ok=1 AND r1.type=#{type})
+				LEFT JOIN iptv_res_ver v1 ON (v1.rid=r1.rid AND r1.prod_vid=v1.vid AND v1.version_disable=0)
 				WHERE p.daily BETWEEN #{from} AND #{to}
 				GROUP BY p.rid
-				ORDER BY SUM(p.play_num) DESC
+				HAVING v1.vid IS NOT NULL
+				ORDER BY p.play_num DESC
 				LIMIT #{size}
 			</otherwise>
 		</choose>

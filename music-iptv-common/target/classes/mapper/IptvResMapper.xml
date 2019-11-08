@@ -70,5 +70,18 @@
 	<update id="consoleUpdateResStatus">
 		update iptv_res set global_disable = #{globalDisable} where rid = #{rid}
 	</update>
+	
+	<select id="findChildLinkRidByType" parameterType="string" resultType="long">
+        select rid from iptv_res_ver where link_prid in (
+            select rid from iptv_res where type = #{type}
+        )
+	</select>
+
+	<update id="consoleSubmitChildLinkByRids">
+        update iptv_res set prod_vid = test_vid where rid in
+        <foreach collection="rids" item="rid" separator="," open="(" close=")">
+			#{rid}
+		</foreach>
+	</update>
 
 </mapper>
