@@ -84,4 +84,8 @@
 		</foreach>
 	</update>
 
+	<update id="updateLyricByRid">
+		UPDATE iptv_res SET media_lyric=#{media_lyric} WHERE rid=#{rid}
+	</update>
+
 </mapper>

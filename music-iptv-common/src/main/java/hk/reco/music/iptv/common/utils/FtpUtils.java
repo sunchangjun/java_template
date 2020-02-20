@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,43 +152,44 @@ public class FtpUtils {
     public void initFtpClient() {
         ftpClient = new FTPClient();
         ftpClient.setControlEncoding("utf-8");
-        ftpClient.setConnectTimeout(5*60*1000);
-        ftpClient.setDefaultTimeout(5*60*1000);
-        ftpClient.setDataTimeout(5*60*1000);
+        ftpClient.setConnectTimeout(5 * 60 * 1000);
+        ftpClient.setDefaultTimeout(5 * 60 * 1000);
+        ftpClient.setDataTimeout(5 * 60 * 1000);
         try {
-            System.out.println("connecting...ftp服务器:"+this.host+":"+this.port);
+            System.out.println("connecting...ftp服务器:" + this.host + ":" + this.port);
             ftpClient.connect(host, port); //连接ftp服务器
             ftpClient.login(username, password); //登录ftp服务器
             int replyCode = ftpClient.getReplyCode(); //是否成功登录服务器
-            if(!FTPReply.isPositiveCompletion(replyCode)){
-                System.out.println("connect failed...ftp服务器:"+this.username+":"+this.port);
+            if (!FTPReply.isPositiveCompletion(replyCode)) {
+                System.out.println("connect failed...ftp服务器:" + this.username + ":" + this.port);
             }
-            System.out.println("connect successfu...ftp服务器:"+this.password+":"+this.port);
-        }catch (MalformedURLException e) {
+            System.out.println("connect successfu...ftp服务器:" + this.password + ":" + this.port);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
      * 上传文件
-     * @param pathName ftp服务保存地址
-     * @param fileName 上传到ftp的文件名
-     *  @param originfilename 待上传文件的名称（绝对地址） *
+     *
+     * @param pathName       ftp服务保存地址
+     * @param fileName       上传到ftp的文件名
+     * @param originfilename 待上传文件的名称（绝对地址） *
      * @return
      */
-    public boolean uploadFile(String pathName, String fileName,String originfilename) throws Exception{
+    public boolean uploadFile(String pathName, String fileName, String originfilename) throws Exception {
         InputStream inputStream = null;
-        try{
+        try {
             System.out.println("开始上传文件");
             inputStream = new FileInputStream(new File(originfilename));
             initFtpClient();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-            ftpClient.setBufferSize(1024*1024*10);
+            ftpClient.setBufferSize(1024 * 1024 * 10);
             //检查上传路径是否存在 如果不存在返回false
             boolean flag = ftpClient.changeWorkingDirectory(pathName);
-            if(!flag){
+            if (!flag) {
                 //创建上传的路径  该方法只能创建一级目录
                 ftpClient.makeDirectory(pathName);
                 //指定上传路径
@@ -197,22 +200,22 @@ public class FtpUtils {
             ftpClient.storeFile(fileName, inputStream);
             System.out.println("上传文件成功");
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("上传文件失败" + fileName);
             e.printStackTrace();
             throw new Exception("上传文件失败" + fileName);
-        }finally{
-            if(ftpClient != null) {
+        } finally {
+            if (ftpClient != null) {
                 ftpClient.logout();
-                if(ftpClient.isConnected()){
-                    try{
+                if (ftpClient.isConnected()) {
+                    try {
                         ftpClient.disconnect();
-                    }catch(IOException e){
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            if(null != inputStream){
+            if (null != inputStream) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
@@ -296,6 +299,50 @@ public class FtpUtils {
                 ftpClient.enterLocalPassiveMode();
                 // 上传文件
                 flag = ftpClient.storeFile(new String(fileName.getBytes(localCharset), serverCharset), fis);
+            } catch (Exception e) {
+                LOGGER.error("本地文件上传FTP失败", e);
+            } finally {
+                IOUtils.closeQuietly(fis);
+                closeConnect();
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * 本地文件上传到FTP服务器
+     *
+     * @param ftpPath  FTP服务器文件相对路径，例如：test/123
+     * @param savePath 本地文件路径，例如：D:/test/123
+     * @return boolean 成功返回true，否则返回false
+     */
+    public boolean uploadLocalDirectory(String ftpPath, String savePath) {
+        // 登录
+        login(host, port, username, password);
+        boolean flag = false;
+        if (ftpClient != null) {
+            FileInputStream fis = null;
+            try {
+                ftpClient.setBufferSize(BUFFER_SIZE);
+                // 设置编码：开启服务器对UTF-8的支持，如果服务器支持就用UTF-8编码，否则就使用本地编码（GBK）
+                if (FTPReply.isPositiveCompletion(ftpClient.sendCommand(OPTS_UTF8, "ON"))) {
+                    localCharset = CHARSET_UTF8;
+                }
+                ftpClient.setControlEncoding(localCharset);
+                ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+                String path = changeEncoding(BASE_PATH + ftpPath);
+                // 目录不存在，则递归创建
+                if (!ftpClient.changeWorkingDirectory(path)) {
+                    this.createDirectorys(path);
+                }
+                // 设置被动模式，开通一个端口来传输数据
+                ftpClient.enterLocalPassiveMode();
+                // 上传文件
+                List<Path> paths = FileUtils.getPaths(savePath);
+                for (Path p : paths) {
+                    fis = new FileInputStream(p.toFile());
+                    flag = ftpClient.storeFile(new String(p.getFileName().toString().getBytes(localCharset), serverCharset), fis);
+                }
             } catch (Exception e) {
                 LOGGER.error("本地文件上传FTP失败", e);
             } finally {
@@ -559,7 +606,7 @@ public class FtpUtils {
      * 获取该目录下所有文件,以字节数组返回
      *
      * @param ftpPath FTP服务器上文件所在相对路径，例如：test/123
-     * @return Map<String   ,   Object> 其中key为文件名，value为字节数组对象
+     * @return Map<String       ,       Object> 其中key为文件名，value为字节数组对象
      */
     public Map<String, byte[]> getFileBytes(String ftpPath) {
         // 登录
@@ -658,7 +705,7 @@ public class FtpUtils {
      * 获取该目录下所有文件,以输入流返回
      *
      * @param ftpPath FTP服务器上文件相对路径，例如：test/123
-     * @return Map<String                               ,                                                                                               I                                                               n                                                               putStream> 其中key为文件名，value为输入流对象
+     * @return Map<String                                                               ,                                                                                                                                                                                               I                                                                                                                               n                                                                                                                               putStream> 其中key为文件名，value为输入流对象
      */
     public Map<String, InputStream> getFileInputStream(String ftpPath) {
         // 登录
@@ -698,7 +745,7 @@ public class FtpUtils {
      * 获取该目录下所有文件及文件,以文件名返回
      *
      * @param ftpPath FTP服务器上文件相对路径，例如：test/123
-     * @return Map<String,List<String>> 其中key为路径，value为文件名
+     * @return Map<String , List < String>> 其中key为路径，value为文件名
      */
     public Map<String, String> getFileNames(String ftpPath) {
         // 登录
@@ -720,10 +767,10 @@ public class FtpUtils {
                     return map;
                 }
                 for (String f : fs) {
-                    final String name = path  + f;
+                    final String name = path + f;
                     if (ftpClient.changeWorkingDirectory(name)) {
                         List<String> list = Lists.newArrayList(ftpClient.listNames());
-                        list.forEach(s -> map.put(s,name + "/"));
+                        list.forEach(s -> map.put(s, name + "/"));
                     } else {
                         map.put(new String(f.getBytes(serverCharset), localCharset), ftpPath);
                     }
@@ -742,7 +789,7 @@ public class FtpUtils {
      * 获取该目录下所有文件及文件,以文件名返回
      *
      * @param ftpPath FTP服务器上文件相对路径，例如：test/123
-     * @return Map<String,List<String>> 其中key为路径，value为文件名
+     * @return Map<String , List < String>> 其中key为路径，value为文件名
      */
     public Map<String, Long> getFileSizes(String ftpPath) {
         // 登录
@@ -764,12 +811,57 @@ public class FtpUtils {
                     return map;
                 }
                 for (String f : fs) {
-                    final String name = path  + f;
+                    final String name = path + f;
                     if (ftpClient.changeWorkingDirectory(name)) {
                         FTPFile[] ftpFiles = ftpClient.listFiles();
                         for (FTPFile ftpFile : ftpFiles) {
-                            map.put(ftpFile.getName(),ftpFile.getSize());
+                            map.put(ftpFile.getName(), ftpFile.getSize());
                         }
+                    }
+                }
+            } catch (IOException e) {
+                LOGGER.error("获取文件失败", e);
+            } finally {
+                closeConnect();
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 获取该目录下子文件夹,以文件夹名返回
+     *
+     * @param ftpPath FTP服务器上文件相对路径，例如：test/123
+     * @return Map<String , Long> 其中key为文件夹名，value为文件夹下所有文件大小
+     */
+    public Map<String, Long> getDirectoriesSizes(String ftpPath) {
+        // 登录
+        login(host, port, username, password);
+        Map<String, Long> map = Maps.newHashMap();
+        if (ftpClient != null) {
+            try {
+                String path = changeEncoding(BASE_PATH + ftpPath);
+                // 判断是否存在该目录
+                if (!ftpClient.changeWorkingDirectory(path)) {
+                    LOGGER.error(BASE_PATH + ftpPath + "该目录不存在");
+                    return map;
+                }
+                ftpClient.enterLocalPassiveMode();  // 设置被动模式，开通一个端口来传输数据
+                String[] fs = ftpClient.listNames();
+                // 判断该目录下是否有文件
+                if (fs == null || fs.length == 0) {
+                    LOGGER.error(BASE_PATH + ftpPath + "该目录下没有文件");
+                    return map;
+                }
+                for (String f : fs) {
+                    final String name = path + f;
+                    if (ftpClient.changeWorkingDirectory(name)) {
+                        FTPFile[] ftpFiles = ftpClient.listFiles();
+                        long files = 0;
+                        for (FTPFile ftpFile : ftpFiles) {
+                            files += ftpFile.getSize();
+                        }
+                        map.put(f, files);
                     }
                 }
             } catch (IOException e) {

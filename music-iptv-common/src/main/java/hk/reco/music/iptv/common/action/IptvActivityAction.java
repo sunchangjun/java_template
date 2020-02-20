@@ -41,26 +41,31 @@ public abstract class IptvActivityAction {
     final private static String ACTIVITY_PARAM="?activityId=";
 
     final public static String ACTIVITYLIST_PATH = "show/activity/list.html";
-
+    /**
+     *
+     * @param userId
+     * @param paymentStatus 暂时未使用 终端回传的抽奖规则
+     * 0表示未初始化 或者理解成都可以抽奖
+     * 1，表示付费用户
+     * 2，表示未付费用户
+     * @return
+     */
     @RequestMapping(value = "activity/getActivityUrl",method = RequestMethod.POST)
     @ApiOperation(value = "获取活动的url", notes = "获取到活动页面的url(activityUrl活动页路径会包含activityId参数，" +
             "recordUrl参与的历史活动列表url,times剩余抽奖次数)", response = RestResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
     @ResponseBody
     @CrossOrigin
-    public RestResponse getActivityUrl(@RequestParam(required = true)String userId) {
+    public RestResponse getActivityUrl(@RequestParam(required = true)String userId,@RequestParam(required = false)Integer paymentStatus) {
         try {
             Map<String, Object> map = new HashMap<>();
             IptvActivity activity = iptvActivityService.findActiveActivtity();
             //当前存在活动，返回活动的url
             if(activity!=null){
                 Integer activityId = activity.getId();
-                int times = iptvActivityService.findUserActivityTimes(activityId,userId);
-                if(times>0){
                     //次数没有活动不弹窗
                     map.put("activityUrl", activity.getUrl()+ACTIVITY_PARAM+activityId);
                     map.put("times",iptvActivityService.findUserActivityTimes(activityId,userId));
-                }
             }
             //返回的是用户参与过的活动的url
             map.put("recordUrl", ACTIVITYLIST_PATH);
@@ -166,8 +171,7 @@ public abstract class IptvActivityAction {
     @ResponseBody
     @CrossOrigin
     public RestResponse getActivityResult(@RequestParam(required = true)Integer activityId,
-                                          @RequestParam(required = true) String userId,
-                                          @RequestParam(required = false)Integer times) {
+                                          @RequestParam(required = true) String userId) {
         try {
             IptvActivity activity = iptvActivityService.findActiveActivtity();
             RestResponse response = new RestResponse();
@@ -177,9 +181,7 @@ public abstract class IptvActivityAction {
                 return response;
             }
             Map<String,Object> map = new HashMap<>();
-            if(times==null){
-                times =  iptvActivityService.findUserActivityTimes(activityId,userId);
-            }
+            int  times =  iptvActivityService.findUserActivityTimes(activityId,userId);
             map.put("times",times);
             if(times>0){
                 map.put("award",iptvActivityService.caculateActivityResult(activityId,userId));

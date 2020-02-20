@@ -33,6 +33,19 @@ public class SpringContextsUtil implements ApplicationContextAware {
 	public static Object getBean(String name) throws BeansException {
 		return applicationContext.getBean(name);
 	}
+
+	/**
+	 * 功能描述:
+	 * 〈根据class获取实例〉
+	 *
+	 * @param clazz class
+	 * @return : T
+	 * @author : wangpq
+	 * @date : 2019/11/8 14:23
+	 */
+	public static <T> T getBean(Class<T> clazz) {
+		return applicationContext.getBean(clazz);
+	}
 	
 	/**
 	 * 获取对象 

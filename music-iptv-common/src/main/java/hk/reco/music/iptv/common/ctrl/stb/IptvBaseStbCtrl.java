@@ -157,6 +157,34 @@ public abstract class IptvBaseStbCtrl {
         }
     }
 
+    @RequestMapping(value = "/get_singer_song_and_mv_list", method = RequestMethod.POST)
+    @ApiOperation(value = "歌手歌曲+mv列表接口", notes = "根据歌手rid取歌曲+mv列表", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    public RestResponse get_singer_song_and_mv_list_impl(
+            @RequestParam(required = false) String mac,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) Long prid,
+            @RequestParam(required = false) Long rid,//歌手id
+            @RequestParam(required = false) Integer pageIndex,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = false) String wthxpath,
+            @RequestParam(required = true) Boolean test,
+            HttpServletRequest req) {
+        try {
+            IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
+            IptvPageResult result = this.stbService.get_singer_song_and_mv_list_impl(IptvPlatform.apk.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test), wthxpath);
+            RestResponse response = new RestResponse();
+            response.setData(result.getVers());
+            response.setTotal(result.getTotal());
+            return response;
+        } catch (IptvBusinessException e) {
+            return new RestResponse(e.getError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+    
     @RequestMapping(value = "/get_diss_category", method = RequestMethod.POST)
     @ApiOperation(value = "歌单分类接口", notes = "歌单分类接口", response = RestResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
@@ -733,6 +761,30 @@ public abstract class IptvBaseStbCtrl {
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());
+            return response;
+        } catch (IptvBusinessException e) {
+            return new RestResponse(e.getError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+    
+    @RequestMapping(value = "/get_reco_singer", method = RequestMethod.POST)
+    @ApiOperation(value = "web专题列表接口", notes = "web专题列表", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    public RestResponse get_reco_singer(
+            @RequestParam(required = false) String mac,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) Long prid,
+            @RequestParam(required = false) Long rid,//
+            @RequestParam(required = false) String wthxpath,
+            @RequestParam(required = true) Boolean test,
+            HttpServletRequest req) {
+        try {
+            List<IptvResVer> result = this.stbService.get_reco_singer(IptvPlatform.apk.name(),NetworkUtils.getIpAddress(req), mac, userId, prid, rid, test, wthxpath);
+            RestResponse response = new RestResponse();
+            response.setData(result);
             return response;
         } catch (IptvBusinessException e) {
             return new RestResponse(e.getError());

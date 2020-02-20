@@ -10,6 +10,10 @@
     <select id="findAll" resultType="hk.reco.music.iptv.common.domain.IptvConfig">
         SELECT * FROM iptv_config
     </select>
+
+
+
+
 	 
 	<select id="findByKeys" resultType="hk.reco.music.iptv.common.domain.IptvConfig">
 		SELECT * FROM iptv_config c WHERE 1 = 1

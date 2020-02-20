@@ -1142,7 +1142,7 @@ function ajaxForHotSearchProgram() {
 	ajax({
 		//url: paramObj.serverUrl + "/hotSearch?rid="+oparateObj.rid+"&prid="+paramObj.prid+"&userId="
          //   + getCAcardNum()+"&test="+paramObj.test+"&wthxpath="+Q.encode(paramObj.wthxpath),// 请求的URL,可传参数
-		url: paramObj.serverUrl + "/hotSearch"+getCommonQueryParam("&",oparateObj.rid,paramObj.prid,Q.encode(paramObj.wthxpath),null,false),// 请求的URL,可传参数
+		url: paramObj.serverUrl + "/hotSearch"+getCommonQueryParam("?",oparateObj.rid,paramObj.prid,Q.encode(paramObj.wthxpath),null,false),// 请求的URL,可传参数
 		type: "POST", //HTTP 请求类型,GET或POST
 		onSuccess: function(html){ //请求成功后执行[可选]
 			var json = eval('('+html+')');

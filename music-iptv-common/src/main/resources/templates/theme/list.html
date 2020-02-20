@@ -113,6 +113,20 @@
                         <td>排&nbsp;&nbsp;序:</td>
                         <td>   <input class="easyui-validatebox" type="text" id="asort" name="sort" data-options="required:true" /></td>
                     </tr>
+                    <tr>
+                        <td>主题类型:</td>
+                        <td>
+                             <select id="child_type" name="child_type">
+                                   <option value="" selected>普通</option>
+                                   <option value="theme_auto_play">自动播放主题</option>
+                                   <option value="theme_speical">其他特殊主题 </option>
+                             </select>
+                        </td>
+                    </tr>
+                    <tr id="template">
+                        <td>模&nbsp;&nbsp;版:</td>
+                        <td> <input class="easyui-validatebox" type="text" id="nfposter" name="fposter"/></td>
+                    </tr>
                 </table>
             </form>
         </div>
@@ -151,6 +165,20 @@
                     <tr>
                         <td>排&nbsp;&nbsp;序:</td>
                         <td>   <input class="easyui-validatebox" type="text" id="sort" name="sort" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>主题类型:</td>
+                        <td>
+                            <select id="nchild_type" name="child_type" disabled>
+                                <option value="" selected>普通</option>
+                                <option value="theme_auto_play">自动播放主题</option>
+                                <option value="theme_speical">其他特殊主题 </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="ntemplate">
+                        <td>模&nbsp;&nbsp;版:</td>
+                        <td><input class="easyui-validatebox" type="text" id="efposter" name="fposter"  disabled/></td>
                     </tr>
                 </table>
             </form>
@@ -301,7 +329,7 @@
         $('#addSub').dialog({
             title: '新增主题',
             width: 280,
-            height: 500,
+            height: 550,
             closed: true,
             iconCls: 'icon-save',
             buttons: [{
@@ -315,6 +343,10 @@
                                     param.type = 'theme';
                                     if(!$("#iptvBigPoster").val()){
                                         $.messager.alert("消息提示","大海报不能为空")
+                                        return false;
+                                    }
+                                    if($("#child_type").val()&&!$("#nfposter").val()){
+                                        $.messager.alert("消息提示","特殊主题请填写模版地址");
                                         return false;
                                     }
                                 },
@@ -338,7 +370,7 @@
         $('#dlg').dialog({
             title: '编辑',
             width: 280,
-            height: 500,
+            height: 550,
             closed: true,
             iconCls: 'icon-save',
             buttons: [{
@@ -665,6 +697,14 @@
                 });
             }
         })
+    }
+
+    function changeThemeType(ele,templateId){
+        if(ele.value){
+             $("#"+templateId).css("visibility","visible");
+        }else{
+            $("#"+templateId).css("visibility","hidden");
+        }
     }
 </script>
 

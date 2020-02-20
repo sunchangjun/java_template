@@ -14,6 +14,7 @@ import hk.reco.music.iptv.common.utils.JsonUtil;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -682,7 +683,6 @@ public class ConsoleDataController {
      * @param xsize         横轴宽度
      * @param ysize         纵轴宽度
      * @param request
-     * @throws IptvBusinessExceptionf
      */
     @RequestMapping("updateThemeLinkinfo")
     @ResponseBody
@@ -790,6 +790,16 @@ public class ConsoleDataController {
         }catch (Exception e){
             return new JsonResult(e.getMessage());
         }
+    }
+
+    /**
+     * 推荐页面
+     * @return
+     */
+    @RequestMapping("reco")
+    public String reco(String type,Model model) {
+        model.addAttribute("type",type);
+        return "reco/list";
     }
 
 }

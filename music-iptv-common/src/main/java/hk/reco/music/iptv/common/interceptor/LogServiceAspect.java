@@ -112,7 +112,7 @@ public class LogServiceAspect {
 			if (StringUtils.isNoneBlank(logDetail.rid()))
 				ol.setRid(Long.valueOf(logDetail.rid()));
 			if (StringUtils.isNoneBlank(logDetail.extrid()))
-				ol.setRid(Long.valueOf(logDetail.extrid()));
+				ol.setExtrid(Long.valueOf(logDetail.extrid()));
 			for (Entry<String, Object> entry : nameAndArgs.entrySet()) {
 				Object v = entry.getValue();
 				switch (entry.getKey()) {

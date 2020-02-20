@@ -15,6 +15,7 @@ public class IptvUser {
 	private boolean test;
 	//add by comelk 抽奖活动记录用户电话便与联系发奖
 	private String phone_num;
+	private String carry_id;
 	public String getPhone_num() {
 		return phone_num;
 	}
@@ -45,5 +46,12 @@ public class IptvUser {
 	}
 	public void setTest(boolean test) {
 		this.test = test;
+	}
+	public String getCarry_id() {
+		return carry_id;
+	}
+
+	public void setCarry_id(String carry_id) {
+		this.carry_id = carry_id;
 	}
 }

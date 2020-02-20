@@ -24,7 +24,7 @@ public class QmResourceService {
             return null;
         }
     }
-    
+
     public QmSong findSongByid(long song_id) {
         String sql = "select *  from qm_song where song_id=?";
         try {
@@ -114,18 +114,18 @@ public class QmResourceService {
             return null;
         }
     }
-    
-    public QmMv findMvByTitleAndSinger(String title,String singer) {
+
+    public QmMv findMvByTitleAndSinger(String title, String singer) {
         String sql = "SELECT m.mv_id,m.res_id,m.pic_url FROM qm_mv m WHERE m.mv_title=? AND m.singer_name=?";
         try {
-            return this.jdbcTemplate.queryForObject(sql, new Object[]{title,singer}, new BeanPropertyRowMapper<>(QmMv.class));
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{title, singer}, new BeanPropertyRowMapper<>(QmMv.class));
         } catch (Exception e) {
-        	List<QmMv> mvs = this.jdbcTemplate.query(sql, new Object[]{title,singer}, new BeanPropertyRowMapper<>(QmMv.class));
-        	if(mvs.size()!=0){
-        		return mvs.get(0);
-        	}else{
-        		return null;
-        	}
+            List<QmMv> mvs = this.jdbcTemplate.query(sql, new Object[]{title, singer}, new BeanPropertyRowMapper<>(QmMv.class));
+            if (mvs.size() != 0) {
+                return mvs.get(0);
+            } else {
+                return null;
+            }
         }
     }
 
@@ -182,6 +182,40 @@ public class QmResourceService {
             String sql = "select v.*,r.src_def from qm_transcode_ver as v,qm_transcode_res as r where r.res_id = ? and r.res_type = ? and v.parent_id = r.id and r.work_done = 1 and r.composer = ?";
             return this.jdbcTemplate.queryForObject(sql, new Object[]{resId, resType, composer}, new BeanPropertyRowMapper<>(QmTransCodeVer.class));
         } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public QmTransCodeVer findTransCodeIptvResIdAndComposer(long resId, int resType, int composer) {
+        try {
+            String sql = "select v.*,r.src_def from qm_transcode_ver_iptv as v,qm_transcode_res_iptv as r where r.res_id = ? and r.res_type = ? and v.parent_id = r.id and r.work_done = 1 and r.composer = ?";
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{resId, resType, composer}, new BeanPropertyRowMapper<>(QmTransCodeVer.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public QmMv findInjectMvById(Long mvId) {
+        try {
+            String sql = "select a.*,b.res_name_py,b.res_singer_py,c.singer_pic_local,c.country,GROUP_CONCAT(d.tag_name) AS tags" +
+                    " from qm_mv a inner join qm_res b on  a.res_id = b.res_id " +
+                    " left join qm_singer c on a.singer_id = c.singer_id left join qm_tags AS d ON find_in_set(CONCAT('t', d.tag_id), b.tags)" +
+                    " where mv_id = ?  and  playable != 0 and c.disabled = 0 ";
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{mvId}, new BeanPropertyRowMapper<>(QmMv.class));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public QmSong findInjectSongById(Long songId) {
+        try {
+            String sql = "select a.*,b.res_name_py,b.res_singer_py,c.singer_pic_local,c.country," +
+                    " d.album_mid,d.album_pic_local,GROUP_CONCAT(e.tag_name) AS tags from qm_song a " +
+                    " inner join qm_res b on  a.res_id = b.res_id left join qm_singer c on a.singer_id = c.singer_id " +
+                    " left join qm_album d on a.album_id = d.album_id left join qm_tags AS e ON FIND_IN_SET(CONCAT('t', e.tag_id), b.tags)" +
+                    " where a.song_id = ? and c.disabled = 0 ";
+            return this.jdbcTemplate.queryForObject(sql, new Object[]{songId}, new BeanPropertyRowMapper<>(QmSong.class));
+        } catch (Exception e) {
             return null;
         }
     }

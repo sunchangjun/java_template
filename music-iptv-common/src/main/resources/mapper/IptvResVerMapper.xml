@@ -676,4 +676,27 @@
 		</choose>
 	</select>
 	
+	<select id="findRecoSinger" resultType="hk.reco.music.iptv.common.domain.IptvResVer">
+		<choose>
+			<when test="test">
+				SELECT v1.link_crid as link_crid,r1.*,v2.*
+				FROM iptv_res r1
+				INNER JOIN iptv_res_ver v1 ON (r1.test_vid=v1.vid) # link-ver
+				INNER JOIN iptv_res r2 ON (v1.link_crid=r2.rid AND r2.global_disable=0)  # reco-content
+				INNER JOIN iptv_res_ver v2 ON (r2.rid=v2.rid AND r2.test_vid=v2.vid AND v2.version_disable=0)
+				WHERE r1.type='reco' AND r1.global_disable=0 AND v1.link_prid=#{prid}
+				ORDER BY v2.sort
+			</when>
+			<otherwise>
+				SELECT v1.link_crid as link_crid,r1.*,v2.*
+				FROM iptv_res r1
+				INNER JOIN iptv_res_ver v1 ON (r1.prod_vid=v1.vid) # link-ver
+				INNER JOIN iptv_res r2 ON (v1.link_crid=r2.rid AND r2.global_disable=0)  # reco-content
+				INNER JOIN iptv_res_ver v2 ON (r2.rid=v2.rid AND r2.prod_vid=v2.vid AND v2.version_disable=0)
+				WHERE r1.type='reco' AND r1.global_disable=0 AND v1.link_prid=#{prid}
+				ORDER BY v2.sort
+			</otherwise>
+		</choose>
+	</select>
+	
 </mapper>

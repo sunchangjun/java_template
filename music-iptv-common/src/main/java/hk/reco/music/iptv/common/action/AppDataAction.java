@@ -2,33 +2,15 @@ package hk.reco.music.iptv.common.action;
 
 import hk.reco.music.iptv.common.ctrl.stb.RestResponse;
 import hk.reco.music.iptv.common.dao.IptvResVerDao;
-import hk.reco.music.iptv.common.domain.ExtraInfo;
-import hk.reco.music.iptv.common.domain.IptvPage;
-import hk.reco.music.iptv.common.domain.IptvPageResult;
-import hk.reco.music.iptv.common.domain.IptvResVer;
-import hk.reco.music.iptv.common.domain.IptvResVerForPage;
-import hk.reco.music.iptv.common.domain.IptvWebAuthResult;
-import hk.reco.music.iptv.common.domain.WebSessionUser;
+import hk.reco.music.iptv.common.domain.*;
 import hk.reco.music.iptv.common.enums.IptvObjectEnum;
 import hk.reco.music.iptv.common.enums.IptvPlatform;
 import hk.reco.music.iptv.common.layout.CatesCoverter;
 import hk.reco.music.iptv.common.layout.Layout;
 import hk.reco.music.iptv.common.layout.LayoutFactory;
+import hk.reco.music.iptv.common.service.IptvConsoleResService;
 import hk.reco.music.iptv.common.service.IptvStbService;
-import hk.reco.music.iptv.common.utils.Constant;
-import hk.reco.music.iptv.common.utils.IptvMsicUtils;
-import hk.reco.music.iptv.common.utils.JsonUtil;
-import hk.reco.music.iptv.common.utils.JsonUtils;
-import hk.reco.music.iptv.common.utils.NetworkUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import hk.reco.music.iptv.common.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,6 +18,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * 〈用于前端页面的跳转〉
@@ -55,13 +41,37 @@ public abstract class AppDataAction  {
 
     final  private static String initialPos = "0";
 
-	@Autowired
-	protected IptvStbService stbService;
+    @Autowired
+    protected IptvStbService stbService;
     @Autowired
     protected IptvResVerDao iptvResVerDao;
     @Autowired
+    protected IptvConsoleResService iptvConsoleResService;
+    @Autowired
     @Qualifier("iptvJdbcTemplate")
     protected JdbcTemplate jdbcTemplate;
+
+    @RequestMapping("show/newindex.htm")
+    public String newindex(HttpServletRequest request, HttpServletResponse response,Model model,Boolean test,String userId,Integer index,Integer rid)
+            throws Exception {
+        if(index == null){
+            index = 0;
+        }
+         List<IptvResVer> vers = null;
+         Object o =  request.getSession().getAttribute("layoutInSession");
+        if(o != null){
+            vers = (List<IptvResVer>)o;
+        }else{
+            vers = this.stbService.get_layouts_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), null,userId, test, initialPos);
+            request.getSession().setAttribute("layoutInSession",vers);
+        }
+        IptvResVer  ver = new IptvResVer();
+        if(index+1<vers.size()){
+              ver= vers.get(index);
+        }
+        return "redirect:index02.htm?index="+index+"&rid="+rid+"&size="+vers.size()+"&type="+ver.getChild_type();
+    }
+
 
 
     @RequestMapping("show/index.htm")
@@ -215,6 +225,7 @@ public abstract class AppDataAction  {
         }
     }
 
+
     /**
      * web 端搜索
      * @param request
@@ -223,7 +234,7 @@ public abstract class AppDataAction  {
     @RequestMapping("search")
     @ResponseBody
     public RestResponse search(Boolean test,String pinyin,HttpServletRequest request,String platform,
-                          String userId,Long prid,Long rid,String wthxpath){
+                               String userId,Long prid,Long rid,String wthxpath){
         RestResponse result = new RestResponse();
         result.setCode(0);
         try {
@@ -251,8 +262,8 @@ public abstract class AppDataAction  {
      */
     @RequestMapping("hotSearch")
     @ResponseBody
-    public RestResponse hotSearch(Boolean test,HttpServletRequest request,String platform, 
-                             String userId,Long prid,Long rid,String wthxpath){
+    public RestResponse hotSearch(Boolean test,HttpServletRequest request,String platform,
+                                  String userId,Long prid,Long rid,String wthxpath){
         RestResponse result = new RestResponse();
         result.setCode(0);
         try {
@@ -277,12 +288,12 @@ public abstract class AppDataAction  {
      */
     @RequestMapping("get_free_media")
     @ResponseBody
-    public RestResponse get_free_media(Boolean test,HttpServletRequest request,String platform, 
-                             String userId,Long prid,Long rid,String wthxpath){
+    public RestResponse get_free_media(Boolean test,HttpServletRequest request,String platform,
+                                       String userId,Long prid,Long rid,String wthxpath){
         RestResponse result = new RestResponse();
         result.setCode(0);
         try {
-           // String mac, String userId, Long prid, Long rid, IptvObjectEnum type, int offset, int size, boolean test
+            // String mac, String userId, Long prid, Long rid, IptvObjectEnum type, int offset, int size, boolean test
             IptvPage page = IptvMsicUtils.parsePage(0, 10000);
             IptvPageResult mv =  this.stbService.get_free_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), null, userId, prid, rid, IptvObjectEnum.mv,
                     page.getOffset(),page.getSize(), test, wthxpath);
@@ -309,8 +320,8 @@ public abstract class AppDataAction  {
      */
     @RequestMapping("user_collect_list")
     @ResponseBody
-    public RestResponse user_collect_list(Boolean test,HttpServletRequest request,String platform, 
-                             String userId,Long prid,Long rid,String wthxpath){//zsltodo
+    public RestResponse user_collect_list(Boolean test,HttpServletRequest request,String platform,
+                                          String userId,Long prid,Long rid,String wthxpath){//zsltodo
         RestResponse result = new RestResponse();
         result.setCode(0);
         try {
@@ -335,7 +346,7 @@ public abstract class AppDataAction  {
     @RequestMapping("get_cate_content_list")
     @ResponseBody
     public RestResponse get_cate_content_list(Boolean test,HttpServletRequest request,Integer pageIndex
-                                          ,Integer pageSize,String platform, String userId,Long prid,Long rid,String wthxpath){
+            ,Integer pageSize,String platform, String userId,Long prid,Long rid,String wthxpath){
         RestResponse response = new RestResponse();
         response.setCode(0);
         try {
@@ -348,8 +359,8 @@ public abstract class AppDataAction  {
             }
             response.setData(vers);
         }catch (Exception e){
-        	response.setCode(1);
-        	response.setMsg(e.getMessage());
+            response.setCode(1);
+            response.setMsg(e.getMessage());
         }
         return response;
     }
@@ -361,8 +372,8 @@ public abstract class AppDataAction  {
      */
     @RequestMapping("authorization")
     @ResponseBody
-    public RestResponse authorization(Boolean test,HttpServletRequest request,String platform, 
-                             String userId,Long prid,Long rid,String type,String wthxpath){
+    public RestResponse authorization(Boolean test,HttpServletRequest request,String platform,
+                                      String userId,Long prid,Long rid,String type,String wthxpath){
         RestResponse result = new RestResponse();
         result.setCode(0);
         try {
@@ -370,11 +381,11 @@ public abstract class AppDataAction  {
             switch (type){
                 case "mv":
                     data = (IptvResVer)this.stbService.get_mv_info_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), null, userId, prid, rid, test, wthxpath);
-                   break;
+                    break;
                 case "song":
                     data = (IptvResVer)this.stbService.get_song_info_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), null, userId, prid, rid, test, wthxpath);
                     break;
-                    default:
+                default:
             }
             IptvWebAuthResult authResult = getAuthResult(request, userId,data);
             authResult.setData(data);
@@ -391,7 +402,7 @@ public abstract class AppDataAction  {
      * @return
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping("log")
+    @RequestMapping("log")
     public void log(HttpServletRequest request,HttpServletResponse response){
         try {
             //String queryString = request.getQueryString();
@@ -422,54 +433,62 @@ public abstract class AppDataAction  {
     public String theme( Boolean test,HttpServletRequest request,String platform,
                          String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
         request.setCharacterEncoding("UTF-8");
-        //处理用户信息
-        Object o = request.getSession().getAttribute(Constant.USER_IN_SESSION);
-        WebSessionUser user;
-        if(o==null){
-            user = dealWithUserInfo(request);
-            user = new WebSessionUser();
-            user.setUserId(userId);
-            user.setPlatform(platform);
-            request.getSession().setAttribute(Constant.USER_IN_SESSION,user);
-        }else{
-            user = (WebSessionUser)o;
+        IptvResVer theme = this.stbService.find_html_theme_by_rid(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac,userId, prid, rid, test, wthxpath);
+        String result = "redirect:theme/normal.htm"+"?"+request.getQueryString()+"&date="+new Date().getTime();
+        if(IptvObjectEnum.theme_list.equals(theme.getChild_type())||IptvObjectEnum.theme_fjyd.equals(theme.getChild_type())){
+            //跳转到列表模板
+            List<IptvResVer> list = theme.getList();
+            List<IptvResVerForPage> items = new ArrayList<>();
+            if(list!=null&&list.size()>0){
+                for (IptvResVer ver : list) {
+                    IptvResVerForPage page = new IptvResVerForPage(ver);
+                    items.add(page);
+                }
+            }
+            model.addAttribute("prid",prid);
+            model.addAttribute("theme",theme);
+            model.addAttribute("jsonString",JsonUtils.toJson(items));
+            model.addAttribute("items",items);
+            result = "show/"+theme.getChild_type().toString();
+        }else if(IptvObjectEnum.theme_auto_play.equals(theme.getChild_type())||IptvObjectEnum.theme_speical.equals(theme.getChild_type())){
+            result =  "redirect:theme/"+theme.getFposter()+"?"+request.getQueryString()+"&date="+new Date().getTime();
         }
-        //获取系统环境
-        boolean sysenv = getSystemev(test,request);
-        IptvResVer theme = this.stbService.find_html_theme_by_rid(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac, user.getUserId(), prid, rid, sysenv, wthxpath);
+        return result;
+    }
+
+    @RequestMapping("getThemeDetail")
+    @ResponseBody
+    public Object  getThemeDetail( Boolean test,HttpServletRequest request,String platform,
+                                   String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
+        RestResponse response = new RestResponse();
+        IptvResVer theme = this.stbService.find_html_theme_by_rid(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac,userId, prid, rid, test, wthxpath);
         List<IptvResVer> list = theme.getList();
+        //使用SingnerId字段承载数据用于兼容老版的apk
         List<IptvResVerForPage> items = new ArrayList<>();
         if(list!=null&&list.size()>0){
             for (IptvResVer ver : list) {
                 IptvResVerForPage page = new IptvResVerForPage(ver);
                 items.add(page);
+                if(IptvObjectEnum.column.equals(ver.getType())){
+                    Long vrid = ver.getRid();
+                    List<IptvResVer> iptvResVers = iptvConsoleResService.consoleIrregularResList(vrid);
+                    ver.setList(iptvResVers);
+                }
             }
         }
-        model.addAttribute("prid",prid);
-        model.addAttribute("theme",theme);
-        model.addAttribute("jsonString",JsonUtils.toJson(items));
-        model.addAttribute("items",items);
-        String result = "show/theme";
-        if(IptvObjectEnum.theme_list.equals(theme.getChild_type())){
-            //跳转到列表模板
-            result = "show/theme_list";
-        }else if(IptvObjectEnum.theme_fjyd.equals(theme.getChild_type())){
-            //跳转到福建移动专属专题
-            result = "show/theme_fjyd";
-        }
-        return result;
+        theme.setSinger_res_ids(JsonUtils.toJson(items));
+        response.setData(theme);
+        return response;
     }
 
 
     @RequestMapping("getThemeList")
     @ResponseBody
     public Object  getThemeList( Boolean test,HttpServletRequest request,String platform,
-                               String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
-        IptvResVer theme = this.stbService.find_html_theme_by_rid(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac,userId, prid, rid, test, wthxpath);
-        List<IptvResVer> list = theme.getList();
+                                 String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
+        IptvResVer theme = this.stbService.find_html_theme_by_rid(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac, userId, prid, rid, test, null);
         RestResponse response = new RestResponse();
-        response.setData(list);
-        response.setTotal(list.size());
+        response.setData(theme);
         return response;
     }
 
@@ -477,7 +496,7 @@ public abstract class AppDataAction  {
     @RequestMapping("removePlayListAll")
     @ResponseBody
     public Object  removePlayListAll( Boolean test,HttpServletRequest request,String platform,
-                               String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
+                                      String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
         this.stbService.remove_all_play_history(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac,userId, prid, rid, test, wthxpath);
         RestResponse response = new RestResponse();
         return response;
@@ -486,7 +505,7 @@ public abstract class AppDataAction  {
     @RequestMapping("removeAllGdCollect")
     @ResponseBody
     public Object  removeAllGdCollect( Boolean test,HttpServletRequest request,String platform,
-                               String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
+                                       String userId,Long prid,Long rid,String mac,Model model,String wthxpath) throws Exception {
         this.stbService.remove_all_gd_collect(IptvPlatform.web.name(), NetworkUtils.getIpAddress(request), mac,userId, prid, rid, test, wthxpath);
         RestResponse response = new RestResponse();
         return response;

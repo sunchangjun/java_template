@@ -63,7 +63,6 @@ public class IptvConsoleStatsService {
 		sum.setUser_visit_num(String.valueOf(this.iptvStatsUserDetailDao.findDistinctActiveUser(from, to)));
 		sum.setUser_visit_total(String.valueOf(sum_user_visit_total));
 		views.add(sum);
-		System.out.println(JsonUtils.toJson(views));
 		return views;
 	}
 

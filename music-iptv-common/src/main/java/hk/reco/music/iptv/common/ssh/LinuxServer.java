@@ -10,7 +10,7 @@ public class LinuxServer {
 	private String host;
 	private String username;
 	private String password;
-	private Integer port;
+	private Integer port = 22;
 
 	public LinuxServer(){}
 

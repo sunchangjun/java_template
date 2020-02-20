@@ -922,7 +922,8 @@ function checkAndToPlay(authResult,_backUrl,mediaFromType,mediaFromId,prid,env,w
 	}
 	else{
         //订购逻辑每个地方不一样，自定义
-		window.location.href=program.cloudPayUrl+"&backUrl="+Q.encode(_backUrl);
+
+		window.location.href=program.toOrderUrl+"&returnUrl="+Q.encode(_backUrl);
 	}
 }
 
@@ -1280,7 +1281,7 @@ function ajaxForOrder(productId){
 
 
 function ajaxForExposure(){
-	
+	return;
 	var object = {};
 	object.tv_no = getCAcardNum();
 	object.exposure_id = location.href+"&cCode=127&ldCode=127";
@@ -1306,6 +1307,7 @@ function ajaxForExposure(){
 
 
 function ajaxForUserVod(play_id,event_type,time,program_id){
+	return ;
 	if(myMediaPlay.end==1){
 		return ;
 	}
@@ -1335,6 +1337,7 @@ function ajaxForUserVod(play_id,event_type,time,program_id){
                                           
 
 function ajaxForPanelClick(){
+	return;
 	var object = {};
 	object.tv_no = getCAcardNum();
 	object.page_level = oparateObj.pagelevel;

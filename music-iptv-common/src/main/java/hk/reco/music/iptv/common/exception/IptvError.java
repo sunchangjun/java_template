@@ -10,6 +10,7 @@ public enum IptvError {
 	PAGEINDEX_ERROR(1002, "pageIndex从0开始编号!"),
 	PAGESIZE_EMPTY_ERROR(1003, "pageSize不能为空!"),
 	P_MISS(1004,"指定参数为空"),
+	P_METHOD(1005,"HTTP请求方式异常"),
 	UPLOAD_IMAGE_FAIL(1005,"图片上传失败"),
     REPEATED_SUBMIT(1010,"重复提交"),
 	TOP_LAYOUT_PARAM_ERROR(8001,"顶层布局的入参为0"),
@@ -23,6 +24,8 @@ public enum IptvError {
 	USER_COLLECT_TYPE_ERROR(8004,"用户收藏类型只能为song|mv|diss|column"),
 	RES_NOT_EXIST(8005,"资源不存在"),//资源下线
 	RES_SINGER_OFFLINE(8006,"资源已下线"),//歌手下线导致资源下线
+	USER_ID_NULL(8007,"用户ID为空"),
+	ORDER_TYPE_ERROR(8008,"订单类型异常"),
 	
 	SYSTEM_ERROR(9999, "系统错误,请稍后再试");
 

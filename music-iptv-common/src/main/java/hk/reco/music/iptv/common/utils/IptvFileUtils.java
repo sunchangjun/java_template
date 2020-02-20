@@ -195,7 +195,7 @@ public class IptvFileUtils {
      * @return
      */
     public static String http(String poster) {
-        if (StringUtils.isNotBlank(poster) && !poster.startsWith("http")) {
+        if (StringUtils.isNotBlank(poster) && !poster.startsWith("http") && !poster.endsWith("htm")) {
             return httpPrefix + poster;
         }
         return poster;

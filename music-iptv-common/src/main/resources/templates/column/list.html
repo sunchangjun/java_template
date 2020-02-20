@@ -73,6 +73,7 @@
 		$('#dg').datagrid({loadFilter:pagerFilter});
         var columns = [];
         var feild = [
+            {field: 'rid', title: 'rid', width: 100},
             {field: 'name', title: '栏目名称', width: 150},
             {field: 'bposter', title: '大海报', width: 50, align: 'center', formatter: formatImg},
             {field: 'sposter', title: '小海报', width: 50, align: 'center', formatter: formatImg},

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -42,8 +43,9 @@ public abstract class IptvWebBaseStbAction {
                                     @RequestParam(required = false) String userId,
                                     @RequestParam(required = false) String wthxpath,
                                     @RequestParam(required = true) Boolean test,
-                                    HttpServletRequest req) {
+                                    HttpServletRequest req, HttpServletResponse resp) {
         try {
+            resp.setHeader("Access-Control-Allow-Origin","*");
             List<IptvResVer> vers = this.stbService.get_layouts_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(req), mac, userId, IptvMsicUtils.parseTest(test), wthxpath);
             RestResponse response = new RestResponse();
             response.setData(vers);
@@ -64,8 +66,9 @@ public abstract class IptvWebBaseStbAction {
                                        @RequestParam(required = true) Long rid,
                                        @RequestParam(required = false) String wthxpath,
                                        @RequestParam(required = true) Boolean test,
-                                       HttpServletRequest req) {
+                                       HttpServletRequest req,HttpServletResponse resp) {
         try {
+            resp.setHeader("Access-Control-Allow-Origin","*");
             RestResponse response = new RestResponse();
             List<IptvResVer> vers = this.stbService.get_layout_by_rid_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(req), mac, userId, 0l, rid, IptvMsicUtils.parseTest(test), wthxpath);
             response.setData(vers);
@@ -759,6 +762,59 @@ public abstract class IptvWebBaseStbAction {
         try {
             IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
             IptvPageResult result = this.stbService.get_singer_song_and_mv_list_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test), wthxpath);
+            RestResponse response = new RestResponse();
+            response.setData(result.getVers());
+            response.setTotal(result.getTotal());
+            return response;
+        } catch (IptvBusinessException e) {
+            return new RestResponse(e.getError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+    //以下暂时为web端独有
+    @Deprecated
+    @RequestMapping(value = "/get_reco_singer", method = RequestMethod.POST)
+    @ApiOperation(value = "web专题列表接口", notes = "web专题列表", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    public RestResponse get_reco_singer(
+            @RequestParam(required = false) String mac,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) Long prid,
+            @RequestParam(required = false) Long rid,//
+            @RequestParam(required = false) String wthxpath,
+            @RequestParam(required = true) Boolean test,
+            HttpServletRequest req) {
+        try {
+            List<IptvResVer> result = this.stbService.get_reco_singer(IptvPlatform.web.name(),NetworkUtils.getIpAddress(req), mac, userId, prid, rid, test, wthxpath);
+            RestResponse response = new RestResponse();
+            response.setData(result);
+            return response;
+        } catch (IptvBusinessException e) {
+            return new RestResponse(e.getError());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RestResponse(IptvError.SYSTEM_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "/get_reco_content_list", method = RequestMethod.POST)
+    @ApiOperation(value = "栏目下内容列表接口", notes = "栏目下内容列表接口", response = RestResponse.class)
+    @ApiResponses(value = {@ApiResponse(code = 0, message = "调用成功")})
+    public RestResponse get_reco_content_list(
+            @RequestParam(required = false) String mac,
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) Long prid,
+            @RequestParam(required = false) Long rid,//reco-rid
+            @RequestParam(required = false) String wthxpath,
+            @RequestParam(required = false) Integer pageIndex,
+            @RequestParam(required = false) Integer pageSize,
+            @RequestParam(required = true) Boolean test,
+            HttpServletRequest req) {
+        try {
+            IptvPage page = IptvMsicUtils.parsePage(pageIndex, pageSize);
+            IptvPageResult result = this.stbService.get_reco_content_list_impl(IptvPlatform.web.name(), NetworkUtils.getIpAddress(req), mac, userId, prid, rid, page, IptvMsicUtils.parseTest(test), wthxpath);
             RestResponse response = new RestResponse();
             response.setData(result.getVers());
             response.setTotal(result.getTotal());

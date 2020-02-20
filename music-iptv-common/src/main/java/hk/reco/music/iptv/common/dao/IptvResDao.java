@@ -29,4 +29,7 @@ public interface IptvResDao {
     public void consoleSubmitChildLinkByRids(@Param("rids") List<Long> rids);
 
 	public List<Long> findChildLinkRidByType(String type);
+
+	public void updateLyricByRid(@Param("media_lyric")String media_lyric,@Param("rid")long rid);
+
 }

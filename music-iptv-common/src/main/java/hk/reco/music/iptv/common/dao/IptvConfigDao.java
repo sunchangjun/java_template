@@ -1,8 +1,11 @@
 package hk.reco.music.iptv.common.dao;
 
 import hk.reco.music.iptv.common.domain.IptvConfig;
+import hk.reco.music.iptv.common.domain.IptvWhiteListUser;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -39,5 +42,10 @@ public interface IptvConfigDao {
 
     List<IptvConfig>  findAll();
 
+
+    @Insert(value="insert into iptv_config (`key`,`value`)value(#{key},#{value})")
+    void  insertIptvConfig(IptvConfig config);
+    @Update(value="update iptv_config  set  `key`=#{key},`value`=#{value}  where  id=#{id}")
+    void  updateIptvConfig(IptvConfig config);
 
 }

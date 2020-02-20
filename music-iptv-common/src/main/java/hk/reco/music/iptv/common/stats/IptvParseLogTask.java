@@ -29,9 +29,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
 
 /**
  * 解析iptv的日志
@@ -56,10 +59,17 @@ public class IptvParseLogTask {
 	
 	@Value("${logging.path}")
 	private String loggingPath;
-    /*common里移除定时任务,改为子项目调用,加@Profile({""}),以免部署测试服务,影响正式服务   */
-	//@Scheduled(cron = "0 */1 * * * ? ")
-    @Scheduled(cron = "0 0 3 * * ? ")
+	@Resource
+	private Environment environment;
+
+	//@Scheduled(cron = "0 */1 * * * ?")
+	@Scheduled(cron = "0 0 3 * * ? ")
 	public void job() throws Exception {
+		String runTask = environment.getProperty("logging.runtask");
+		if("false".equals(runTask)){
+			logger.info("当前环境不运行日志解析time={}", LocalDateTime.now().toString());
+			return;
+		}
 		logger.info("定时任务开始time={}", LocalDateTime.now().toString());
 		long now = System.currentTimeMillis();
 		//1-解决多台tomcat同时跑的冲突问题,先插入成功的tomcat进行占位,后插入并失败的,结束运行
@@ -101,9 +111,10 @@ public class IptvParseLogTask {
 						day_file_map.put(file_date, day_files);
 						day_files.add(file);
 					}
-				}else{
-					System.out.println("略过文件:"+file_name);
 				}
+//				else{
+//					System.out.println("略过文件:"+file_name);
+//				}
 			}
 		}
 		

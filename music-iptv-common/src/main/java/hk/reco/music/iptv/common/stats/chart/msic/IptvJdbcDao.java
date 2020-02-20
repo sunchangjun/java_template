@@ -26,6 +26,7 @@ public class IptvJdbcDao {
 		try{
 			return this.jdbcTemplate.queryForObject(sql, new Object[]{res_id}, new BeanPropertyRowMapper<>(IptvResVer.class));
 		}catch(Exception e){
+		    e.printStackTrace();
 			return null;
 		}
 	}

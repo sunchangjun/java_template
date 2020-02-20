@@ -31,6 +31,8 @@ public class WthxResourceService {
 
     private static final String FIND_BY_STATUS = "select * from wthx_media where status = ?";
 
+    private static final String FIND_SUCCESS = "select res_id,res_type from wthx_media where status = 2";
+
     private static final String FIND_BY_STATUS_AND_TSURL = "select * from wthx_media where status = 2 and ts_url is not null ";
 
     private static final String FIND_WTHXMEDIA_BY_MUSICID_TYPE = "select * from wthx_media where media_id=? and res_type=?";
@@ -61,6 +63,10 @@ public class WthxResourceService {
 
     public List<WthxMedia> findMediaByStatus(int status) {
         return this.jdbcTemplate.query(FIND_BY_STATUS, new Object[]{status}, new BeanPropertyRowMapper<>(WthxMedia.class));
+    }
+
+    public List<WthxMedia> findSuccessMedia() {
+        return this.jdbcTemplate.query(FIND_SUCCESS, new Object[]{}, new BeanPropertyRowMapper<>(WthxMedia.class));
     }
 
     public List<WthxMedia> findMediaByStatusAndTsUrl() {

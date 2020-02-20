@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,179 +37,220 @@ import hk.reco.music.iptv.common.utils.IptvFileUtils;
 
 /**
  * 包装了redis的缓存服务
+ *
  * @author zhangsl
  * @date 2019年2月22日
  */
 @Service
 public class IptvCacheService {
-	@Autowired
-	protected IptvResVerDao iptvResVerDao;
-	@Autowired
-	protected IptvResVerService iptvResVerService;
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
-	@Resource
-	private ValueOperations<String, Object> valueOperations;
-	private static final Logger log = LoggerFactory.getLogger(IptvCacheService.class);
+    @Autowired
+    protected IptvResVerDao iptvResVerDao;
+    @Autowired
+    protected IptvResVerService iptvResVerService;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private ValueOperations<String, Object> valueOperations;
+    private static final Logger log = LoggerFactory.getLogger(IptvCacheService.class);
 
-	/**
-	 * 批量查询redis中的key
-	 * 
-	 * @param keyPattern
-	 * @return
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Set<String> getKeys(String keyPattern) {
-		Set<String> keys = Sets.newHashSet();
-		try {
-			/**
-			 * scan替换keys，处理redis性能问题
-			 */
-			ScanOptions options = ScanOptions.scanOptions().match(keyPattern).count(1000).build();
-			Cursor<String> cs = (Cursor) redisTemplate.executeWithStickyConnection(new RedisCallback() {
-				public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
-					redisConnection.scan(options);
-					redisTemplate.getKeySerializer();
-					return new ConvertingCursor<>(redisConnection.scan(options), (Converter<byte[], ?>) redisTemplate.getKeySerializer()::deserialize);
-				}
-			});
+    /**
+     * 批量查询redis中的key
+     *
+     * @param keyPattern
+     * @return
+     */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public Set<String> getKeys(String keyPattern) {
+        Set<String> keys = Sets.newHashSet();
+        try {
+            /**
+             * scan替换keys，处理redis性能问题
+             */
+            ScanOptions options = ScanOptions.scanOptions().match(keyPattern).count(1000).build();
+            Cursor<String> cs = (Cursor) redisTemplate.executeWithStickyConnection(new RedisCallback() {
+                public Object doInRedis(RedisConnection redisConnection) throws DataAccessException {
+                    redisConnection.scan(options);
+                    redisTemplate.getKeySerializer();
+                    return new ConvertingCursor<>(redisConnection.scan(options), (Converter<byte[], ?>) redisTemplate.getKeySerializer()::deserialize);
+                }
+            });
 
-			cs.forEachRemaining(k -> {
-				keys.add(k);
-			});
+            cs.forEachRemaining(k -> {
+                keys.add(k);
+            });
 
-			cs.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.error("获取redis Cursor异常：查看redis相关配置信息");
-		}
-		return keys;
-	}
+            cs.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("获取redis Cursor异常：查看redis相关配置信息");
+        }
+        return keys;
+    }
 
-	/**
-	 * 删除单个key
-	 * @param key
-	 */
-	public Long delByKey(String key) {
-		log.info("开始查找生产环境缓存: [" + key + "]");
-		boolean result = this.redisTemplate.delete(key);
-		if (result) {
-			log.info("成功删除生产环境缓存,key: [" + key + "]");
-		}
-		return result ? 1l : 0;
-	}
+    /**
+     * 删除单个key
+     *
+     * @param key
+     */
+    public Long delByKey(String key) {
+        log.info("开始查找生产环境缓存: [" + key + "]");
+        boolean result = this.redisTemplate.delete(key);
+        if (result) {
+            log.info("成功删除生产环境缓存,key: [" + key + "]");
+        }
+        return result ? 1l : 0;
+    }
 
-	/**
-	 * 删除多个key
-	 * @param pattern 多个key的集合
-	 * @return
-	 */
-	public Long delByKeysByPattern(String pattern) {
-		Set<String> keys = getKeys(pattern);
-		log.info("开始查找生产环境缓存: [" + pattern + "]");
-		for (String key : keys) {
-			log.info("成功删除生产环境缓存,key: [" + key + "]");
-		}
-		return this.redisTemplate.delete(keys);
-	}
+    /**
+     * 删除多个key
+     *
+     * @param pattern 多个key的集合
+     * @return
+     */
+    public Long delByKeysByPattern(String pattern) {
+        Set<String> keys = getKeys(pattern);
+        log.info("开始查找生产环境缓存: [" + pattern + "]");
+        for (String key : keys) {
+            log.info("成功删除生产环境缓存,key: [" + key + "]");
+        }
+        return this.redisTemplate.delete(keys);
+    }
 
-	/**
-	 * 设置缓存
-	 * @param key
-	 * @param value
-	 */
-	public void setCache(String key, Object value) {
-		this.redisTemplate.opsForValue().set(key, value);
-	}
+    /**
+     * 设置缓存
+     *
+     * @param key
+     * @param value
+     */
+    public void setCache(String key, Object value) {
+        this.redisTemplate.opsForValue().set(key, value);
+    }
 
-	/**
-	 * 获取缓存
-	 * @Author wangpq
-	 * @Param [key]
-	 * @Date 2019/6/24 13:12
-	 * @return java.lang.Object
-	 */
-	public <T> T getCache(String key) {
-		return (T) this.redisTemplate.boundValueOps(key).get();
-	}
+    /**
+     * 设置缓存
+     *
+     * @param key
+     * @param value
+     */
+    public void setCache(String key, Object value, long timeout) {
+        setCache(key, value, timeout, TimeUnit.MILLISECONDS);
+    }
 
-	// //////////////下面是通用方法
+    /**
+     * 设置缓存
+     *
+     * @param key
+     * @param value
+     */
+    public void setCache(String key, Object value, long timeout, TimeUnit unit) {
+        this.redisTemplate.opsForValue().set(key, value, timeout, unit);
+    }
 
-	//1-资源详情
-	@IptvCacheable
-	public IptvResVer loadResByRid(Long rid, Boolean test) throws IptvBusinessException {
-		System.out.println("==>loadResByRid rid:"+rid);
-		IptvResVer ver = this.iptvResVerDao.findResByRid(null, rid, test);
-		if (ver == null) {
-			throw new IptvBusinessException(IptvError.RES_NOT_EXIST);// 没有查询到,报错'资源不存在'
-		} else {
-			IptvObjectEnum type = ver.getType();
-			if (type == IptvObjectEnum.mv || type == IptvObjectEnum.song) {
-				if (ver.getSinger_name() == null) {// 如果没有歌手,则说明歌手已经下线,现在报错
-					throw new IptvBusinessException(IptvError.RES_SINGER_OFFLINE);
-				}
-			}
-		}
-		IptvFileUtils.toHttp(ver);
-		return ver;
-	}
-	
-	//2-规则对象分页列表
-	@IptvCacheable
-	public IptvPageResult loadResChilds(Long rid, String pinyin, IptvObjectEnum type, IptvObjectEnum ctype, Integer offset, Integer size, Boolean test) {
-		return this.iptvResVerService.findListExcludeGlobalDisablePageable(type, ctype, rid, pinyin, offset, size, test);
-	}
+    /**
+     * 获取缓存
+     *
+     * @return java.lang.Object
+     * @Author wangpq
+     * @Param [key]
+     * @Date 2019/6/24 13:12
+     */
+    public <T> T getCache(String key) {
+        return (T) this.redisTemplate.boundValueOps(key).get();
+    }
 
-	// 子对象列表
-	@IptvCacheable
-	public List<IptvResVer> loadResChilds(Long rid, IptvObjectEnum type, Boolean test, boolean regular) {
-		return regular ? this.iptvResVerService.findListExcludeGlobalDisable(null, null, rid, test)
-				: this.iptvResVerService.findListIncludeGlobalDisable(rid, test);
-	}
+    public <T> T getCacheObject(String key, Class<T> tClass) {
+        Object o = this.redisTemplate.boundValueOps(key).get();
+        if (o != null) {
+            return JSON.parseObject(o.toString(), tClass);
+        }
+        return null;
+    }
 
-	// 标签查询
-	@IptvCacheable
-	public List<IptvResVer> loadCategoryList(IptvObjectEnum type, IptvObjectEnum ctype, Boolean test) {
-		return this.iptvResVerService.findListByTypeAndChildType(type, ctype, test);
-	}
+    public <T> List<T> getCacheList(String key, Class<T> tClass) {
+        Object o = this.redisTemplate.boundValueOps(key).get();
+        if (o != null) {
+            return JSON.parseArray(o.toString(), tClass);
+        }
+        return null;
+    }
 
-	// 类型查询
-	@IptvCacheable
-	public IptvPageResult loadTypeList(IptvObjectEnum type, int offset, int size, Boolean test) throws IptvBusinessException{
-		IptvPageResult result = new IptvPageResult();
-		int total = this.iptvResVerDao.findResListByTypeCount(type, test);
-		if(total>0){
-			List<IptvResVer> vers = this.iptvResVerDao.findResListByType(type, offset, size, test);
-			IptvFileUtils.toHttp(vers);
-			result.setVers(vers);
-			result.setTotal(total);
-		}else{
-			result.setVers(new ArrayList<IptvResVer>());
-			result.setTotal(0);
-		}
-		return result;
-	}
+    // //////////////下面是通用方法
 
-	@IptvCacheEvict
-	public void kill_res_cache(Long rid){
-		System.out.println("Kill Object rid:"+rid);
-	}
+    //1-资源详情
+    @IptvCacheable
+    public IptvResVer loadResByRid(Long rid, Boolean test) throws IptvBusinessException {
+//		System.out.println("==>loadResByRid rid:"+rid);
+        IptvResVer ver = this.iptvResVerDao.findResByRid(null, rid, test);
+        if (ver == null) {
+            throw new IptvBusinessException(IptvError.RES_NOT_EXIST);// 没有查询到,报错'资源不存在'
+        } else {
+            IptvObjectEnum type = ver.getType();
+            if (type == IptvObjectEnum.mv || type == IptvObjectEnum.song) {
+                if (ver.getSinger_name() == null) {// 如果没有歌手,则说明歌手已经下线,现在报错
+                    throw new IptvBusinessException(IptvError.RES_SINGER_OFFLINE);
+                }
+            }
+        }
+        IptvFileUtils.toHttp(ver);
+        return ver;
+    }
 
-	@IptvCacheEvict
-	public void kill_res_child_cache(Long rid, String pinyin, IptvObjectEnum type){
-		System.out.println("Kill Childs prid:"+rid+",prid-type:"+type);
-	}
-	
-	@IptvCacheEvict
-	public void kill_category_cache(IptvObjectEnum type, IptvObjectEnum ctype){
-		System.out.println("Kill Category: type:"+type+",ctype:"+ctype);
-	}
-	
-	@IptvCacheEvict
-	public void kill_type_cache(IptvObjectEnum type){
-		System.out.println("Kill Type:" + type);
-	}
+    //2-规则对象分页列表
+    @IptvCacheable
+    public IptvPageResult loadResChilds(Long rid, String pinyin, IptvObjectEnum type, IptvObjectEnum ctype, Integer offset, Integer size, Boolean test) {
+        return this.iptvResVerService.findListExcludeGlobalDisablePageable(type, ctype, rid, pinyin, offset, size, test);
+    }
+
+    // 子对象列表
+    @IptvCacheable
+    public List<IptvResVer> loadResChilds(Long rid, IptvObjectEnum type, Boolean test, boolean regular) {
+        return regular ? this.iptvResVerService.findListExcludeGlobalDisable(null, null, rid, test)
+                : this.iptvResVerService.findListIncludeGlobalDisable(rid, test);
+    }
+
+    // 标签查询
+    @IptvCacheable
+    public List<IptvResVer> loadCategoryList(IptvObjectEnum type, IptvObjectEnum ctype, Boolean test) {
+        return this.iptvResVerService.findListByTypeAndChildType(type, ctype, test);
+    }
+
+    // 类型查询
+    @IptvCacheable
+    public IptvPageResult loadTypeList(IptvObjectEnum type, int offset, int size, Boolean test) throws IptvBusinessException {
+        IptvPageResult result = new IptvPageResult();
+        int total = this.iptvResVerDao.findResListByTypeCount(type, test);
+        if (total > 0) {
+            List<IptvResVer> vers = this.iptvResVerDao.findResListByType(type, offset, size, test);
+            IptvFileUtils.toHttp(vers);
+            result.setVers(vers);
+            result.setTotal(total);
+        } else {
+            result.setVers(new ArrayList<IptvResVer>());
+            result.setTotal(0);
+        }
+        return result;
+    }
+
+    @IptvCacheEvict
+    public void kill_res_cache(Long rid) {
+        System.out.println("Kill Object rid:" + rid);
+    }
+
+    @IptvCacheEvict
+    public void kill_res_child_cache(Long rid, String pinyin, IptvObjectEnum type) {
+        System.out.println("Kill Childs prid:" + rid + ",prid-type:" + type);
+    }
+
+    @IptvCacheEvict
+    public void kill_category_cache(IptvObjectEnum type, IptvObjectEnum ctype) {
+        System.out.println("Kill Category: type:" + type + ",ctype:" + ctype);
+    }
+
+    @IptvCacheEvict
+    public void kill_type_cache(IptvObjectEnum type) {
+        System.out.println("Kill Type:" + type);
+    }
 
 }

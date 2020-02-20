@@ -3,9 +3,11 @@ package hk.reco.music.iptv.common.dao;
 import hk.reco.music.iptv.common.domain.IptvStatsUserDetail;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface IptvStatsUserDetailDao{
@@ -35,4 +37,9 @@ public interface IptvStatsUserDetailDao{
 	 * @return
 	 */
 	public int findDistinctPlayUser(@Param("from")String from, @Param("to")String to);
+
+//	@Select(value="select distinct user_id from iptv_stats_user_detail  where first_time < #{time}")
+//    Set<String> findAllDistinctUser(@Param("time")String time);
+    @Select(value="select distinct user_id from iptv_stats_user_detail")
+    Set<String> findAllDistinctUser();
 }

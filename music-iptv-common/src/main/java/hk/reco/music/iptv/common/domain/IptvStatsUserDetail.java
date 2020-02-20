@@ -39,4 +39,32 @@ public class IptvStatsUserDetail {
 	public void setFirst_time(Date first_time) {
 		this.first_time = first_time;
 	}
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + (user_id == null ? 0 : user_id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;//地址相等
+        }
+
+        if(obj == null){
+            return false;//非空性：对于任意非空引用x，x.equals(null)应该返回false。
+        }
+
+        if(obj instanceof IptvStatsUserDetail){
+            IptvStatsUserDetail other = (IptvStatsUserDetail) obj;
+            //需要比较的字段相等，则这两个对象相等
+            if(other .getUser_id().equals(this.user_id)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

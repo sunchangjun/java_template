@@ -3,6 +3,7 @@ package hk.reco.music.iptv.common.service;
 import hk.reco.music.iptv.common.annotation.RedisServicelock;
 import hk.reco.music.iptv.common.dao.IptvActivtityDao;
 import hk.reco.music.iptv.common.domain.*;
+import hk.reco.music.iptv.common.utils.ApplactionUtils;
 import hk.reco.music.iptv.common.utils.DateUtils;
 import hk.reco.music.iptv.common.utils.IptvFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +27,13 @@ import java.util.stream.Collectors;
 public class IptvActivityService {
     @Autowired
     private IptvActivtityDao iptvActivtityDao;
+    @Autowired(required = false)
+    private IptvActivityIncService iptvActivityIncService;
     //活动类型为每天
     final private static Integer ACTIVITY_TYPE_DAY=2;
     //默认抽中奖品 简称谢谢参与
     private  static IptvActivityAward defaultAward ;
+
     static{
         defaultAward = new IptvActivityAward();
         defaultAward.setName("谢谢参与");
@@ -124,7 +128,11 @@ public class IptvActivityService {
         }
         //2、查询用户在时间段内参与活动的次数
         int used = iptvActivtityDao.findActivityTimesInDuration(userId,activityId,null,start_time,end_time);
-        //3、todo 考虑用户购买等增加次数
+        if(iptvActivityIncService != null){
+            //3、todo 考虑用户购买等增加次数
+            int times = iptvActivityIncService.getTimes(activityId,userId,anum-used);
+            return times;
+        }
         return anum-used;
     }
 
@@ -168,7 +176,6 @@ public class IptvActivityService {
         //入库结果
         IptvAcctivityRecord record = new IptvAcctivityRecord(userId,award.getId(),activityId);
         iptvActivtityDao.insertNewRecord(record);
-        //：todo 考虑用户购买等增加次数
         return award;
     }
 

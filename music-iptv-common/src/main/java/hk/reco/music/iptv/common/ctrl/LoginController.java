@@ -51,7 +51,15 @@ public class LoginController {
 	
 	
 	@RequestMapping("/")
-	public String index(){
+	public String index(HttpServletRequest request){
+		request.getSession().setAttribute("platform","");
+		return "login";
+	}
+
+
+	@RequestMapping("/web")
+	public String webindex(HttpServletRequest request){
+		request.getSession().setAttribute("platform","web");
 		return "login";
 	}
 	

@@ -1,15 +1,15 @@
 package hk.reco.music.iptv.common.utils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -47,7 +47,7 @@ public class FileUtils {
      */
     public static List<Path> getPaths(String path, String format) {
         List<Path> list = Lists.newArrayList();
-        if (org.apache.commons.lang3.StringUtils.isBlank(path)) {
+        if (StringUtils.isBlank(path)) {
             return list;
         }
         Path p = Paths.get(path);
@@ -139,6 +139,30 @@ public class FileUtils {
 
     /**
      * 功能描述:
+     * 〈拷贝网络图片〉
+     *
+     * @param url 地址
+     * @param filePath 存储位置
+     * @param fileName 文件名称
+     * @return : java.lang.String
+     * @author : wangpq
+     * @date : 2020/1/16 13:12
+     */
+    public static String copyIOFile(String url, String filePath, String fileName) throws Exception {
+        byte[] bs = HttpUtils.getImageBytes(url);
+        String suffix = ImageTypeUtils.getPicType(bs);
+        try (InputStream is = new ByteArrayInputStream(bs)) {
+            Path target = Paths.get(filePath, fileName + "." + suffix);
+            Files.createDirectories(target.getParent());
+            Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return suffix;
+    }
+
+    /**
+     * 功能描述:
      * 〈NIO 内存映射拷贝文件(适用于大文件)〉
      *
      * @param sharePath 文件地址 D:\test\123.txt
@@ -200,17 +224,18 @@ public class FileUtils {
 
     /**
      * 将多个文件制作成压缩文件
+     *
      * @param zipPathName
      * @param files
      * @return
      */
-    public static File buildFilesToZip(String zipPathName,List<File> files){
+    public static File buildFilesToZip(String zipPathName, List<File> files) {
         File file = new File(zipPathName);
         if (file.exists()) {
             file.delete();
         }
-        File parent=file.getParentFile();
-        if(parent!=null&&!parent.exists()){
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
             parent.mkdirs();
         }
         try {
@@ -228,16 +253,80 @@ public class FileUtils {
                 fis.close();
             }
             zos.close();
-            return  file;
+            return file;
         } catch (Exception ioe) {
             ioe.printStackTrace();
-            return  null;
+            return null;
         }
     }
 
-    public static void main(String[] args) throws Exception{
+
+    /**
+     * 功能描述:
+     * 〈获取子目录文件大小〉
+     *
+     * @param path 路径
+     * @return : java.util.Map<java.lang.String,java.lang.Long>
+     * @author : wangpq
+     * @date : 2020/1/15 14:24
+     */
+    public static Map<String, Long> getDirectoriesSizes(String path) {
+        return getDirectoriesSizes(path, null);
+    }
+
+    /**
+     * 功能描述:
+     * 〈获取子目录文件大小，过滤指定文件〉
+     *
+     * @param path   路径
+     * @param format 过滤指定文件
+     * @return : java.util.Map<java.lang.String,java.lang.Long>
+     * @author : wangpq
+     * @date : 2020/1/15 14:24
+     */
+    public static Map<String, Long> getDirectoriesSizes(String path, String format) {
+        Map<String, Long> map = Maps.newHashMap();
+        if (StringUtils.isNotBlank(path)) {
+            Path p = Paths.get(path);
+            if (Files.exists(p)) {
+                List<Path> list = getPaths(path, format);
+                handlerDirectories(map, list, format);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 功能描述:
+     * 〈处理目录文件〉
+     *
+     * @param map    结果集
+     * @param list   文件列表
+     * @param format 过滤信息
+     * @return : void
+     * @author : wangpq
+     * @date : 2020/1/15 15:10
+     */
+    private static void handlerDirectories(Map<String, Long> map, List<Path> list, String format) {
+        try {
+            for (Path ps : list) {
+                if (Files.isDirectory(ps)) {
+                    List<Path> paths = getPaths(ps.toString(), format);
+                    handlerDirectories(map, paths, format);
+                } else {
+                    String parent = ps.getParent().getFileName().toString();
+                    long size = map.containsKey(parent) ? Files.size(ps) + map.get(parent) : Files.size(ps);
+                    map.put(parent, size);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
         long startTime = System.currentTimeMillis();
-        copyFile("\\\\192.168.3.100\\qqmusic\\songs\\h\\j\\997a1b31ffc14c9aa821caf319d792b1.m4a","F:\\import_res\\fff\\","test.m4a");
+        copyFile("\\\\192.168.3.100\\qqmusic\\songs\\h\\j\\997a1b31ffc14c9aa821caf319d792b1.m4a", "F:\\import_res\\fff\\", "test.m4a");
         System.out.println(System.currentTimeMillis() - startTime);
     }
 

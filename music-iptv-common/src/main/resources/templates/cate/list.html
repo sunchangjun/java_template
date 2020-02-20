@@ -15,8 +15,10 @@
     <div  data-options="region:'east'"  title="分类资源"  style="width:80%;height: 100%;">
         <div id="wu-toolbar">
             <div class="wu-toolbar-button">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-control-fastforward-blue"
-                   onclick="groupLinkSubmit('#program-table')" plain="true">批量提交</a>
+                <a href="#" id="addResource"  class="easyui-linkbutton" iconCls="icon-build"
+                   onclick="addResource('#cate-table')" plain="true">添加</a>
+                <a href="#" id="submitResouce"  class="easyui-linkbutton" iconCls="icon-control-fastforward-blue"
+                   onclick="submitResouceToProduct('#cate-table','#program-table')" plain="true">提交到正式环境</a>
             </div>
         </div>
         <table id="program-table"  style="width: 100%;height: 100%" toolbar="#wu-toolbar">
@@ -40,6 +42,26 @@
             </a>
         </div>
     </form>
+</div>
+
+
+<!--添加媒体-->
+<div id="dialog"  title="媒体资源"  class="easyui-window" style="width:600px;height: 700px;"
+     data-options="modal:true,closed:true,iconCls:'Lockgo',closable:true,resizable:false,draggable:false,collapsible:false,minimizable:false,maximizable:false">
+    <div id="search" class="easyui-tabs" style="height: 100%">
+        <div th:title="${type}">
+            <table th:id="${type}" class="search-table" style="height:100%;width:100%;">
+            </table>
+        </div>
+    </div>
+</div>
+<div id="wu-rtoolbar">
+    <div>
+        资源名称: <input th:id="${type}+'name'" class="easyui-textbox" style="width:120px">
+        提交状态:
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="searchResource()">搜索</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-accept" onclick="addResourceBytype()">添加</a>
+    </div>
 </div>
 </body>
 <script type="text/javascript">
@@ -136,7 +158,6 @@
         var mediaId = rowData.rid;
         var columns = [];
         var feild = [
-            {field:'ck',checkbox:true},
             {field: 'link_rid', title: 'ID', width: 100},
             {field: 'name', title: '名称', width: 100},
             {field: 'keyword', title: '关键字', width: 150},
@@ -151,6 +172,16 @@
             columns: columns,
             loadFilter: pagerFilter,
             pagination: true,
+            pageSize:20,
+            onLoadSuccess: function (data) {
+                var rows = data.rows;
+                var flag = true;
+                if(!data.status){
+                    $("#submitResouce").css("display","inline-block");
+                }else{
+                    $("#submitResouce").css("display","none");
+                }
+            },
             singleSelect: false
         });
     }
@@ -160,6 +191,125 @@
 	    $("#ff").form('reset');
 	    $("#sourceImg").attr("src","/addImg.png");
         $("#changePosterPannel").panel('open');
+    }
+
+
+    /**
+     * 添加资源
+     * @param mediaTable
+     * @returns {boolean}
+     */
+    function addResource(mediaTable){
+        var selection = $(mediaTable).datagrid("getSelections")[0];
+        if(!selection){
+            return false;
+        }
+        var columns = [];
+        var feild = [
+            {field:'ck',checkbox:true},
+            {field: 'rid', title: 'ID', width: 50},
+            {field: 'name', title: '资源名称', width: 150},
+            {field: 'keyword', title: '关键字', width: 100},
+            {field: 'singer_name', title: '歌手', width: 100},
+            {field: 'bposter', title: '海报', width: 50, align: 'center', formatter: formatImg}
+        ];
+        columns.push(feild);
+        var options = {
+            url: 'listData',
+            collapsible: true,
+            singleSelect: true,
+            toolbar:"#wu-rtoolbar",
+            selectOnCheck:false,
+            loadMsg:false,
+            method: 'post',
+            pagination: true,
+            pageSize: 20,
+            onDblClickRow:function(rowIndex, rowData){
+                $("#sourceImg").attr("src",rowData.bposter);
+                $("#editorform").form("reset");
+                $("#editorform").form("load",rowData);
+                $("#dlg").dialog("open");
+            },
+            columns: columns,
+            rowStyler: function (index, row) {
+                return "backgroud:red";
+            },
+            queryParams: {
+                type: type,
+                singerAffect:true,
+                globalstatus:0,
+            }
+        }
+        $("#"+type).datagrid(options);
+        $("#dialog").panel('open');
+    }
+
+
+    /**
+     * 搜索mv
+     */
+    function searchResource(){
+        var queryParams = $("#"+type).datagrid('options').queryParams;
+        queryParams.name = $('#'+type+'name').val();
+        $("#"+type).datagrid("reload");
+    }
+
+
+    /**
+     * 按类型添加资源
+     */
+    function addResourceBytype(){
+        var selections = $("#"+type).datagrid("getChecked");
+        if(selections.length==0){
+            $.messager.alert("消息提示","请勾选要添加的行");
+            return false;
+        }
+        var ids = '';
+        for(var i =0;i<selections.length;i++){
+            ids+=selections[i].rid+",";
+        }
+        var selection = $("#cate-table").datagrid("getSelections")[0];
+        var prid = selection.rid;
+        $.ajax({
+            url:"addChildLink",
+            type:"post",
+            data:{
+                prid:prid,
+                crids:ids
+            },
+            success:function(data){
+                if(data.success){
+                    $("#"+type).datagrid('reload');
+                    $("#program-table").datagrid('reload');
+                }else{
+                    $.messager.alert("消息提示",data.backmsg);
+                }
+            }
+        });
+    }
+
+    function removeRow(link_vid){
+        $.ajax({
+            url:"deleteChildLink",
+            type:"post",
+            data:{
+                link_vid:link_vid,
+            },
+            success:function(re){
+                if(re.success){
+                   // parent.reloadTree();
+                    $("#program-table").datagrid('reload');
+                }else{
+                    $.messager.alert("消息提示",re.backmsg);
+                }
+            }
+        });
+    }
+
+
+    function formatLinkSubmit(value,data,index){
+       // var  vid = data.link_vid? data.link_vid:data.vid;
+        return "<a href='javascript:void(0);' style='text-decoration: underline;' onclick='removeRow("+data.link_vid+")'>删除</a>"
     }
 
 </script>

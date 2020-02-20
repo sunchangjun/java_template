@@ -6,6 +6,13 @@ public class QmRes {
 	private String res_name;
 	private int res_type;
 	private String tags;
+	private String dst_url;
+	public String getDst_url() {
+		return dst_url;
+	}
+	public void setDst_url(String dst_url) {
+		this.dst_url = dst_url;
+	}
 	public long getRes_id() {
 		return res_id;
 	}

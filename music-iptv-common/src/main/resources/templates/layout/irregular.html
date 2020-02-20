@@ -82,6 +82,7 @@
             /*<![CDATA[*/
             var type = '[[${type}]]';
             var layoutId = '[[${layoutId}]]';
+            var platform = '[[${session.platform}]]';
             /*]]>*/
             $(function(){
 
@@ -218,7 +219,14 @@
                     }
                 });
 
-            })
+            });
+
+            var width = 1150;
+            var height = 440;
+            if(platform == "web"){
+                width = 1200;
+                height = 510;
+            }
             var controlObj={
                 layout:{"createTime":
                         {"date":16,
@@ -237,9 +245,9 @@
                     "key":"G1",
                     "online":0,
                     "pos":"0 0",
-                    "sceneHeight":440,
-                    "sceneWidth":1150,
-                    "size":"1150 440",
+                    "sceneHeight":height,
+                    "sceneWidth":width,
+                    "size":width+" "+height,
                     "versionDesc":"versionDesc"
                 }
             }

@@ -78,6 +78,9 @@ public interface IptvResVerDao {
 	public List<IptvResVer> findResListByTypeAndChildType(@Param("type")IptvObjectEnum type, @Param("child_type")IptvObjectEnum child_type, 
 			@Param("offset")int offset, @Param("size")int size, @Param("test")boolean test);
 	
+	//查找分类下的推荐歌手
+	public List<IptvResVer> findRecoSinger(@Param("prid")Long prid, @Param("test")boolean test);
+	
 	//搜索接口
 	public List<IptvResVer> searchResByKeyword(@Param("type")IptvObjectEnum type, @Param("pinyin")String pinyin, @Param("test")boolean test);
 	

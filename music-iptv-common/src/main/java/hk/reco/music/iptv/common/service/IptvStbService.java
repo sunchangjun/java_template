@@ -511,5 +511,27 @@ public class IptvStbService {
 			}
 		}
 	}
+	
+	//获取推荐资源
+	@LogDetail(method = "get_reco_singer")
+	public List<IptvResVer> get_reco_singer(String platform, String ipAddress, String mac, String userId, Long prid, Long rid, Boolean test, String path) throws Exception {
+		long now = System.currentTimeMillis();
+		platform = (platform==null)?IptvPlatform.apk.name():platform;
+		this.log(platform, ipAddress, mac, userId, prid, rid, null, null, null, null, "get_reco_singer", now, test, path);
+		List<IptvResVer> vers = this.iptvResVerDao.findRecoSinger(rid, test);
+		IptvFileUtils.toHttp(vers);
+		return vers;
+	}
+
+	//由栏目rid取下面的内容(song|mv|diss|column|singer|theme)
+	@LogDetail(method = "get_reco_content_list_impl")
+	public IptvPageResult get_reco_content_list_impl(String platform, String ip, String mac, String userId, Long prid, Long rid, IptvPage page, boolean test, String path)
+			throws Exception {
+		long now = System.currentTimeMillis();
+		int offset = page.getOffset();
+		int size = page.getSize();
+		this.log(platform, ip, mac, userId, prid, rid, null, null, null, null, "get_reco_content_list_impl", now, test, path);
+		return this.iptvCacheService.loadResChilds(rid, null, IptvObjectEnum.reco, null, offset, size, test);
+	}
 
 }

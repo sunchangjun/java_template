@@ -13,6 +13,7 @@ import com.jcraft.jsch.Session;
 public class JschConnect {
 
     private Session session;
+    private ChannelSftp aliveSftp = null;
 
     public JschConnect(LinuxServer server) throws JSchException {
         openSession(server.getHost(), server.getUsername(),
@@ -193,5 +194,54 @@ public class JschConnect {
             }
         }
 
+    }
+
+    /**
+     * 上传本地文件到远程linux上 使用sftp上传,不关闭channel
+     * @param localFile
+     * @param remoteFile
+     * @throws Exception
+     */
+    public void transferAlive(String localFile, String remoteFile) throws Exception{
+        if(aliveSftp == null){
+            aliveSftp = (ChannelSftp) session.openChannel("sftp");
+            aliveSftp.connect();
+        }
+        String parent = getParentPath(remoteFile);
+        try {
+            aliveSftp.stat(parent);//检测是否文件夹存在,如果不存在则抛出异常
+        } catch (Exception e) {
+            System.out.println("parent==>" + parent);
+            executeCommand("mkdir -p " + parent);
+        }
+        aliveSftp.put(localFile, remoteFile);
+    }
+
+    public void transferAlive(InputStream is, String remoteFile) throws Exception{
+        if(aliveSftp == null){
+            aliveSftp = (ChannelSftp) session.openChannel("sftp");
+            aliveSftp.connect();
+        }
+        String parent = getParentPath(remoteFile);
+        try {
+            aliveSftp.stat(parent);//检测是否文件夹存在,如果不存在则抛出异常
+        } catch (Exception e) {
+            System.out.println("parent==>" + parent);
+            executeCommand("mkdir -p " + parent);
+        }
+        aliveSftp.put(is, remoteFile);
+    }
+
+    /**
+     * 文件上传后关闭channel
+     */
+    public void closeAliveSftp(){
+        if(aliveSftp != null){
+            try {
+                aliveSftp.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -37,7 +37,7 @@
     </style>
 </head>
 <body>
-<div th:style="'position: absolute;width: 1280px;height:720px;left: 0;top: 0;background-image:url('+${#httpServletRequest.getContextPath()}+'/show/images/bg.jpg);z-index: -1'">
+<div th:style="'position: absolute;width: 1280px;height:720px;left: 0;top: 0;background-image:url('+${#httpServletRequest.getContextPath()}+'/show/images/bg.jpg);'">
     <p id="test" class="test">测试版</p>
     <p id="log" class="log"></p>
     <div  style="position:absolute;top: 0;left: 65px;padding:30px 0px;text-align: center;width: 1150px;z-index: 2;">
@@ -659,6 +659,11 @@
                     var url = Q.getNewAddUrl("list.htm")+"code=gd"+"&name="+Q.encode(name)+getCommonQueryParam("&",rid,layoutObj.rid,Q.encode(wthxpath),Q.encode(backurl),false);
                     window.location.href=url;
                     break;
+                case "column":
+                    //var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode(name)+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=gd"+"&wthxpath="+Q.encode(wthxpath);
+                    var url = Q.getNewAddUrl("list.htm")+"code=column"+"&name="+Q.encode(name)+getCommonQueryParam("&",rid,layoutObj.rid,Q.encode(wthxpath),Q.encode(backurl),false);
+                    window.location.href=url;
+                    break;
                 case "func":
                     //歌手页面
                     this.doFuncSelect(rid,name,chidlType,backurl,wthxpath);
@@ -726,6 +731,10 @@
                 case "func_free":
                     var url = Q.getNewAddUrl("list.htm")+"&name="+Q.encode("免费专区")+"&code=free"+getCommonQueryParam("&",rid,layoutObj.rid,Q.encode(wthxpath),Q.encode(backurl),false);
                    // var url = Q.getNewAddUrl("list.htm")+"backUrl="+Q.encode(backurl)+"&rid="+rid+"&name="+Q.encode("免费专区")+"&prid="+layoutObj.rid+"&test="+ paramObj.test+"&code=free"+"&wthxpath="+Q.encode(wthxpath);
+                    window.location.href=url;
+                    break;
+                case "func_more_mv":
+                    var url = Q.getNewAddUrl("more_mv.htm")+"name="+Q.encode("更多mv")+"&code=free"+getCommonQueryParam("&",rid,layoutObj.rid,Q.encode(wthxpath),Q.encode(backurl),false);
                     window.location.href=url;
                     break;
                 case "func_order":

@@ -318,15 +318,15 @@ public class IptvImportApi {
             this.importLink(iptv_link, applyToProduct);
         }
 
-        List<QmSong> songs = this.qmService.findSongByTopid(top.getId());
-        for (QmSong song : songs) {
-            long song_id = song.getRes_id();
-            IptvRes iptv_song = this.handleSong(song_id, batch_num, applyToProduct, appendVer);
-            if (iptv_top.isNewCreate() || iptv_song.isNewCreate()) {
-                IptvResVer iptv_link = IptvResVer.createLink(iptv_top.getRid(), iptv_song.getRid(), batch_num);
-                this.importLink(iptv_link, applyToProduct);
-            }
-        }
+//        List<QmSong> songs = this.qmService.findSongByTopid(top.getId());
+//        for (QmSong song : songs) {
+//            long song_id = song.getRes_id();
+//            IptvRes iptv_song = this.handleSong(song_id, batch_num, applyToProduct, appendVer);
+//            if (iptv_top.isNewCreate() || iptv_song.isNewCreate()) {
+//                IptvResVer iptv_link = IptvResVer.createLink(iptv_top.getRid(), iptv_song.getRid(), batch_num);
+//                this.importLink(iptv_link, applyToProduct);
+//            }
+//        }
         return iptv_top;
     }
 
@@ -342,15 +342,15 @@ public class IptvImportApi {
             this.importLink(iptv_link, applyToProduct);
         }
 
-        List<QmMv> mvs = this.qmService.findMvByTopid(top.getId());
-        for (QmMv mv : mvs) {
-            long res_id = mv.getRes_id();
-            IptvRes iptv_mv = this.handleMv(res_id, tag, batch_num, applyToProduct, appendVer);
-            if (iptv_top.isNewCreate() || iptv_mv.isNewCreate()) {
-                IptvResVer iptv_link = IptvResVer.createLink(iptv_top.getRid(), iptv_mv.getRid(), Float.valueOf(mv.getSort()), batch_num);
-                this.importLink(iptv_link, applyToProduct);
-            }
-        }
+//        List<QmMv> mvs = this.qmService.findMvByTopid(top.getId());
+//        for (QmMv mv : mvs) {
+//            long res_id = mv.getRes_id();
+//            IptvRes iptv_mv = this.handleMv(res_id, tag, batch_num, applyToProduct, appendVer);
+//            if (iptv_top.isNewCreate() || iptv_mv.isNewCreate()) {
+//                IptvResVer iptv_link = IptvResVer.createLink(iptv_top.getRid(), iptv_mv.getRid(), Float.valueOf(mv.getSort()), batch_num);
+//                this.importLink(iptv_link, applyToProduct);
+//            }
+//        }
         return iptv_top;
     }
 

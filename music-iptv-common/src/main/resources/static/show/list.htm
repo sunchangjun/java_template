@@ -650,6 +650,9 @@ function initListData(_id, _code) {
 		case "gs":
 			ajaxForSingerProgramData(_id);
 			break;
+		case "column":
+			ajaxForColumnProgramData(_id);
+			break;
 		case "zt":
 		case "gd":
 			ajaxForTopicDetails(_id);
@@ -696,6 +699,37 @@ function ajaxForFreeData(){
         post:"",
         timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
     });
+}
+
+
+function ajaxForColumnProgramData(_id) {
+	ajax({
+		url: paramObj.serverUrl + "/webstb/get_column_content_list"+getCommonQueryParam("?",oparateObj.rid,paramObj.prid,Q.encode(paramObj.wthxpath),null,true),// 请求的URL,可传参数
+		type: "POST", //HTTP 请求类型,GET或POST
+		onSuccess: function(html){ //请求成功后执行[可选]
+			var json = eval('('+html+')');
+			if("0" == json.code) {
+				if(json.data.length > 0) {
+					listObj.init(json.data);
+					oparateObj.focusOn();
+				} else {
+					popUpObj.doBack = oparateObj.doBack;
+					popUpObj.doFuc = oparateObj.doBack;
+					popUpObj.init("暂无歌曲信息！");
+				}
+			} else {
+
+			}
+		},
+		onError:function(){ //请求失败后执行[可选]
+			popUpObj.init("获取数据失败！");
+		},
+		onComplete:function(){// 请求成功.失败或完成(无论成功失败都会调用)时执行的函数[可选]
+			// alert("onComplete");
+		},
+		post:"",
+		timeout:7000  //请求的超时时间，默认7000ms，也可自行设定[可选]
+	});
 }
 
 
