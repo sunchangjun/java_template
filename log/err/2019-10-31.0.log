@@ -1,0 +1,12 @@
+2019-10-3109:40:33.176-ERROR[LogInSwagger2Interceptor.java:33]-session   username:
+2019-10-3111:21:10.667-ERROR[LogInSwagger2Interceptor.java:33]-session   username:
+2019-10-3111:32:56.003-ERROR[LogInSwagger2Interceptor.java:33]-session   username:
+2019-10-3111:35:35.267-ERROR[LogInSwagger2Interceptor.java:33]-session   username:
+2019-10-3113:45:03.305-ERROR[LogInSwagger2Interceptor.java:33]-session   username:
+2019-10-3114:01:36.202-ERROR[LogInSwagger2Interceptor.java:33]-session   username:
+2019-10-3114:12:52.764-ERROR[LogInSwagger2Interceptor.java:33]-session  username:
+2019-10-3114:15:37.643-ERROR[LogInSwagger2Interceptor.java:33]-sessionMessage=ccc
+2019-10-3114:28:39.352-ERROR[LogInSwagger2Interceptor.java:33]-sessionMessage=null
+2019-10-3114:28:51.829-ERROR[HikariConfig.java:950]-HikariPool-1 - jdbcUrl is required with driverClassName.
+2019-10-3114:33:19.748-ERROR[HikariConfig.java:950]-HikariPool-1 - jdbcUrl is required with driverClassName.
+2019-10-3114:54:33.297-ERROR[LogInSwagger2Interceptor.java:33]-sessionMessage=scj

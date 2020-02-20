@@ -1,0 +1,425 @@
+2020-01-1415:53:22.724-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 17820 (started by DELL in F:\代码模板\java_template)
+2020-01-1415:53:22.727-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1415:53:24.028-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1415:53:24.029-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1415:53:24.098-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 66ms. Found 1 repository interfaces.
+2020-01-1415:53:24.110-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1415:53:24.111-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1415:53:24.127-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1415:53:24.127-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 9ms. Found 0 repository interfaces.
+2020-01-1415:53:24.665-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$2beae78] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1415:53:24.673-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$6cf0c6b9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1415:53:24.977-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1415:53:24.991-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1415:53:24.999-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1415:53:24.999-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1415:53:25.001-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1415:53:25.127-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1415:53:25.127-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 2324 ms
+2020-01-1415:53:25.161-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1415:53:25.165-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1415:53:25.165-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1415:53:25.165-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1415:53:25.165-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1415:53:25.824-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1415:53:25.825-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1415:53:25.825-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1415:53:25.825-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1415:53:25.826-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1415:53:25.826-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1415:53:26.525-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9300
+2020-01-1415:53:28.115-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1415:53:28.357-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1415:53:28.420-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1415:53:28.433-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1415:53:28.614-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1415:53:28.670-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1415:53:28.671-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1415:53:28.699-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1415:53:28.707-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1415:53:28.722-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1415:53:28.724-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 6.644 seconds (JVM running for 7.428)
+2020-01-1415:53:50.640-INFO [DirectJDKLog.java:173]-Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-01-1415:53:50.641-INFO [FrameworkServlet.java:524]-Initializing Servlet 'dispatcherServlet'
+2020-01-1415:53:50.657-INFO [FrameworkServlet.java:546]-Completed initialization in 16 ms
+2020-01-1415:56:02.013-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 32136 (started by DELL in F:\代码模板\java_template)
+2020-01-1415:56:02.021-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1415:56:02.887-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1415:56:02.888-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1415:56:02.936-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 44ms. Found 1 repository interfaces.
+2020-01-1415:56:02.945-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1415:56:02.946-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1415:56:02.959-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1415:56:02.960-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 8ms. Found 0 repository interfaces.
+2020-01-1415:56:03.227-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$d626c36c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1415:56:03.233-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$4058dbad] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1415:56:03.481-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1415:56:03.497-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1415:56:03.507-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1415:56:03.507-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1415:56:03.510-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1415:56:03.604-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1415:56:03.604-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1528 ms
+2020-01-1415:56:03.628-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1415:56:03.633-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1415:56:03.634-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1415:56:03.634-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1415:56:03.634-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1415:56:04.204-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1415:56:04.206-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1415:56:04.206-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1415:56:04.206-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1415:56:04.207-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1415:56:04.207-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1415:56:05.016-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9200
+2020-01-1415:56:35.984-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1415:56:36.139-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1415:56:36.150-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1415:56:36.159-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1415:56:36.284-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1415:56:36.332-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1415:56:36.333-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1415:56:36.358-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1415:56:36.365-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1415:56:36.376-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1415:56:36.378-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 34.772 seconds (JVM running for 35.455)
+2020-01-1415:56:52.132-INFO [DirectJDKLog.java:173]-Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-01-1415:56:52.132-INFO [FrameworkServlet.java:524]-Initializing Servlet 'dispatcherServlet'
+2020-01-1415:56:52.139-INFO [FrameworkServlet.java:546]-Completed initialization in 7 ms
+2020-01-1416:07:45.117-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 20264 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:07:45.120-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:07:45.938-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:07:45.940-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:07:45.985-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 42ms. Found 1 repository interfaces.
+2020-01-1416:07:45.993-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:07:45.994-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:07:46.008-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:07:46.008-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1416:07:46.289-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$e402f322] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:07:46.298-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$4e350b63] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:07:46.533-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:07:46.544-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:07:46.551-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:07:46.552-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:07:46.554-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:07:46.641-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:07:46.642-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1470 ms
+2020-01-1416:07:46.665-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:07:46.668-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:07:46.669-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:07:46.669-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:07:46.669-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:07:47.274-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:07:47.275-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:07:47.275-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:07:47.276-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:07:47.276-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:07:47.276-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:07:48.208-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9300
+2020-01-1416:07:49.473-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:07:49.692-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:07:49.717-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:07:49.729-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:07:49.877-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:07:49.930-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:07:49.931-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:07:49.957-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:07:49.964-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:07:49.977-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:07:49.979-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 5.299 seconds (JVM running for 5.905)
+2020-01-1416:08:41.842-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 59796 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:08:41.846-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:08:42.677-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:08:42.678-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:08:42.726-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 45ms. Found 1 repository interfaces.
+2020-01-1416:08:42.735-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:08:42.736-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:08:42.754-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:08:42.754-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 12ms. Found 0 repository interfaces.
+2020-01-1416:08:43.030-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$85479850] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:08:43.044-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$ef79b091] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:08:43.278-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:08:43.288-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:08:43.295-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:08:43.295-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:08:43.297-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:08:43.387-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:08:43.387-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1480 ms
+2020-01-1416:08:43.416-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:08:43.419-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:08:43.420-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:08:43.420-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:08:43.420-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:08:43.969-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:08:43.970-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:08:43.970-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:08:43.970-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:08:43.971-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:08:43.971-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:08:44.817-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9300
+2020-01-1416:08:45.843-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:08:46.004-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:08:46.014-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:08:46.023-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:08:46.151-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:08:46.200-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:08:46.201-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:08:46.229-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:08:46.236-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:08:46.249-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:08:46.251-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 4.842 seconds (JVM running for 5.473)
+2020-01-1416:08:59.445-INFO [DirectJDKLog.java:173]-Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-01-1416:08:59.445-INFO [FrameworkServlet.java:524]-Initializing Servlet 'dispatcherServlet'
+2020-01-1416:08:59.452-INFO [FrameworkServlet.java:546]-Completed initialization in 7 ms
+2020-01-1416:22:51.127-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 58568 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:22:51.130-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:22:52.074-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:22:52.075-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:22:52.127-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 49ms. Found 1 repository interfaces.
+2020-01-1416:22:52.137-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:22:52.138-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:22:52.152-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:22:52.152-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1416:22:52.443-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$79c049d8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:22:52.464-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e3f26219] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:22:52.765-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:22:52.779-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:22:52.790-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:22:52.790-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:22:52.793-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:22:52.888-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:22:52.888-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1708 ms
+2020-01-1416:22:52.915-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:22:52.919-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:22:52.919-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:22:52.919-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:22:52.920-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:22:53.532-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:22:53.533-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:22:53.534-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:22:53.535-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:22:53.535-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:22:53.536-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:22:54.333-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9300
+2020-01-1416:22:55.559-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:22:55.746-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:22:55.759-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:22:55.772-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:22:55.974-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:22:56.070-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:22:56.072-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:22:56.106-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:22:56.117-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:22:56.133-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:22:56.136-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 5.472 seconds (JVM running for 6.108)
+2020-01-1416:25:20.349-INFO [DirectJDKLog.java:173]-Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-01-1416:25:20.349-INFO [FrameworkServlet.java:524]-Initializing Servlet 'dispatcherServlet'
+2020-01-1416:25:20.358-INFO [FrameworkServlet.java:546]-Completed initialization in 9 ms
+2020-01-1416:29:11.204-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 5144 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:29:11.207-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:29:12.160-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:29:12.161-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:29:12.204-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 39ms. Found 1 repository interfaces.
+2020-01-1416:29:12.214-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:29:12.216-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:29:12.229-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:29:12.229-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1416:29:12.487-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$f9b852cc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:29:12.503-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$63ea6b0d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:29:12.776-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:29:12.789-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:29:12.800-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:29:12.800-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:29:12.803-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:29:12.897-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:29:12.897-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1637 ms
+2020-01-1416:29:12.923-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:29:12.927-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:29:12.927-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:29:12.927-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:29:12.927-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:29:13.514-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:29:13.516-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:29:13.516-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:29:13.517-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:29:13.517-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:29:13.517-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:29:14.353-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9300
+2020-01-1416:29:15.371-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:29:15.524-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:29:15.535-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:29:15.544-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:29:15.673-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:29:15.721-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:29:15.722-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:29:15.748-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:29:15.754-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:29:15.766-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:29:15.767-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 5.058 seconds (JVM running for 5.71)
+2020-01-1416:33:55.433-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 46792 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:33:55.436-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:33:56.415-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:33:56.416-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:33:56.466-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 46ms. Found 1 repository interfaces.
+2020-01-1416:33:56.480-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:33:56.482-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:33:56.495-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:33:56.496-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1416:33:56.834-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$78c3d3bc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:33:56.840-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e2f5ebfd] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:33:57.144-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:33:57.159-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:33:57.166-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:33:57.167-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:33:57.169-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:33:57.269-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:33:57.269-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1779 ms
+2020-01-1416:33:57.299-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:33:57.304-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:33:57.304-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:33:57.305-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:33:57.305-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:33:58.024-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:33:58.026-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:33:58.026-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:33:58.026-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:33:58.026-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:33:58.027-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:33:58.802-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 192.168.3.184:9300
+2020-01-1416:34:01.686-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:34:02.108-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:34:02.120-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:34:02.131-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:34:02.282-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:34:02.339-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:34:02.340-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:34:02.375-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:34:02.383-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:34:02.398-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:34:02.400-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 7.481 seconds (JVM running for 8.173)
+2020-01-1416:35:27.134-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 46156 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:35:27.137-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:35:28.056-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:35:28.057-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:35:28.105-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 44ms. Found 1 repository interfaces.
+2020-01-1416:35:28.114-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:35:28.115-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:35:28.127-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:35:28.127-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1416:35:28.398-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$104e0694] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:35:28.407-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$7a801ed5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:35:28.689-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:35:28.701-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:35:28.708-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:35:28.708-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:35:28.711-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:35:28.813-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:35:28.814-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1609 ms
+2020-01-1416:35:28.841-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:35:28.845-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:35:28.845-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:35:28.845-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:35:28.845-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:35:29.547-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:35:29.549-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:35:29.550-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:35:29.550-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:35:29.550-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:35:29.550-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:35:30.336-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 192.168.3.1:9300
+2020-01-1416:35:33.294-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:35:33.573-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:35:33.584-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:35:33.592-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:35:33.720-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:35:33.768-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:35:33.769-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:35:33.799-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:35:33.808-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:35:33.824-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:35:33.826-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 7.176 seconds (JVM running for 7.82)
+2020-01-1416:42:14.633-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 50372 (started by DELL in F:\代码模板\java_template)
+2020-01-1416:42:14.635-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1416:42:15.572-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:42:15.574-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:42:15.619-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 42ms. Found 1 repository interfaces.
+2020-01-1416:42:15.627-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1416:42:15.628-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1416:42:15.641-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1416:42:15.641-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1416:42:15.911-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$ab2abf89] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:42:15.918-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$155cd7ca] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1416:42:16.158-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1416:42:16.173-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1416:42:16.180-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1416:42:16.180-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1416:42:16.183-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1416:42:16.274-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1416:42:16.274-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1588 ms
+2020-01-1416:42:16.298-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1416:42:16.302-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1416:42:16.302-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1416:42:16.303-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1416:42:16.303-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1416:42:16.838-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1416:42:16.838-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1416:42:16.839-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1416:42:16.839-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1416:42:16.839-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1416:42:16.839-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1416:42:17.543-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 192.168.3.184:9300
+2020-01-1416:42:20.615-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1416:42:20.801-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1416:42:20.812-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1416:42:20.822-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1416:42:20.963-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1416:42:21.019-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1416:42:21.020-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1416:42:21.053-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1416:42:21.062-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1416:42:21.076-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1416:42:21.078-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 6.985 seconds (JVM running for 7.64)
+2020-01-1417:39:22.197-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 34836 (started by DELL in F:\代码模板\java_template)
+2020-01-1417:39:22.200-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2020-01-1417:39:23.025-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1417:39:23.026-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1417:39:23.069-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 40ms. Found 1 repository interfaces.
+2020-01-1417:39:23.077-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2020-01-1417:39:23.078-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-1417:39:23.092-INFO [RepositoryConfigurationExtensionSupport.java:363]-Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.sun.web.elasticsearch.UserESRepository.
+2020-01-1417:39:23.092-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 7ms. Found 0 repository interfaces.
+2020-01-1417:39:23.376-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$79c049d8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1417:39:23.392-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e3f26219] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2020-01-1417:39:23.626-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2020-01-1417:39:23.638-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2020-01-1417:39:23.646-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2020-01-1417:39:23.647-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2020-01-1417:39:23.650-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;D:\util\nodejs\node_global;D:\util\nodejs\;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;D:\util\nodejs\node_global;;.]
+2020-01-1417:39:23.746-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2020-01-1417:39:23.746-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 1497 ms
+2020-01-1417:39:23.770-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2020-01-1417:39:23.774-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2020-01-1417:39:23.774-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2020-01-1417:39:23.774-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2020-01-1417:39:23.774-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2020-01-1417:39:24.406-INFO [PluginsService.java:190]-no modules loaded
+2020-01-1417:39:24.407-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.index.reindex.ReindexPlugin]
+2020-01-1417:39:24.407-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.join.ParentJoinPlugin]
+2020-01-1417:39:24.407-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.percolator.PercolatorPlugin]
+2020-01-1417:39:24.407-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.script.mustache.MustachePlugin]
+2020-01-1417:39:24.408-INFO [PluginsService.java:193]-loaded plugin [org.elasticsearch.transport.Netty4Plugin]
+2020-01-1417:39:25.227-INFO [TransportClientFactoryBean.java:88]-Adding transport node : 127.0.0.1:9300
+2020-01-1417:39:27.179-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2020-01-1417:39:27.388-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2020-01-1417:39:27.400-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2020-01-1417:39:27.409-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2020-01-1417:39:27.555-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2020-01-1417:39:27.634-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2020-01-1417:39:27.636-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2020-01-1417:39:27.677-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2020-01-1417:39:27.684-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2020-01-1417:39:27.696-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2020-01-1417:39:27.698-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 5.928 seconds (JVM running for 6.598)
+2020-01-1417:40:50.659-INFO [DirectJDKLog.java:173]-Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-01-1417:40:50.660-INFO [FrameworkServlet.java:524]-Initializing Servlet 'dispatcherServlet'
+2020-01-1417:40:50.667-INFO [FrameworkServlet.java:546]-Completed initialization in 7 ms

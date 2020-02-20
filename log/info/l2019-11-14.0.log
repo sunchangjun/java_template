@@ -1,0 +1,35 @@
+2019-11-1413:54:42.932-INFO [StartupInfoLogger.java:50]-Starting SunWebApplication on DESKTOP-6B5D8GA with PID 179860 (started by DELL in F:\代码模板\java_template)
+2019-11-1413:54:42.967-INFO [SpringApplication.java:666]-The following profiles are active: dev
+2019-11-1413:54:46.763-INFO [RepositoryConfigurationDelegate.java:244]-Multiple Spring Data modules found, entering strict repository configuration mode!
+2019-11-1413:54:46.766-INFO [RepositoryConfigurationDelegate.java:126]-Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-11-1413:54:46.843-INFO [RepositoryConfigurationDelegate.java:182]-Finished Spring Data repository scanning in 40ms. Found 0 repository interfaces.
+2019-11-1413:54:47.561-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'redisConfig' of type [com.sun.web.config.RedisConfig$$EnhancerBySpringCGLIB$$97a8a99f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-1413:54:47.570-INFO [PostProcessorRegistrationDelegate.java:330]-Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$1dac1e0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-11-1413:54:48.208-INFO [TomcatWebServer.java:91]-Tomcat initialized with port(s): 9999 (http)
+2019-11-1413:54:48.225-INFO [DirectJDKLog.java:173]-Initializing ProtocolHandler ["http-nio-9999"]
+2019-11-1413:54:48.236-INFO [DirectJDKLog.java:173]-Starting service [Tomcat]
+2019-11-1413:54:48.236-INFO [DirectJDKLog.java:173]-Starting Servlet engine: [Apache Tomcat/9.0.19]
+2019-11-1413:54:48.240-INFO [DirectJDKLog.java:173]-The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_101\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;D:\util\xshell6\;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Java\jdk1.8.0_101\bin;C:\Program Files\Java\jdk1.8.0_101\jre\bin;D:\apache-maven-3.5.4\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\work\git\Git\cmd;D:\util\TorGit\bin;D:\Python;D:\util\TorSvn\bin;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;;C:\Users\DELL\AppData\Local\Microsoft\WindowsApps;D:\util\WebStorm 2019.2.2\bin;;.]
+2019-11-1413:54:48.600-INFO [DirectJDKLog.java:173]-Initializing Spring embedded WebApplicationContext
+2019-11-1413:54:48.601-INFO [ServletWebServerApplicationContext.java:285]-Root WebApplicationContext: initialization completed in 5505 ms
+2019-11-1413:54:48.662-INFO [ServletRegistrationBean.java:187]-Servlet dispatcherServlet mapped to [/]
+2019-11-1413:54:48.668-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'characterEncodingFilter' to: [/*]
+2019-11-1413:54:48.668-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2019-11-1413:54:48.669-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2019-11-1413:54:48.669-INFO [AbstractFilterRegistrationBean.java:245]-Mapping filter: 'requestContextFilter' to: [/*]
+2019-11-1413:54:50.859-INFO [WelcomePageHandlerMapping.java:61]-Adding welcome page template: index
+2019-11-1413:54:51.182-INFO [DocumentationPluginsBootstrapper.java:120]-Context refreshed
+2019-11-1413:54:51.226-INFO [DocumentationPluginsBootstrapper.java:123]-Found 1 custom documentation plugin(s)
+2019-11-1413:54:51.237-INFO [ApiListingReferenceScanner.java:41]-Scanning for api listing references
+2019-11-1413:54:51.449-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: findAllIptvConfigUsingPOST_1
+2019-11-1413:54:51.521-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listUsingGET_1
+2019-11-1413:54:51.522-INFO [CachingOperationNameGenerator.java:40]-Generating unique operation named: listDataUsingGET_1
+2019-11-1413:54:51.548-INFO [ScheduledAnnotationBeanPostProcessor.java:295]-No TaskScheduler/ScheduledExecutorService bean found for scheduled processing
+2019-11-1413:54:51.558-INFO [DirectJDKLog.java:173]-Starting ProtocolHandler ["http-nio-9999"]
+2019-11-1413:54:51.593-INFO [TomcatWebServer.java:206]-Tomcat started on port(s): 9999 (http) with context path ''
+2019-11-1413:54:51.602-INFO [StartupInfoLogger.java:59]-Started SunWebApplication in 10.441 seconds (JVM running for 13.645)
+2019-11-1413:55:21.962-INFO [DirectJDKLog.java:173]-Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-11-1413:55:21.962-INFO [FrameworkServlet.java:524]-Initializing Servlet 'dispatcherServlet'
+2019-11-1413:55:21.978-INFO [FrameworkServlet.java:546]-Completed initialization in 16 ms
+2019-11-1413:56:15.475-INFO [HikariDataSource.java:110]-HikariPool-1 - Starting...
+2019-11-1413:56:16.200-INFO [HikariDataSource.java:123]-HikariPool-1 - Start completed.
